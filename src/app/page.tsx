@@ -1,65 +1,116 @@
-import Image from "next/image";
+import { prisma } from "@/lib/prisma";
+import SearchBar from "@/components/SearchBar";
+import CategoryNav from "@/components/CategoryNav";
+import OrgCard from "@/components/OrgCard";
+import ReviewCard from "@/components/ReviewCard";
 
-export default function Home() {
+export default async function HomePage() {
+  const [categories, trendingOrgs, latestReviews, stats] = await Promise.all([
+    prisma.category.findMany({ orderBy: { id: "asc" } }),
+    prisma.organization.findMany({
+      orderBy: { reviewCount: "desc" },
+      take: 6,
+      include: { category: true },
+    }),
+    prisma.review.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        user: { select: { id: true, displayName: true, image: true } },
+        org: { select: { name: true, slug: true } },
+      },
+    }),
+    Promise.all([
+      prisma.organization.count(),
+      prisma.review.count(),
+      prisma.user.count(),
+    ]),
+  ]);
+
+  const [orgCount, reviewCount, userCount] = stats;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div>
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-blue-800 to-blue-950 text-white py-16">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h1 className="text-4xl font-bold mb-3">情報強者</h1>
+          <p className="text-blue-200 text-lg mb-8">
+            騙される前に、まずチェック。
           </p>
+          <SearchBar size="lg" />
+          <div className="flex justify-center gap-8 mt-8 text-sm text-blue-200">
+            <div>
+              <span className="text-2xl font-bold text-white">{orgCount}</span>
+              <br />登録組織
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-white">{reviewCount}</span>
+              <br />口コミ
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-white">{userCount}</span>
+              <br />ユーザー
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
+
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        {/* Categories */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">カテゴリから探す</h2>
+          <CategoryNav categories={categories} />
+        </section>
+
+        {/* Trending */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">注目の組織</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {trendingOrgs.map((org) => (
+              <OrgCard
+                key={org.id}
+                slug={org.slug}
+                name={org.name}
+                categoryName={org.category.name}
+                categorySlug={org.category.slug}
+                description={org.description}
+                avgRating={org.avgRating}
+                reviewCount={org.reviewCount}
+                status={org.status}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Latest Reviews */}
+        <section>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">最新の口コミ</h2>
+          <div className="space-y-4">
+            {latestReviews.map((review) => (
+              <ReviewCard
+                key={review.id}
+                title={review.title}
+                body={review.body}
+                ratingOverall={review.ratingOverall}
+                ratingDanger={review.ratingDanger}
+                ratingCost={review.ratingCost}
+                ratingPressure={review.ratingPressure}
+                ratingTransparency={review.ratingTransparency}
+                ratingExit={review.ratingExit}
+                relationship={review.relationship}
+                period={review.period}
+                isAnonymous={review.isAnonymous}
+                displayName={review.user.displayName}
+                helpfulCount={review.helpfulCount}
+                createdAt={review.createdAt.toISOString()}
+                orgName={review.org.name}
+                orgSlug={review.org.slug}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int          @id @default(autoincrement())
+  email          String?      @unique
+  name           String?
+  displayName    String
+  image          String?
+  hashedPassword String?
+  provider       String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  reviews        Review[]
+  votes          ReviewVote[]
+}
+
+model Category {
+  id    Int            @id @default(autoincrement())
+  slug  String         @unique
+  name  String
+  icon  String?
+  orgs  Organization[]
+}
+
+model Organization {
+  id             Int          @id @default(autoincrement())
+  slug           String       @unique
+  name           String
+  nameKana       String?
+  aliases        String?
+  categoryId     Int
+  category       Category     @relation(fields: [categoryId], references: [id])
+  description    String?
+  website        String?
+  representative String?
+  founded        String?
+  address        String?
+  status         String       @default("ACTIVE")
+  avgRating      Float        @default(0)
+  reviewCount    Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  reviews        Review[]
+  tags           TagsOnOrgs[]
+}
+
+model Tag {
+  id   Int          @id @default(autoincrement())
+  name String       @unique
+  orgs TagsOnOrgs[]
+}
+
+model TagsOnOrgs {
+  orgId Int
+  tagId Int
+  org   Organization @relation(fields: [orgId], references: [id])
+  tag   Tag          @relation(fields: [tagId], references: [id])
+
+  @@id([orgId, tagId])
+}
+
+model Review {
+  id                 Int          @id @default(autoincrement())
+  orgId              Int
+  org                Organization @relation(fields: [orgId], references: [id])
+  userId             Int
+  user               User         @relation(fields: [userId], references: [id])
+  ratingOverall      Float
+  ratingDanger       Int
+  ratingCost         Int
+  ratingPressure     Int
+  ratingTransparency Int
+  ratingExit         Int
+  title              String
+  body               String
+  relationship       String
+  period             String?
+  isAnonymous        Boolean      @default(true)
+  helpfulCount       Int          @default(0)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  votes              ReviewVote[]
+}
+
+model ReviewVote {
+  id       Int    @id @default(autoincrement())
+  reviewId Int
+  review   Review @relation(fields: [reviewId], references: [id])
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  value    Int
+
+  @@unique([reviewId, userId])
+}
