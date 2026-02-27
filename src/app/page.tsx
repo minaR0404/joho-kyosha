@@ -39,18 +39,18 @@ export default async function HomePage() {
             騙される前に、まずチェック。
           </p>
           <SearchBar size="lg" />
-          <div className="flex justify-center gap-8 mt-8 text-sm text-blue-200">
-            <div>
-              <span className="text-2xl font-bold text-white">{orgCount}</span>
-              <br />登録組織
+          <div className="flex justify-center gap-20 mt-10">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center">
+              <span className="text-3xl font-extrabold text-white">{orgCount}</span>
+              <span className="text-xs text-blue-200 mt-2 tracking-wide">登録組織</span>
             </div>
-            <div>
-              <span className="text-2xl font-bold text-white">{reviewCount}</span>
-              <br />口コミ
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center">
+              <span className="text-3xl font-extrabold text-white">{reviewCount}</span>
+              <span className="text-xs text-blue-200 mt-2 tracking-wide">口コミ</span>
             </div>
-            <div>
-              <span className="text-2xl font-bold text-white">{userCount}</span>
-              <br />ユーザー
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center">
+              <span className="text-3xl font-extrabold text-white">{userCount}</span>
+              <span className="text-xs text-blue-200 mt-2 tracking-wide">ユーザー</span>
             </div>
           </div>
         </div>
