@@ -68,7 +68,8 @@ export default async function OrgDetailPage({ params }: Props) {
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2 mb-2">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">{org.name}</h1>
+                <div className="flex items-center gap-2 mb-3">
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
                     {org.category.name}
                   </span>
@@ -76,16 +77,15 @@ export default async function OrgDetailPage({ params }: Props) {
                     <span className="text-xs px-2 py-0.5 bg-gray-200 text-gray-500 rounded">閉鎖</span>
                   )}
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">{org.name}</h1>
+                {org.description && (
+                  <p className="text-gray-700 leading-relaxed mb-3">{org.description}</p>
+                )}
                 {org.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-3">
+                  <div className="flex flex-wrap gap-1">
                     {org.tags.map(({ tag }) => (
                       <TagBadge key={tag.id} name={tag.name} />
                     ))}
                   </div>
-                )}
-                {org.description && (
-                  <p className="text-gray-700 leading-relaxed">{org.description}</p>
                 )}
               </div>
               {org.reviewCount > 0 && (
