@@ -35,7 +35,7 @@ export default function SearchBar({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="組織名・商材名で検索..."
-          className={`w-full ${sizeClasses} border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white`}
+          className={`w-full ${sizeClasses} border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400 caret-gray-900`}
         />
         <button
           type="submit"
