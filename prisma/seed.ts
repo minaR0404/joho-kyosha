@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 async function main() {
   // Categories
   const categories = await Promise.all([
-    prisma.category.create({ data: { slug: "info-products", name: "情報商材", icon: "📦" } }),
-    prisma.category.create({ data: { slug: "mlm", name: "マルチ商法(MLM)", icon: "🔗" } }),
-    prisma.category.create({ data: { slug: "religion", name: "宗教", icon: "🙏" } }),
-    prisma.category.create({ data: { slug: "investment", name: "投資スクール", icon: "📈" } }),
-    prisma.category.create({ data: { slug: "online-salon", name: "オンラインサロン", icon: "💬" } }),
-    prisma.category.create({ data: { slug: "other", name: "その他", icon: "📋" } }),
+    prisma.category.create({ data: { slug: "info-products", name: "情報商材", icon: "🎯" } }),
+    prisma.category.create({ data: { slug: "mlm", name: "マルチ商法(MLM)", icon: "🕸️" } }),
+    prisma.category.create({ data: { slug: "religion", name: "宗教", icon: "⛩️" } }),
+    prisma.category.create({ data: { slug: "investment", name: "投資スクール", icon: "💹" } }),
+    prisma.category.create({ data: { slug: "online-salon", name: "オンラインサロン", icon: "💻" } }),
+    prisma.category.create({ data: { slug: "other", name: "その他", icon: "📂" } }),
   ]);
 
   // Tags
