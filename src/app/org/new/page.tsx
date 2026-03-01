@@ -10,6 +10,15 @@ interface Category {
   name: string;
 }
 
+const CATEGORY_ORDER: Record<string, number> = {
+  "info-products": 0,
+  mlm: 1,
+  investment: 2,
+  "online-salon": 3,
+  religion: 4,
+  other: 5,
+};
+
 export default function NewOrgPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -25,7 +34,11 @@ export default function NewOrgPage() {
   useEffect(() => {
     fetch("/api/orgs?categoriesOnly=1")
       .then((res) => res.json())
-      .then((data) => setCategories(data.categories || []))
+      .then((data) => {
+        const cats: Category[] = data.categories || [];
+        cats.sort((a, b) => (CATEGORY_ORDER[a.slug] ?? 99) - (CATEGORY_ORDER[b.slug] ?? 99));
+        setCategories(cats);
+      })
       .catch(() => {});
   }, []);
 

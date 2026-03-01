@@ -3,7 +3,7 @@
 import { getRatingColor } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 
-export function RatingStarsDisplay({
+export function RatingIconsDisplay({
   rating,
   size = "sm",
 }: {
@@ -80,7 +80,7 @@ export function RatingStarsDisplay({
   );
 }
 
-export function RatingStarsInput({
+export function RatingIconsInput({
   value,
   onChange,
   label,

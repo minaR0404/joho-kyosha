@@ -1,4 +1,4 @@
-import { RatingStarsDisplay } from "./RatingStars";
+import { RatingIconsDisplay } from "./RatingIcons";
 
 interface ReviewCardProps {
   title: string;
@@ -47,7 +47,7 @@ export default function ReviewCard({
           <h4 className="font-bold text-gray-900">{title}</h4>
         </div>
         <div className="flex-shrink-0 flex items-center gap-2">
-          <RatingStarsDisplay rating={ratingOverall} />
+          <RatingIconsDisplay rating={ratingOverall} />
           <span className="text-sm font-bold text-gray-700">
             {ratingOverall.toFixed(1)}
           </span>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RatingStarsInput } from "./RatingStars";
+import { RatingIconsInput } from "./RatingIcons";
 import { RATING_AXES, RELATIONSHIPS } from "@/lib/utils";
 
 export default function ReviewForm({ orgId, orgSlug }: { orgId: number; orgSlug: string }) {
@@ -70,7 +70,7 @@ export default function ReviewForm({ orgId, orgSlug }: { orgId: number; orgSlug:
         <h3 className="font-bold text-gray-900 mb-4">評価（各1〜5）</h3>
         <div className="space-y-3">
           {RATING_AXES.map((axis) => (
-            <RatingStarsInput
+            <RatingIconsInput
               key={axis.key}
               label={axis.label}
               value={ratings[axis.key as keyof typeof ratings]}
