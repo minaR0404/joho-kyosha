@@ -52,9 +52,10 @@ model Organization {
 }
 
 model Tag {
-  id   Int          @id @default(autoincrement())
-  name String       @unique
-  orgs TagsOnOrgs[]
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  orgs       TagsOnOrgs[]
+  reviewTags ReviewTag[]
 }
 
 model TagsOnOrgs {
@@ -87,6 +88,16 @@ model Review {
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
   votes              ReviewVote[]
+  tags               ReviewTag[]
+}
+
+model ReviewTag {
+  reviewId Int
+  tagId    Int
+  review   Review @relation(fields: [reviewId], references: [id])
+  tag      Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([reviewId, tagId])
 }
 
 model ReviewVote {

@@ -34,6 +34,7 @@ export default async function OrgDetailPage({ params }: Props) {
         orderBy: { createdAt: "desc" },
         include: {
           user: { select: { id: true, displayName: true, image: true } },
+          tags: { include: { tag: true } },
         },
       },
     },
@@ -43,6 +44,19 @@ export default async function OrgDetailPage({ params }: Props) {
   const admin = isAdmin(session?.user?.email);
 
   if (!org || (org.status === "DELETED" && !admin)) notFound();
+
+  // Aggregate review tags
+  const reviewTagCounts: Record<string, { name: string; count: number }> = {};
+  for (const review of org.reviews) {
+    for (const rt of (review as unknown as { tags: { tag: { id: number; name: string } }[] }).tags ?? []) {
+      const key = String(rt.tag.id);
+      if (!reviewTagCounts[key]) {
+        reviewTagCounts[key] = { name: rt.tag.name, count: 0 };
+      }
+      reviewTagCounts[key].count++;
+    }
+  }
+  const aggregatedTags = Object.values(reviewTagCounts).sort((a, b) => b.count - a.count);
 
   // Calculate average ratings per axis
   const avgRatings = org.reviews.length > 0
@@ -87,11 +101,16 @@ export default async function OrgDetailPage({ params }: Props) {
                 {org.description && (
                   <p className="text-gray-700 leading-relaxed mb-3">{org.description}</p>
                 )}
-                {org.tags.length > 0 && (
+                {(aggregatedTags.length > 0 || org.tags.length > 0) && (
                   <div className="flex flex-wrap gap-1">
-                    {org.tags.map(({ tag }) => (
-                      <TagBadge key={tag.id} name={tag.name} />
+                    {aggregatedTags.map((t) => (
+                      <TagBadge key={`review-${t.name}`} name={t.name} count={t.count} />
                     ))}
+                    {org.tags
+                      .filter(({ tag }) => !reviewTagCounts[String(tag.id)])
+                      .map(({ tag }) => (
+                        <TagBadge key={`org-${tag.id}`} name={tag.name} />
+                      ))}
                   </div>
                 )}
               </div>

@@ -24,10 +24,13 @@ export default async function ReviewPage({ params }: Props) {
     redirect(`/auth/login?callbackUrl=/org/${slug}/review`);
   }
 
-  const org = await prisma.organization.findUnique({
-    where: { slug },
-    select: { id: true, slug: true, name: true, category: { select: { name: true, slug: true } } },
-  });
+  const [org, tags] = await Promise.all([
+    prisma.organization.findUnique({
+      where: { slug },
+      select: { id: true, slug: true, name: true, category: { select: { name: true, slug: true } } },
+    }),
+    prisma.tag.findMany({ orderBy: { id: "asc" } }),
+  ]);
 
   if (!org) notFound();
 
@@ -48,7 +51,7 @@ export default async function ReviewPage({ params }: Props) {
         あなたの体験を共有して、他の人が騙されないよう助けましょう。
       </p>
 
-      <ReviewForm orgId={org.id} orgSlug={org.slug} />
+      <ReviewForm orgId={org.id} orgSlug={org.slug} tags={tags} />
     </div>
   );
 }

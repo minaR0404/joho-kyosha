@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 import { RatingIconsInput } from "./RatingIcons";
 import { RATING_AXES, RELATIONSHIPS } from "@/lib/utils";
 
-export default function ReviewForm({ orgId, orgSlug }: { orgId: number; orgSlug: string }) {
+interface Tag {
+  id: number;
+  name: string;
+}
+
+export default function ReviewForm({ orgId, orgSlug, tags }: { orgId: number; orgSlug: string; tags: Tag[] }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,6 +26,7 @@ export default function ReviewForm({ orgId, orgSlug }: { orgId: number; orgSlug:
   const [relationship, setRelationship] = useState("");
   const [period, setPeriod] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +45,7 @@ export default function ReviewForm({ orgId, orgSlug }: { orgId: number; orgSlug:
           relationship,
           period: period || undefined,
           isAnonymous,
+          tagIds: selectedTagIds,
         }),
       });
 
@@ -142,6 +149,38 @@ export default function ReviewForm({ orgId, orgSlug }: { orgId: number; orgSlug:
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+
+      {/* Tags */}
+      {tags.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            該当するタグ（複数選択可）
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {tags.map((tag) => {
+              const selected = selectedTagIds.includes(tag.id);
+              return (
+                <button
+                  key={tag.id}
+                  type="button"
+                  onClick={() =>
+                    setSelectedTagIds((prev) =>
+                      selected ? prev.filter((id) => id !== tag.id) : [...prev, tag.id]
+                    )
+                  }
+                  className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                    selected
+                      ? "bg-red-50 text-red-700 border-red-300"
+                      : "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-400"
+                  }`}
+                >
+                  {tag.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Anonymous */}
       <label className="flex items-center gap-2 cursor-pointer">

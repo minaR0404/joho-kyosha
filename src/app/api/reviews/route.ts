@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
       relationship,
       period,
       isAnonymous,
+      tagIds,
     } = body;
 
     if (!orgId || !title || !reviewBody || !relationship) {
@@ -64,6 +65,9 @@ export async function POST(req: NextRequest) {
         relationship,
         period: period || null,
         isAnonymous: isAnonymous ?? true,
+        tags: Array.isArray(tagIds) && tagIds.length > 0
+          ? { create: tagIds.map((tagId: number) => ({ tagId })) }
+          : undefined,
       },
     });
 
