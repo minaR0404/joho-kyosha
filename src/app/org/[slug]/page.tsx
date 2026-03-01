@@ -39,10 +39,10 @@ export default async function OrgDetailPage({ params }: Props) {
     },
   });
 
-  if (!org) notFound();
-
   const session = await auth();
   const admin = isAdmin(session?.user?.email);
+
+  if (!org || (org.status === "DELETED" && !admin)) notFound();
 
   // Calculate average ratings per axis
   const avgRatings = org.reviews.length > 0

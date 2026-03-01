@@ -13,9 +13,10 @@ export async function GET(req: NextRequest) {
 
   const q = searchParams.get("q") || "";
   const orgs = await prisma.organization.findMany({
-    where: q
-      ? { OR: [{ name: { contains: q } }, { description: { contains: q } }] }
-      : undefined,
+    where: {
+      status: { not: "DELETED" },
+      ...(q ? { OR: [{ name: { contains: q } }, { description: { contains: q } }] } : {}),
+    },
     orderBy: { reviewCount: "desc" },
     take: 50,
     include: { category: { select: { name: true, slug: true } } },

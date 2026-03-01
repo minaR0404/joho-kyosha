@@ -23,7 +23,7 @@ export default async function CategoryPage({ params }: Props) {
   if (!category) notFound();
 
   const orgs = await prisma.organization.findMany({
-    where: { categoryId: category.id },
+    where: { categoryId: category.id, status: { not: "DELETED" } },
     orderBy: { reviewCount: "desc" },
     include: { category: true },
   });

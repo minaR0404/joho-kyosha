@@ -8,6 +8,7 @@ export default async function HomePage() {
   const [categories, trendingOrgs, latestReviews, stats] = await Promise.all([
     prisma.category.findMany({ orderBy: { id: "asc" } }),
     prisma.organization.findMany({
+      where: { status: { not: "DELETED" } },
       orderBy: { reviewCount: "desc" },
       take: 6,
       include: { category: true },
@@ -21,7 +22,7 @@ export default async function HomePage() {
       },
     }),
     Promise.all([
-      prisma.organization.count(),
+      prisma.organization.count({ where: { status: { not: "DELETED" } } }),
       prisma.review.count(),
       prisma.user.count(),
     ]),

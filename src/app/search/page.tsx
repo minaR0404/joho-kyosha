@@ -17,6 +17,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const orgs = query
     ? await prisma.organization.findMany({
         where: {
+          status: { not: "DELETED" },
           OR: [
             { name: { contains: query } },
             { nameKana: { contains: query } },

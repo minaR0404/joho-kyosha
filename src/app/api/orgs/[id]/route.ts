@@ -35,12 +35,10 @@ export async function DELETE(
   const orgId = Number(id);
 
   try {
-    await prisma.$transaction([
-      prisma.reviewVote.deleteMany({ where: { review: { orgId } } }),
-      prisma.review.deleteMany({ where: { orgId } }),
-      prisma.tagsOnOrgs.deleteMany({ where: { orgId } }),
-      prisma.organization.delete({ where: { id: orgId } }),
-    ]);
+    await prisma.organization.update({
+      where: { id: orgId },
+      data: { status: "DELETED" },
+    });
 
     return NextResponse.json({ success: true });
   } catch {
