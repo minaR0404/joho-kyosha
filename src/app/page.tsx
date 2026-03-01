@@ -40,16 +40,16 @@ export default async function HomePage() {
           </p>
           <SearchBar size="lg" />
           <div className="flex justify-center gap-20 mt-10">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-white">{orgCount}</span>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
+              <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{orgCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">登録組織</span>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-white">{reviewCount}</span>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
+              <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{reviewCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">口コミ</span>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold text-white">{userCount}</span>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
+              <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{userCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">ユーザー</span>
             </div>
           </div>
