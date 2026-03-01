@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
+import { auth, isAdmin } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import RatingBadge from "@/components/RatingBadge";
 import RatingRadar from "@/components/RatingRadar";
 import ReviewCard from "@/components/ReviewCard";
 import TagBadge from "@/components/TagBadge";
+import AdminDeleteButton from "@/components/AdminDeleteButton";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -38,6 +40,9 @@ export default async function OrgDetailPage({ params }: Props) {
   });
 
   if (!org) notFound();
+
+  const session = await auth();
+  const admin = isAdmin(session?.user?.email);
 
   // Calculate average ratings per axis
   const avgRatings = org.reviews.length > 0
@@ -117,6 +122,11 @@ export default async function OrgDetailPage({ params }: Props) {
                 <div><span className="text-gray-500">所在地:</span> {org.address}</div>
               )}
             </div>
+            {admin && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <AdminDeleteButton orgId={org.id} />
+              </div>
+            )}
           </div>
 
           {/* Reviews */}

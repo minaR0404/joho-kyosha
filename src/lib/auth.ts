@@ -3,6 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
+export function isAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const adminEmails = process.env.ADMIN_EMAIL?.split(",").map((e) => e.trim()) || [];
+  return adminEmails.includes(email);
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
