@@ -41,9 +41,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const existingByName = await prisma.organization.findFirst({ where: { name } });
+    if (existingByName) {
+      return NextResponse.json(
+        { error: "この組織名はすでに登録されています" },
+        { status: 409 }
+      );
+    }
+
     let slug = toSlug(name);
-    const existing = await prisma.organization.findUnique({ where: { slug } });
-    if (existing) {
+    const existingBySlug = await prisma.organization.findUnique({ where: { slug } });
+    if (existingBySlug) {
       slug = `${slug}-${Date.now()}`;
     }
 
