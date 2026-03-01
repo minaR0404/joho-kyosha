@@ -31,7 +31,7 @@ export default function RatingRadar(props: RatingRadarProps) {
       <RadarChart data={data} cx="50%" cy="50%" outerRadius="70%">
         <PolarGrid />
         <PolarAngleAxis dataKey="axis" tick={{ fontSize: 12 }} />
-        <PolarRadiusAxis domain={[0, 5]} tickCount={6} tick={{ fontSize: 10 }} />
+        <PolarRadiusAxis domain={[0, 5]} tickCount={6} tick={false} axisLine={false} />
         <Radar
           dataKey="value"
           stroke="#dc2626"
