@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 
 export default function SearchBar({
   defaultValue = "",
@@ -39,9 +40,9 @@ export default function SearchBar({
         />
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition-colors text-sm"
+          className="absolute right-6 top-1/2 -translate-y-1/2 text-blue-600 hover:text-blue-800 transition-colors"
         >
-          検索
+          <Search className="w-6.5 h-6.5" />
         </button>
       </div>
     </form>
