@@ -6,7 +6,8 @@ import type { Metadata } from "next";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
   const category = await prisma.category.findUnique({ where: { slug } });
   if (!category) return {};
   return {
@@ -16,7 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoryPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
   const category = await prisma.category.findUnique({ where: { slug } });
   if (!category) notFound();
 
@@ -46,21 +48,28 @@ export default async function CategoryPage({ params }: Props) {
           </a>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {orgs.map((org) => (
-            <OrgCard
-              key={org.id}
-              slug={org.slug}
-              name={org.name}
-              categoryName={org.category.name}
-              categorySlug={org.category.slug}
-              description={org.description}
-              avgRating={org.avgRating}
-              reviewCount={org.reviewCount}
-              status={org.status}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {orgs.map((org) => (
+              <OrgCard
+                key={org.id}
+                slug={org.slug}
+                name={org.name}
+                categoryName={org.category.name}
+                categorySlug={org.category.slug}
+                description={org.description}
+                avgRating={org.avgRating}
+                reviewCount={org.reviewCount}
+                status={org.status}
+              />
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <a href="/org/new" className="text-blue-600 hover:underline text-sm">
+              新しい組織・商材を登録する
+            </a>
+          </div>
+        </>
       )}
     </div>
   );

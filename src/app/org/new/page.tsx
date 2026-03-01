@@ -67,7 +67,7 @@ export default function NewOrgPage() {
         return;
       }
 
-      router.push(`/org/${data.slug}`);
+      router.push(`/org/${encodeURIComponent(data.slug)}`);
     } catch {
       setError("通信エラーが発生しました");
     } finally {
