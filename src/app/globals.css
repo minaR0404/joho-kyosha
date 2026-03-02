@@ -21,3 +21,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), var(--font-noto-sans-jp), sans-serif;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

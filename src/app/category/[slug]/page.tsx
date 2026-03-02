@@ -1,25 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import OrgCard from "@/components/OrgCard";
-import {
-  ShieldAlert,
-  Network,
-  TrendingUp,
-  Monitor,
-  Landmark,
-  LayoutGrid,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { CATEGORY_CONFIG, DEFAULT_ICON } from "@/lib/category-config";
 import type { Metadata } from "next";
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  "info-products": ShieldAlert,
-  mlm: Network,
-  investment: TrendingUp,
-  "online-salon": Monitor,
-  religion: Landmark,
-  other: LayoutGrid,
-};
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -50,7 +33,7 @@ export default async function CategoryPage({ params }: Props) {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          {(() => { const Icon = CATEGORY_ICONS[slug] || LayoutGrid; return <Icon className="w-8 h-8 text-blue-600" strokeWidth={1.5} />; })()}
+          {(() => { const Icon = CATEGORY_CONFIG[slug]?.icon || DEFAULT_ICON; return <Icon className="w-8 h-8 text-blue-600" strokeWidth={1.5} />; })()}
           <h1 className="text-2xl font-bold text-gray-900">{category.name}</h1>
         </div>
         <p className="text-gray-600">

@@ -1,22 +1,5 @@
 import Link from "next/link";
-import {
-  ShieldAlert,
-  Network,
-  TrendingUp,
-  Monitor,
-  Landmark,
-  LayoutGrid,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-const CATEGORY_CONFIG: Record<string, { order: number; icon: LucideIcon }> = {
-  "info-products": { order: 0, icon: ShieldAlert },
-  mlm:             { order: 1, icon: Network },
-  investment:      { order: 2, icon: TrendingUp },
-  "online-salon":  { order: 3, icon: Monitor },
-  religion:        { order: 4, icon: Landmark },
-  other:           { order: 5, icon: LayoutGrid },
-};
+import { CATEGORY_CONFIG, DEFAULT_ICON } from "@/lib/category-config";
 
 interface CategoryNavProps {
   categories: { slug: string; name: string; icon: string | null }[];
@@ -32,7 +15,7 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
       {sorted.map((cat) => {
-        const Icon = CATEGORY_CONFIG[cat.slug]?.icon || LayoutGrid;
+        const Icon = CATEGORY_CONFIG[cat.slug]?.icon || DEFAULT_ICON;
         return (
           <Link
             key={cat.slug}
