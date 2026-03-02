@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import SearchBar from "@/components/SearchBar";
 import CategoryNav from "@/components/CategoryNav";
 import OrgCard from "@/components/OrgCard";
@@ -29,6 +30,17 @@ export default async function HomePage() {
   ]);
 
   const [orgCount, reviewCount, userCount] = stats;
+
+  const session = await auth();
+  const userId = session?.user?.id ? Number(session.user.id) : null;
+  const reviewIds = latestReviews.map((r) => r.id);
+  const userVotes = userId
+    ? await prisma.reviewVote.findMany({
+        where: { userId, reviewId: { in: reviewIds }, value: 1 },
+        select: { reviewId: true },
+      })
+    : [];
+  const votedReviewIds = new Set(userVotes.map((v) => v.reviewId));
 
   return (
     <div>
@@ -91,6 +103,7 @@ export default async function HomePage() {
             {latestReviews.map((review) => (
               <ReviewCard
                 key={review.id}
+                reviewId={review.id}
                 title={review.title}
                 body={review.body}
                 ratingOverall={review.ratingOverall}
@@ -107,6 +120,7 @@ export default async function HomePage() {
                 createdAt={review.createdAt.toISOString()}
                 orgName={review.org.name}
                 orgSlug={review.org.slug}
+                userVoted={votedReviewIds.has(review.id)}
               />
             ))}
           </div>

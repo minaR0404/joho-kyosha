@@ -34,6 +34,13 @@ export default async function MyPage() {
 
   const totalHelpful = user.reviews.reduce((sum, r) => sum + r.helpfulCount, 0);
 
+  // Fetch user's votes on own reviews
+  const userVotes = await prisma.reviewVote.findMany({
+    where: { userId: user.id, reviewId: { in: user.reviews.map((r) => r.id) }, value: 1 },
+    select: { reviewId: true },
+  });
+  const votedReviewIds = new Set(userVotes.map((v) => v.reviewId));
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Profile */}
@@ -98,7 +105,10 @@ export default async function MyPage() {
             </Link>
           </div>
         ) : (
-          <ReviewList reviews={JSON.parse(JSON.stringify(user.reviews))} />
+          <ReviewList reviews={JSON.parse(JSON.stringify(user.reviews.map((r) => ({
+            ...r,
+            userVoted: votedReviewIds.has(r.id),
+          }))))} />
         )}
       </section>
     </div>

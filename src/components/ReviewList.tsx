@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getRatingBgColor } from "@/lib/utils";
+import HelpfulButton from "./HelpfulButton";
 
 const PER_PAGE = 5;
 
@@ -11,8 +12,10 @@ interface Review {
   title: string;
   body: string;
   ratingOverall: number;
+  helpfulCount: number;
   createdAt: string;
   org: { slug: string; name: string; category: { name: string } };
+  userVoted?: boolean;
 }
 
 export default function ReviewList({ reviews }: { reviews: Review[] }) {
@@ -36,9 +39,16 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
                 </p>
                 <h3 className="font-medium text-gray-900 truncate">{review.title}</h3>
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">{review.body}</p>
-                <p className="text-xs text-gray-400 mt-2">
-                  {new Date(review.createdAt).toLocaleDateString("ja-JP")}
-                </p>
+                <div className="flex items-center gap-3 mt-2">
+                  <p className="text-xs text-gray-400">
+                    {new Date(review.createdAt).toLocaleDateString("ja-JP")}
+                  </p>
+                  <HelpfulButton
+                    reviewId={review.id}
+                    initialCount={review.helpfulCount}
+                    initialVoted={review.userVoted ?? false}
+                  />
+                </div>
               </div>
               <span className={`shrink-0 text-sm font-bold px-2 py-1 rounded ${getRatingBgColor(review.ratingOverall)}`}>
                 {review.ratingOverall.toFixed(1)}

@@ -16,7 +16,9 @@ export default function HelpfulButton({
   const [voted, setVoted] = useState(initialVoted);
   const [loading, setLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setLoading(true);
     try {
       const res = await fetch(`/api/reviews/${reviewId}/vote`, {
