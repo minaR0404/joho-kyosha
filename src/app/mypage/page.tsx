@@ -4,8 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getRatingBgColor } from "@/lib/utils";
 import { MessageSquare, ThumbsUp, Calendar } from "lucide-react";
-import EditProfileForm from "@/components/EditProfileForm";
-import ChangePasswordForm from "@/components/ChangePasswordForm";
+import AccountSettings from "@/components/AccountSettings";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -77,10 +76,10 @@ export default async function MyPage() {
       </div>
 
       {/* Settings */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <EditProfileForm currentName={user.displayName} />
-        <ChangePasswordForm />
-      </div>
+      <section className="mb-8">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">アカウント設定</h2>
+        <AccountSettings currentName={user.displayName} email={user.email || ""} />
+      </section>
 
       {/* Reviews */}
       <section>
