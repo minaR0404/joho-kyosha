@@ -16,10 +16,13 @@ export default function HelpfulButton({
   const [voted, setVoted] = useState(initialVoted);
   const [loading, setLoading] = useState(false);
 
+  const [showLoginHint, setShowLoginHint] = useState(false);
+
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setLoading(true);
+    setShowLoginHint(false);
     try {
       const res = await fetch(`/api/reviews/${reviewId}/vote`, {
         method: "POST",
@@ -30,6 +33,8 @@ export default function HelpfulButton({
         const data = await res.json();
         setCount(data.helpfulCount);
         setVoted(!voted);
+      } else if (res.status === 401) {
+        setShowLoginHint(true);
       }
     } catch {
       // ignore
@@ -39,6 +44,7 @@ export default function HelpfulButton({
   };
 
   return (
+    <>
     <button
       onClick={handleClick}
       disabled={loading}
@@ -52,5 +58,11 @@ export default function HelpfulButton({
       <span>参考になった</span>
       {count > 0 && <span>{count}</span>}
     </button>
+    {showLoginHint && (
+      <span className="text-xs text-gray-400 ml-1">
+        <a href="/auth/login" className="hover:underline" onClick={(e) => e.stopPropagation()}>ログイン</a>すると投票できます
+      </span>
+    )}
+    </>
   );
 }
