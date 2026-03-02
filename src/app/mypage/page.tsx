@@ -36,41 +36,44 @@ export default async function MyPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Profile Card */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-16 h-16 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-2xl font-bold shrink-0">
-            {user.displayName.charAt(0)}
+      {/* Profile */}
+      <div className="bg-white border border-gray-200 rounded-lg p-8 mb-4 flex flex-col items-center text-center">
+        <div className="w-20 h-20 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-3xl font-bold mb-3">
+          {user.displayName.charAt(0)}
+        </div>
+        <h1 className="text-xl font-bold text-gray-900">{user.displayName}</h1>
+        <p className="text-sm text-gray-500 mt-1">{user.email}</p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center shrink-0">
+            <MessageSquare className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{user.displayName}</h1>
-            <p className="text-sm text-gray-500">{user.email}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-gray-500 mb-1">
-              <MessageSquare className="w-4 h-4" />
-            </div>
             <p className="text-2xl font-bold text-gray-900">{user.reviews.length}</p>
             <p className="text-xs text-gray-500">口コミ</p>
           </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-gray-500 mb-1">
-              <ThumbsUp className="w-4 h-4" />
-            </div>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
+          <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
+            <ThumbsUp className="w-5 h-5 text-green-600" />
+          </div>
+          <div>
             <p className="text-2xl font-bold text-gray-900">{totalHelpful}</p>
             <p className="text-xs text-gray-500">参考になった</p>
           </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-gray-500 mb-1">
-              <Calendar className="w-4 h-4" />
-            </div>
-            <p className="text-2xl font-bold text-gray-900">
+        </div>
+        <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
+          <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center shrink-0">
+            <Calendar className="w-5 h-5 text-purple-600" />
+          </div>
+          <div>
+            <p className="text-lg font-bold text-gray-900">
               {user.createdAt.toLocaleDateString("ja-JP", { year: "numeric", month: "short" })}
             </p>
-            <p className="text-xs text-gray-500">登録</p>
+            <p className="text-xs text-gray-500">登録日</p>
           </div>
         </div>
       </div>
