@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search, ShieldAlert, Network, TrendingUp, Monitor, Landmark, LayoutGrid } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { Menu, X, Search, User, LogOut, ShieldAlert, Network, TrendingUp, Monitor, Landmark, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const MENU_CATEGORIES = [
@@ -17,6 +18,7 @@ const MENU_CATEGORIES = [
 
 export default function Header() {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -63,12 +65,27 @@ export default function Header() {
             >
               このサイトについて
             </Link>
-            <Link
-              href="/auth/login"
-              className="text-sm px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition-colors"
-            >
-              ログイン
-            </Link>
+            {session?.user ? (
+              <Link
+                href="/mypage"
+                className={cn(
+                  "text-sm px-3 py-2 rounded-md transition-colors flex items-center gap-1.5",
+                  pathname === "/mypage"
+                    ? "bg-blue-50 text-blue-700"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                )}
+              >
+                <User className="w-4 h-4" />
+                <span className="hidden sm:inline">マイページ</span>
+              </Link>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="text-sm px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition-colors"
+              >
+                ログイン
+              </Link>
+            )}
           </nav>
         </div>
       </div>
@@ -124,6 +141,15 @@ export default function Header() {
               >
                 組織を登録する
               </Link>
+              {session?.user && (
+                <button
+                  onClick={() => { setMenuOpen(false); signOut({ callbackUrl: "/" }); }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  ログアウト
+                </button>
+              )}
             </div>
           </div>
         </div>
