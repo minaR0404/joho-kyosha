@@ -45,6 +45,16 @@ export default async function OrgDetailPage({ params }: Props) {
 
   if (!org || (org.status === "DELETED" && !admin)) notFound();
 
+  // Fetch user's existing votes
+  const userId = session?.user?.id ? Number(session.user.id) : null;
+  const userVotes = userId
+    ? await prisma.reviewVote.findMany({
+        where: { userId, reviewId: { in: org.reviews.map((r) => r.id) }, value: 1 },
+        select: { reviewId: true },
+      })
+    : [];
+  const votedReviewIds = new Set(userVotes.map((v) => v.reviewId));
+
   // Aggregate review tags
   const reviewTagCounts: Record<string, { name: string; count: number }> = {};
   for (const review of org.reviews) {
@@ -173,6 +183,7 @@ export default async function OrgDetailPage({ params }: Props) {
               {org.reviews.map((review) => (
                 <ReviewCard
                   key={review.id}
+                  reviewId={review.id}
                   title={review.title}
                   body={review.body}
                   ratingOverall={review.ratingOverall}
@@ -187,6 +198,7 @@ export default async function OrgDetailPage({ params }: Props) {
                   displayName={review.user.displayName}
                   helpfulCount={review.helpfulCount}
                   createdAt={review.createdAt.toISOString()}
+                  userVoted={votedReviewIds.has(review.id)}
                 />
               ))}
             </div>

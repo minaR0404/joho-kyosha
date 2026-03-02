@@ -1,4 +1,5 @@
 import { RatingIconsDisplay } from "./RatingIcons";
+import HelpfulButton from "./HelpfulButton";
 
 interface ReviewCardProps {
   title: string;
@@ -17,6 +18,8 @@ interface ReviewCardProps {
   createdAt: string;
   orgName?: string;
   orgSlug?: string;
+  reviewId?: number;
+  userVoted?: boolean;
 }
 
 export default function ReviewCard({
@@ -31,6 +34,8 @@ export default function ReviewCard({
   createdAt,
   orgName,
   orgSlug,
+  reviewId,
+  userVoted = false,
 }: ReviewCardProps) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-5">
@@ -63,8 +68,8 @@ export default function ReviewCard({
         {period && <span>時期: {period}</span>}
         <span>{isAnonymous ? "匿名" : displayName}</span>
         <span>{new Date(createdAt).toLocaleDateString("ja-JP")}</span>
-        {helpfulCount > 0 && (
-          <span>参考になった: {helpfulCount}</span>
+        {reviewId != null && (
+          <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
         )}
       </div>
     </div>
