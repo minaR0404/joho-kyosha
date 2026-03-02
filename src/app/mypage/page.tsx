@@ -2,9 +2,9 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getRatingBgColor } from "@/lib/utils";
 import { MessageSquare, ThumbsUp, Calendar } from "lucide-react";
 import AccountSettings from "@/components/AccountSettings";
+import ReviewList from "@/components/ReviewList";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -98,31 +98,7 @@ export default async function MyPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
-            {user.reviews.map((review) => (
-              <Link
-                key={review.id}
-                href={`/org/${review.org.slug}`}
-                className="block bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs text-gray-500 mb-1">
-                      {review.org.category.name} &gt; {review.org.name}
-                    </p>
-                    <h3 className="font-medium text-gray-900 truncate">{review.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{review.body}</p>
-                    <p className="text-xs text-gray-400 mt-2">
-                      {review.createdAt.toLocaleDateString("ja-JP")}
-                    </p>
-                  </div>
-                  <span className={`shrink-0 text-sm font-bold px-2 py-1 rounded ${getRatingBgColor(review.ratingOverall)}`}>
-                    {review.ratingOverall.toFixed(1)}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <ReviewList reviews={JSON.parse(JSON.stringify(user.reviews))} />
         )}
       </section>
     </div>
