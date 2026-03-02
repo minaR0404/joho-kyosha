@@ -3,6 +3,9 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getRatingBgColor } from "@/lib/utils";
+import { MessageSquare, ThumbsUp, Calendar } from "lucide-react";
+import EditProfileForm from "@/components/EditProfileForm";
+import ChangePasswordForm from "@/components/ChangePasswordForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -30,15 +33,56 @@ export default async function MyPage() {
 
   if (!user) redirect("/auth/login");
 
+  const totalHelpful = user.reviews.reduce((sum, r) => sum + r.helpfulCount, 0);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">マイページ</h1>
-        <p className="text-gray-600 text-sm">
-          {user.displayName} さん（{user.email}）
-        </p>
+      {/* Profile Card */}
+      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-16 h-16 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-2xl font-bold shrink-0">
+            {user.displayName.charAt(0)}
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">{user.displayName}</h1>
+            <p className="text-sm text-gray-500">{user.email}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 text-gray-500 mb-1">
+              <MessageSquare className="w-4 h-4" />
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{user.reviews.length}</p>
+            <p className="text-xs text-gray-500">口コミ</p>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 text-gray-500 mb-1">
+              <ThumbsUp className="w-4 h-4" />
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{totalHelpful}</p>
+            <p className="text-xs text-gray-500">参考になった</p>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 text-gray-500 mb-1">
+              <Calendar className="w-4 h-4" />
+            </div>
+            <p className="text-2xl font-bold text-gray-900">
+              {user.createdAt.toLocaleDateString("ja-JP", { year: "numeric", month: "short" })}
+            </p>
+            <p className="text-xs text-gray-500">登録</p>
+          </div>
+        </div>
       </div>
 
+      {/* Settings */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <EditProfileForm currentName={user.displayName} />
+        <ChangePasswordForm />
+      </div>
+
+      {/* Reviews */}
       <section>
         <h2 className="text-lg font-bold text-gray-900 mb-4">
           投稿した口コミ（{user.reviews.length}件）
