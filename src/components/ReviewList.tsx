@@ -125,7 +125,7 @@ export default function ReviewList({ reviews: initialReviews }: { reviews: Revie
                     <MoreVertical className="w-4 h-4" />
                   </button>
                   {menuOpenId === review.id && (
-                    <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[120px]">
+                    <div className="absolute -right-2 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1">
                       {confirmingId === review.id ? (
                         <div className="px-3 py-2">
                           <p className="text-xs text-red-600 mb-2">本当に削除しますか？</p>
@@ -148,7 +148,7 @@ export default function ReviewList({ reviews: initialReviews }: { reviews: Revie
                       ) : (
                         <button
                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setConfirmingId(review.id); }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors cursor-pointer whitespace-nowrap"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           削除
