@@ -37,25 +37,18 @@ export default function ReviewCard({
   reviewId,
   userVoted = false,
 }: ReviewCardProps) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5">
+  const href = reviewId != null && orgSlug ? `/org/${orgSlug}/review/${reviewId}` : undefined;
+
+  const content = (
+    <>
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
           {orgName && orgSlug && (
-            <a
-              href={`/org/${orgSlug}`}
-              className="block text-sm text-blue-600 hover:underline mb-0.5"
-            >
+            <span className="block text-sm text-blue-600 mb-0.5">
               {orgName}
-            </a>
+            </span>
           )}
-          {reviewId != null && orgSlug ? (
-            <a href={`/org/${orgSlug}/review/${reviewId}`} className="block font-bold text-gray-900 hover:text-blue-600 transition-colors">
-              {title}
-            </a>
-          ) : (
-            <h4 className="font-bold text-gray-900">{title}</h4>
-          )}
+          <h4 className="font-bold text-gray-900">{title}</h4>
         </div>
         <div className="flex-shrink-0 flex items-center gap-2">
           <RatingIconsDisplay rating={ratingOverall} />
@@ -78,6 +71,20 @@ export default function ReviewCard({
           <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
         )}
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a href={href} className="block bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-5">
+      {content}
     </div>
   );
 }
