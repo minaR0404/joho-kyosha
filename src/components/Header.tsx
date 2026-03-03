@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, Search, User, LogOut, ShieldAlert, Network, TrendingUp, Monitor, Landmark, LayoutGrid } from "lucide-react";
+import { Menu, X, Search, User, LogOut, Home, ShieldAlert, Network, TrendingUp, Monitor, Landmark, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const MENU_CATEGORIES = [
@@ -119,6 +119,14 @@ export default function Header() {
               </div>
             </div>
             <div className="border-t border-gray-100 pt-3 flex flex-col sm:flex-row gap-1">
+              <Link
+                href="/"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50"
+              >
+                <Home className="w-4 h-4" />
+                ホーム
+              </Link>
               <Link
                 href="/search"
                 onClick={() => setMenuOpen(false)}
