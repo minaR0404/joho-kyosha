@@ -53,14 +53,14 @@ export default async function HomePage() {
           </p>
           <SearchBar size="lg" />
           <div className="flex justify-center gap-20 mt-10">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
+            <a href="#categories" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
               <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{orgCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">登録組織</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
+            </a>
+            <a href="#latest-reviews" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
               <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{reviewCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">口コミ</span>
-            </div>
+            </a>
             <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
               <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{userCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">ユーザー</span>
@@ -71,7 +71,7 @@ export default async function HomePage() {
 
       <div className="max-w-6xl mx-auto px-4 py-10">
         {/* Categories */}
-        <section className="mb-12">
+        <section id="categories" className="mb-12 scroll-mt-20">
           <h2 className="text-xl font-bold text-gray-900 mb-4">カテゴリから探す</h2>
           <CategoryNav categories={categories} />
         </section>
@@ -97,7 +97,7 @@ export default async function HomePage() {
         </section>
 
         {/* Latest Reviews */}
-        <section>
+        <section id="latest-reviews" className="scroll-mt-20">
           <h2 className="text-xl font-bold text-gray-900 mb-4">最新の口コミ</h2>
           <div className="space-y-4">
             {latestReviews.map((review) => (
