@@ -49,7 +49,13 @@ export default function ReviewCard({
               {orgName}
             </a>
           )}
-          <h4 className="font-bold text-gray-900">{title}</h4>
+          {reviewId != null && orgSlug ? (
+            <a href={`/org/${orgSlug}/review/${reviewId}`} className="font-bold text-gray-900 hover:text-blue-600 transition-colors">
+              {title}
+            </a>
+          ) : (
+            <h4 className="font-bold text-gray-900">{title}</h4>
+          )}
         </div>
         <div className="flex-shrink-0 flex items-center gap-2">
           <RatingIconsDisplay rating={ratingOverall} />

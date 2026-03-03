@@ -184,6 +184,7 @@ export default async function OrgDetailPage({ params }: Props) {
                 <ReviewCard
                   key={review.id}
                   reviewId={review.id}
+                  orgSlug={org.slug}
                   title={review.title}
                   body={review.body}
                   ratingOverall={review.ratingOverall}
