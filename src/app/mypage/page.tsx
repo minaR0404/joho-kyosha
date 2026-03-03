@@ -24,7 +24,7 @@ export default async function MyPage() {
       reviews: {
         orderBy: { createdAt: "desc" },
         include: {
-          org: { select: { slug: true, name: true, category: { select: { name: true } } } },
+          org: { select: { slug: true, name: true, category: { select: { slug: true, name: true } } } },
         },
       },
     },

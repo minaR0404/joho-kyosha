@@ -14,7 +14,7 @@ interface Review {
   ratingOverall: number;
   helpfulCount: number;
   createdAt: string;
-  org: { slug: string; name: string; category: { name: string } };
+  org: { slug: string; name: string; category: { slug: string; name: string } };
   userVoted?: boolean;
 }
 
@@ -34,7 +34,13 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-gray-500 mb-1">
-                  {review.org.category.name} &gt;{" "}
+                  <Link
+                    href={`/category/${review.org.category.slug}`}
+                    className="relative z-10 hover:text-blue-600 hover:underline"
+                  >
+                    {review.org.category.name}
+                  </Link>
+                  {" "}&gt;{" "}
                   <Link
                     href={`/org/${review.org.slug}`}
                     className="relative z-10 text-blue-600 hover:underline"
