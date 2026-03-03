@@ -27,19 +27,31 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
     <>
       <div className="space-y-4">
         {visible.map((review) => (
-          <Link
+          <div
             key={review.id}
-            href={`/org/${review.org.slug}`}
-            className="block bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+            className="relative bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-gray-500 mb-1">
-                  {review.org.category.name} &gt; {review.org.name}
+                  {review.org.category.name} &gt;{" "}
+                  <Link
+                    href={`/org/${review.org.slug}`}
+                    className="relative z-10 text-blue-600 hover:underline"
+                  >
+                    {review.org.name}
+                  </Link>
                 </p>
-                <h3 className="font-medium text-gray-900 truncate">{review.title}</h3>
+                <h3 className="font-medium text-gray-900 truncate">
+                  <Link
+                    href={`/org/${review.org.slug}/review/${review.id}`}
+                    className="after:absolute after:inset-0"
+                  >
+                    {review.title}
+                  </Link>
+                </h3>
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">{review.body}</p>
-                <div className="flex items-center gap-3 mt-2">
+                <div className="relative z-10 flex items-center gap-3 mt-2">
                   <p className="text-xs text-gray-400">
                     {new Date(review.createdAt).toLocaleDateString("ja-JP")}
                   </p>
@@ -54,7 +66,7 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
                 {review.ratingOverall.toFixed(1)}
               </span>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       {hasMore && (
