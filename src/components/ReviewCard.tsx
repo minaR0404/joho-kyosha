@@ -44,13 +44,13 @@ export default function ReviewCard({
           {orgName && orgSlug && (
             <a
               href={`/org/${orgSlug}`}
-              className="text-sm text-blue-600 hover:underline"
+              className="block text-sm text-blue-600 hover:underline mb-0.5"
             >
               {orgName}
             </a>
           )}
           {reviewId != null && orgSlug ? (
-            <a href={`/org/${orgSlug}/review/${reviewId}`} className="font-bold text-gray-900 hover:text-blue-600 transition-colors">
+            <a href={`/org/${orgSlug}/review/${reviewId}`} className="block font-bold text-gray-900 hover:text-blue-600 transition-colors">
               {title}
             </a>
           ) : (
