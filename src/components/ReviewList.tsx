@@ -127,9 +127,9 @@ export default function ReviewList({ reviews: initialReviews }: { reviews: Revie
                   {menuOpenId === review.id && (
                     <div className="absolute -right-2 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1">
                       {confirmingId === review.id ? (
-                        <div className="px-3 py-2">
+                        <div className="px-3 py-2 whitespace-nowrap">
                           <p className="text-xs text-red-600 mb-2">本当に削除しますか？</p>
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 justify-center">
                             <button
                               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(review.id); }}
                               disabled={deletingId === review.id}
