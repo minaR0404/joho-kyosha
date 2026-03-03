@@ -39,16 +39,27 @@ export default function ReviewCard({
 }: ReviewCardProps) {
   const href = reviewId != null && orgSlug ? `/org/${orgSlug}/review/${reviewId}` : undefined;
 
-  const content = (
-    <>
+  return (
+    <div className="relative bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
           {orgName && orgSlug && (
-            <span className="block text-sm text-blue-600 mb-0.5">
+            <a
+              href={`/org/${orgSlug}`}
+              className="relative z-10 block text-sm text-blue-600 mb-0.5 hover:underline"
+            >
               {orgName}
-            </span>
+            </a>
           )}
-          <h4 className="font-bold text-gray-900">{title}</h4>
+          {href ? (
+            <h4 className="font-bold text-gray-900">
+              <a href={href} className="after:absolute after:inset-0">
+                {title}
+              </a>
+            </h4>
+          ) : (
+            <h4 className="font-bold text-gray-900">{title}</h4>
+          )}
         </div>
         <div className="flex-shrink-0 flex items-center gap-2">
           <RatingIconsDisplay rating={ratingOverall} />
@@ -62,7 +73,7 @@ export default function ReviewCard({
         {body}
       </p>
 
-      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3">
+      <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3">
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
         {period && <span>時期: {period}</span>}
         <span>{isAnonymous ? "匿名" : displayName}</span>
@@ -71,20 +82,6 @@ export default function ReviewCard({
           <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
         )}
       </div>
-    </>
-  );
-
-  if (href) {
-    return (
-      <a href={href} className="block bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5">
-      {content}
     </div>
   );
 }
