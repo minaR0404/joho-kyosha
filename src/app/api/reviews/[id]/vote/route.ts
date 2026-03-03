@@ -21,6 +21,15 @@ export async function POST(
       return NextResponse.json({ error: "無効な投票です" }, { status: 400 });
     }
 
+    // Check review exists and not deleted
+    const review = await prisma.review.findUnique({
+      where: { id: reviewId },
+      select: { deletedAt: true },
+    });
+    if (!review || review.deletedAt) {
+      return NextResponse.json({ error: "口コミが見つかりません" }, { status: 404 });
+    }
+
     const existing = await prisma.reviewVote.findUnique({
       where: { reviewId_userId: { reviewId, userId } },
     });

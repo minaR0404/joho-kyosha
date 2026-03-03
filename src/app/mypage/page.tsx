@@ -22,6 +22,7 @@ export default async function MyPage() {
     where: { id: Number(session.user.id) },
     include: {
       reviews: {
+        where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
         include: {
           org: { select: { slug: true, name: true, category: { select: { slug: true, name: true } } } },

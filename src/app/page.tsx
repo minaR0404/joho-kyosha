@@ -15,6 +15,7 @@ export default async function HomePage() {
       include: { category: true },
     }),
     prisma.review.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
       take: 5,
       include: {
@@ -24,7 +25,7 @@ export default async function HomePage() {
     }),
     Promise.all([
       prisma.organization.count({ where: { status: { not: "DELETED" } } }),
-      prisma.review.count(),
+      prisma.review.count({ where: { deletedAt: null } }),
       prisma.user.count(),
     ]),
   ]);

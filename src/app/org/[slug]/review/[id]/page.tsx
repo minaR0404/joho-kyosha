@@ -7,6 +7,7 @@ import RatingRadar from "@/components/RatingRadar";
 import RatingBadge from "@/components/RatingBadge";
 import TagBadge from "@/components/TagBadge";
 import HelpfulButton from "@/components/HelpfulButton";
+import ReviewDeleteButton from "@/components/ReviewDeleteButton";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string; id: string }> };
@@ -39,10 +40,11 @@ export default async function ReviewDetailPage({ params }: Props) {
     },
   });
 
-  if (!review || review.org.slug !== slug) notFound();
+  if (!review || review.deletedAt || review.org.slug !== slug) notFound();
 
   const session = await auth();
   const userId = session?.user?.id ? Number(session.user.id) : null;
+  const isOwner = userId === review.user.id;
   const userVoted = userId
     ? !!(await prisma.reviewVote.findUnique({
         where: { reviewId_userId: { reviewId: review.id, userId } },
@@ -106,6 +108,12 @@ export default async function ReviewDetailPage({ params }: Props) {
                 initialCount={review.helpfulCount}
                 initialVoted={userVoted}
               />
+              {isOwner && (
+                <ReviewDeleteButton
+                  reviewId={review.id}
+                  redirectTo={`/org/${review.org.slug}`}
+                />
+              )}
             </div>
           </div>
         </div>

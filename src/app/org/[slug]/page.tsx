@@ -31,6 +31,7 @@ export default async function OrgDetailPage({ params }: Props) {
       category: true,
       tags: { include: { tag: true } },
       reviews: {
+        where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
         include: {
           user: { select: { id: true, displayName: true, image: true } },

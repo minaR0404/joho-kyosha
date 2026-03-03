@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
 
     // Update organization's average rating and review count
     const agg = await prisma.review.aggregate({
-      where: { orgId: Number(orgId) },
+      where: { orgId: Number(orgId), deletedAt: null },
       _avg: { ratingOverall: true },
       _count: true,
     });
