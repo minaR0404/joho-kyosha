@@ -61,10 +61,10 @@ export default async function HomePage() {
               <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{reviewCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">口コミ</span>
             </a>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15">
+            <a href={session?.user ? "/mypage" : "/auth/login"} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
               <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{userCount}</span>
               <span className="text-xs text-blue-200 mt-2 tracking-wide">ユーザー</span>
-            </div>
+            </a>
           </div>
         </div>
       </section>
