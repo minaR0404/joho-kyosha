@@ -7,10 +7,12 @@ export default function HelpfulButton({
   reviewId,
   initialCount,
   initialVoted,
+  size = "sm",
 }: {
   reviewId: number;
   initialCount: number;
   initialVoted: boolean;
+  size?: "sm" | "md";
 }) {
   const [count, setCount] = useState(initialCount);
   const [voted, setVoted] = useState(initialVoted);
@@ -48,13 +50,13 @@ export default function HelpfulButton({
     <button
       onClick={handleClick}
       disabled={loading}
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs transition-colors cursor-pointer ${
-        voted
-          ? "bg-blue-100 text-blue-700"
-          : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-      } disabled:opacity-50`}
+      className={`inline-flex items-center rounded transition-colors cursor-pointer disabled:opacity-50 ${
+        size === "md"
+          ? `gap-1.5 px-3 py-1 text-sm border ${voted ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"}`
+          : `gap-1 px-2 py-0.5 text-xs ${voted ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`
+      }`}
     >
-      <ThumbsUp className="w-3 h-3" />
+      <ThumbsUp className={size === "md" ? "w-4 h-4" : "w-3 h-3"} />
       <span>参考になった</span>
       {count > 0 && <span>{count}</span>}
     </button>

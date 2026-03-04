@@ -98,17 +98,22 @@ export default async function ReviewDetailPage({ params }: Props) {
               </div>
             )}
 
-            {/* Meta + Helpful */}
+            {/* Helpful */}
+            <div className="mb-4">
+              <HelpfulButton
+                reviewId={review.id}
+                initialCount={review.helpfulCount}
+                initialVoted={userVoted}
+                size="md"
+              />
+            </div>
+
+            {/* Meta */}
             <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-4">
               <span className="px-2 py-0.5 bg-gray-100 rounded">{review.relationship}</span>
               {review.period && <span>時期: {review.period}</span>}
               <span>{review.isAnonymous ? "匿名" : review.user.displayName}</span>
               <span>{review.createdAt.toLocaleDateString("ja-JP")}</span>
-              <HelpfulButton
-                reviewId={review.id}
-                initialCount={review.helpfulCount}
-                initialVoted={userVoted}
-              />
               {isOwner && (
                 <ReviewDeleteButton
                   reviewId={review.id}
