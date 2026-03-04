@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef, useState, useEffect } from "react";
 import { RatingIconsDisplay } from "./RatingIcons";
 import HelpfulButton from "./HelpfulButton";
 
@@ -38,6 +41,15 @@ export default function ReviewCard({
   userVoted = false,
 }: ReviewCardProps) {
   const href = reviewId != null && orgSlug ? `/org/${orgSlug}/review/${reviewId}` : undefined;
+  const bodyRef = useRef<HTMLParagraphElement>(null);
+  const [isClamped, setIsClamped] = useState(false);
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (el) {
+      setIsClamped(el.scrollHeight > el.clientHeight);
+    }
+  }, [body]);
 
   return (
     <div className="relative bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
@@ -69,9 +81,12 @@ export default function ReviewCard({
         </div>
       </div>
 
-      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap mb-3">
+      <p ref={bodyRef} className={`text-sm text-gray-700 leading-relaxed whitespace-pre-wrap line-clamp-3 ${isClamped ? "mb-1" : "mb-3"}`}>
         {body}
       </p>
+      {isClamped && href && (
+        <p className="text-xs text-blue-600 mb-3">続きを読む</p>
+      )}
 
       <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3">
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
