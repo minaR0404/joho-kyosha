@@ -81,12 +81,14 @@ export default function ReviewCard({
         </div>
       </div>
 
-      <p ref={bodyRef} className={`text-sm text-gray-700 leading-relaxed whitespace-pre-wrap line-clamp-3 ${isClamped ? "mb-1" : "mb-3"}`}>
-        {body}
-      </p>
-      {isClamped && href && (
-        <p className="text-xs text-blue-600 mb-3">続きを読む</p>
-      )}
+      <div className="relative mb-3">
+        <p ref={bodyRef} className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden">
+          {body}
+        </p>
+        {isClamped && (
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
+        )}
+      </div>
 
       <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3">
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
