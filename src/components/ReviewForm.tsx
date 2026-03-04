@@ -148,20 +148,20 @@ export default function ReviewForm({ orgId, orgSlug, tags }: { orgId: number; or
         <textarea
           value={body}
           onChange={(e) => {
-            setBody(e.target.value.slice(0, 2000));
+            setBody(e.target.value.slice(0, 4000));
             const el = e.target;
             el.style.height = "auto";
             el.style.height = `${el.scrollHeight}px`;
           }}
           required
-          maxLength={2000}
+          maxLength={4000}
           rows={4}
           placeholder="具体的な体験を共有してください。他の方が判断する際の参考になります。"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden"
         />
-        {body.length > 1800 && (
-          <p className={`text-xs text-right mt-1 ${body.length >= 2000 ? "text-red-500" : "text-gray-400"}`}>
-            {body.length}/2000
+        {body.length > 3600 && (
+          <p className={`text-xs text-right mt-1 ${body.length >= 4000 ? "text-red-500" : "text-gray-400"}`}>
+            {body.length}/4000
           </p>
         )}
       </div>
