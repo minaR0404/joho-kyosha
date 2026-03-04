@@ -75,8 +75,8 @@ export default async function ReviewDetailPage({ params }: Props) {
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             {/* Header */}
             <div className="flex items-start justify-between gap-3 mb-4">
-              <h1 className="text-xl font-bold text-gray-900">{review.title}</h1>
-              <div className="flex items-center gap-2 shrink-0">
+              <h1 className="text-xl font-bold text-gray-900 mt-1">{review.title}</h1>
+              <div className="flex items-center gap-2 shrink-0 mt-1">
                 <RatingIconsDisplay rating={review.ratingOverall} size="md" />
                 <span className="text-lg font-bold text-gray-700">
                   {review.ratingOverall.toFixed(1)}
@@ -85,7 +85,7 @@ export default async function ReviewDetailPage({ params }: Props) {
             </div>
 
             {/* Body */}
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mb-6">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mt-12 mb-6">
               {review.body}
             </p>
 
