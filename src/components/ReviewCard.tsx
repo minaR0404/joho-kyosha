@@ -81,7 +81,7 @@ export default function ReviewCard({
         </div>
       </div>
 
-      <div className="relative mb-3">
+      <div className="relative mb-3 pointer-events-none">
         <p ref={bodyRef} className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden">
           {body}
         </p>
@@ -90,13 +90,15 @@ export default function ReviewCard({
         )}
       </div>
 
-      <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3">
+      <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3 pointer-events-none">
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
         {period && <span>時期: {period}</span>}
         <span>{isAnonymous ? "匿名" : displayName}</span>
         <span>{new Date(createdAt).toLocaleDateString("ja-JP")}</span>
         {reviewId != null && (
-          <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
+          <span className="pointer-events-auto">
+            <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
+          </span>
         )}
       </div>
     </div>
