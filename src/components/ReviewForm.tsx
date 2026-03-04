@@ -142,11 +142,16 @@ export default function ReviewForm({ orgId, orgSlug, tags }: { orgId: number; or
         </label>
         <textarea
           value={body}
-          onChange={(e) => setBody(e.target.value)}
+          onChange={(e) => {
+            setBody(e.target.value);
+            const el = e.target;
+            el.style.height = "auto";
+            el.style.height = `${el.scrollHeight}px`;
+          }}
           required
-          rows={6}
+          rows={4}
           placeholder="具体的な体験を共有してください。他の方が判断する際の参考になります。"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden"
         />
       </div>
 
