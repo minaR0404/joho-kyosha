@@ -131,31 +131,33 @@ export default async function ReviewDetailPage({ params }: Props) {
               ratingTransparency={review.ratingTransparency}
               ratingExit={review.ratingExit}
             />
-            <div className="space-y-2 mt-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">危険度</span>
-                <span className="font-medium">{review.ratingDanger}</span>
+            <div className="mt-3 text-sm max-w-[260px] mx-auto">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">危険度</span>
+                  <span className="font-medium">{review.ratingDanger.toFixed(1)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">金銭的リスク</span>
+                  <span className="font-medium">{review.ratingCost.toFixed(1)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">勧誘の強さ</span>
+                  <span className="font-medium">{review.ratingPressure.toFixed(1)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">情報の不透明さ</span>
+                  <span className="font-medium">{review.ratingTransparency.toFixed(1)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">脱退の難しさ</span>
+                  <span className="font-medium">{review.ratingExit.toFixed(1)}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">金銭的リスク</span>
-                <span className="font-medium">{review.ratingCost}</span>
+              <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between items-center">
+                <span className="font-bold text-gray-700">総合スコア</span>
+                <span className={`text-lg font-bold ${getRatingTextColor(review.ratingOverall)}`}>{review.ratingOverall.toFixed(1)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">勧誘の強さ</span>
-                <span className="font-medium">{review.ratingPressure}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">情報の不透明さ</span>
-                <span className="font-medium">{review.ratingTransparency}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">脱退の難しさ</span>
-                <span className="font-medium">{review.ratingExit}</span>
-              </div>
-            </div>
-            <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between items-center">
-              <span className="text-sm font-bold text-gray-700">総合スコア</span>
-              <span className={`text-lg font-bold ${getRatingTextColor(review.ratingOverall)}`}>{review.ratingOverall.toFixed(1)}</span>
             </div>
           </div>
 

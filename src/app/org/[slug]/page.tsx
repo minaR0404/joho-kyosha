@@ -214,31 +214,33 @@ export default async function OrgDetailPage({ params }: Props) {
             <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4 sticky top-20">
               <h3 className="font-bold text-gray-900 mb-3">評価レーダー</h3>
               <RatingRadar {...avgRatings} />
-              <div className="space-y-2 mt-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">危険度</span>
-                  <span className="font-medium">{avgRatings.ratingDanger.toFixed(1)}</span>
+              <div className="mt-3 text-sm max-w-[260px] mx-auto">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">危険度</span>
+                    <span className="font-medium">{avgRatings.ratingDanger.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">金銭的リスク</span>
+                    <span className="font-medium">{avgRatings.ratingCost.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">勧誘の強さ</span>
+                    <span className="font-medium">{avgRatings.ratingPressure.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">情報の不透明さ</span>
+                    <span className="font-medium">{avgRatings.ratingTransparency.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">脱退の難しさ</span>
+                    <span className="font-medium">{avgRatings.ratingExit.toFixed(1)}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">金銭的リスク</span>
-                  <span className="font-medium">{avgRatings.ratingCost.toFixed(1)}</span>
+                <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between items-center">
+                  <span className="font-bold text-gray-700">総合スコア</span>
+                  <span className={`text-lg font-bold ${getRatingTextColor(org.avgRating)}`}>{org.avgRating.toFixed(1)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">勧誘の強さ</span>
-                  <span className="font-medium">{avgRatings.ratingPressure.toFixed(1)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">情報の不透明さ</span>
-                  <span className="font-medium">{avgRatings.ratingTransparency.toFixed(1)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">脱退の難しさ</span>
-                  <span className="font-medium">{avgRatings.ratingExit.toFixed(1)}</span>
-                </div>
-              </div>
-              <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between items-center">
-                <span className="text-sm font-bold text-gray-700">総合スコア</span>
-                <span className={`text-lg font-bold ${getRatingTextColor(org.avgRating)}`}>{org.avgRating.toFixed(1)}</span>
               </div>
             </div>
           )}
