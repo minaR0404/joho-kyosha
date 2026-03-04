@@ -3,6 +3,7 @@ import { auth, isAdmin } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import RatingBadge from "@/components/RatingBadge";
+import { getRatingTextColor } from "@/lib/utils";
 import RatingRadar from "@/components/RatingRadar";
 import ReviewCard from "@/components/ReviewCard";
 import TagBadge from "@/components/TagBadge";
@@ -234,6 +235,10 @@ export default async function OrgDetailPage({ params }: Props) {
                   <span className="text-gray-600">脱退の難しさ</span>
                   <span className="font-medium">{avgRatings.ratingExit.toFixed(1)}</span>
                 </div>
+              </div>
+              <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between items-center">
+                <span className="text-sm font-bold text-gray-700">総合スコア</span>
+                <span className={`text-lg font-bold ${getRatingTextColor(org.avgRating)}`}>{org.avgRating.toFixed(1)}</span>
               </div>
             </div>
           )}

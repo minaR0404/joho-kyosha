@@ -5,6 +5,7 @@ import Link from "next/link";
 import { RatingIconsDisplay } from "@/components/RatingIcons";
 import RatingRadar from "@/components/RatingRadar";
 import RatingBadge from "@/components/RatingBadge";
+import { getRatingTextColor } from "@/lib/utils";
 import TagBadge from "@/components/TagBadge";
 import HelpfulButton from "@/components/HelpfulButton";
 import ReviewDeleteButton from "@/components/ReviewDeleteButton";
@@ -151,6 +152,10 @@ export default async function ReviewDetailPage({ params }: Props) {
                 <span className="text-gray-600">脱退の難しさ</span>
                 <span className="font-medium">{review.ratingExit}</span>
               </div>
+            </div>
+            <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between items-center">
+              <span className="text-sm font-bold text-gray-700">総合スコア</span>
+              <span className={`text-lg font-bold ${getRatingTextColor(review.ratingOverall)}`}>{review.ratingOverall.toFixed(1)}</span>
             </div>
           </div>
 

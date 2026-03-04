@@ -28,6 +28,13 @@ export function getRatingBgColor(rating: number): string {
   return "bg-red-100 text-red-800";
 }
 
+export function getRatingTextColor(rating: number): string {
+  if (rating < 2) return "text-green-600";
+  if (rating < 3) return "text-yellow-600";
+  if (rating < 4) return "text-orange-600";
+  return "text-red-600";
+}
+
 export function getRatingLabel(rating: number): string {
   if (rating < 2) return "低リスク";
   if (rating < 3) return "要注意";
