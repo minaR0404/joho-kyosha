@@ -7,7 +7,7 @@ import RatingRadar from "@/components/RatingRadar";
 import RatingBadge from "@/components/RatingBadge";
 import { getRatingTextColor } from "@/lib/utils";
 import TagBadge from "@/components/TagBadge";
-import { User, Calendar, Briefcase } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import HelpfulButton from "@/components/HelpfulButton";
 import ReviewDeleteButton from "@/components/ReviewDeleteButton";
 import type { Metadata } from "next";
@@ -86,27 +86,17 @@ export default async function ReviewDetailPage({ params }: Props) {
             </div>
 
             {/* Meta */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-8">
+            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8">
               <span className="inline-flex items-center gap-1">
-                <User className="w-3.5 h-3.5" />
+                <User className="w-4.5 h-4.5" />
                 <span className="font-medium text-gray-700">{review.isAnonymous ? "匿名" : review.user.displayName}</span>
               </span>
-              <span className="text-gray-300">|</span>
               <span className="inline-flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
+                <Calendar className="w-4 h-4" />
                 {review.createdAt.toLocaleDateString("ja-JP")}
               </span>
-              <span className="text-gray-300">|</span>
-              <span className="inline-flex items-center gap-1">
-                <Briefcase className="w-3.5 h-3.5" />
-                {review.relationship}
-              </span>
-              {review.period && (
-                <>
-                  <span className="text-gray-300">|</span>
-                  <span>{review.period}</span>
-                </>
-              )}
+              <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{review.relationship}</span>
+              {review.period && <span className="text-gray-400">{review.period}</span>}
             </div>
 
             {/* Body */}
