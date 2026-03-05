@@ -26,6 +26,13 @@ export async function POST(req: NextRequest) {
       tagIds,
     } = body;
 
+    if (period && typeof period === "string" && period.length > 20) {
+      return NextResponse.json(
+        { error: "時期は20文字以内で入力してください" },
+        { status: 400 }
+      );
+    }
+
     if (!orgId || !title || !reviewBody || !relationship) {
       return NextResponse.json(
         { error: "必須項目を入力してください" },
