@@ -75,7 +75,7 @@ export default async function ReviewDetailPage({ params }: Props) {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             {/* Header */}
-            <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="flex items-start justify-between gap-3 mb-2.5">
               <h1 className="text-xl font-bold text-gray-900 mt-1">{review.title}</h1>
               <div className="flex items-center gap-2 shrink-0 mt-1">
                 <RatingIconsDisplay rating={review.ratingOverall} size="md" />
@@ -86,7 +86,7 @@ export default async function ReviewDetailPage({ params }: Props) {
             </div>
 
             {/* Meta */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8">
+            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8 pl-1.5">
               <span className="inline-flex items-center gap-1">
                 <User className="w-4.5 h-4.5" />
                 <span className="font-medium text-gray-700">{review.isAnonymous ? "匿名" : review.user.displayName}</span>
