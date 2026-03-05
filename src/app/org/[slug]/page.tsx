@@ -199,6 +199,7 @@ export default async function OrgDetailPage({ params }: Props) {
                   period={review.period}
                   isAnonymous={review.isAnonymous}
                   displayName={review.user.displayName}
+                  userId={review.user.id}
                   helpfulCount={review.helpfulCount}
                   createdAt={review.createdAt.toISOString()}
                   userVoted={votedReviewIds.has(review.id)}

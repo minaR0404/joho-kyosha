@@ -22,6 +22,7 @@ interface ReviewCardProps {
   orgName?: string;
   orgSlug?: string;
   reviewId?: number;
+  userId?: number;
   userVoted?: boolean;
 }
 
@@ -38,6 +39,7 @@ export default function ReviewCard({
   orgName,
   orgSlug,
   reviewId,
+  userId,
   userVoted = false,
 }: ReviewCardProps) {
   const href = reviewId != null && orgSlug ? `/org/${orgSlug}/review/${reviewId}` : undefined;
@@ -93,7 +95,11 @@ export default function ReviewCard({
       <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3 pointer-events-none">
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
         {period && <span>時期: {period}</span>}
-        <span>{isAnonymous ? "匿名" : displayName}</span>
+        {!isAnonymous && userId ? (
+          <a href={`/user/${userId}`} className="pointer-events-auto hover:text-blue-600 hover:underline">{displayName}</a>
+        ) : (
+          <span>{isAnonymous ? "匿名" : displayName}</span>
+        )}
         <span>{new Date(createdAt).toLocaleDateString("ja-JP")}</span>
         {reviewId != null && (
           <span className="pointer-events-auto">

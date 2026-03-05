@@ -117,6 +117,7 @@ export default async function HomePage() {
                 period={review.period}
                 isAnonymous={review.isAnonymous}
                 displayName={review.user.displayName}
+                userId={review.user.id}
                 helpfulCount={review.helpfulCount}
                 createdAt={review.createdAt.toISOString()}
                 orgName={review.org.name}

@@ -89,7 +89,13 @@ export default async function ReviewDetailPage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8 pl-1.5">
               <span className="inline-flex items-center gap-1">
                 <User className="w-4.5 h-4.5" />
-                <span className="font-medium text-gray-700">{review.isAnonymous ? "匿名" : review.user.displayName}</span>
+                {review.isAnonymous ? (
+                  <span className="font-medium text-gray-700">匿名</span>
+                ) : (
+                  <Link href={`/user/${review.user.id}`} className="font-medium text-gray-700 hover:text-blue-600 hover:underline">
+                    {review.user.displayName}
+                  </Link>
+                )}
               </span>
               <span className="inline-flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
