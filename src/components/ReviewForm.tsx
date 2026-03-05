@@ -118,6 +118,11 @@ export default function ReviewForm({ orgId, orgSlug, tags }: { orgId: number; or
           placeholder="例: 2023年6月"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        {period.length > 16 && (
+          <p className={`text-xs text-right mt-1 ${period.length >= 20 ? "text-red-500" : "text-gray-400"}`}>
+            {period.length}/20
+          </p>
+        )}
       </div>
 
       {/* Title */}
