@@ -107,7 +107,7 @@ export default function ReviewCard({
           {new Date(createdAt).toLocaleDateString("ja-JP")}
         </span>
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
-        {period && <span>時期: {period}</span>}
+        {period && <span>関わった時期: {period}</span>}
         {reviewId != null && (
           <span className="pointer-events-auto">
             <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />

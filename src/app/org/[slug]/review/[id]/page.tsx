@@ -102,7 +102,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                 {review.createdAt.toLocaleDateString("ja-JP")}
               </span>
               <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{review.relationship}</span>
-              {review.period && <span className="text-gray-400">{review.period}</span>}
+              {review.period && <span className="text-gray-400">関わった時期: {review.period}</span>}
             </div>
 
             {/* Body */}
