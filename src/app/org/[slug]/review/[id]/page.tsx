@@ -86,10 +86,10 @@ export default async function ReviewDetailPage({ params }: Props) {
 
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-8">
-              <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{review.relationship}</span>
               <span>{review.isAnonymous ? "匿名" : review.user.displayName}</span>
-              {review.period && <span>時期: {review.period}</span>}
               <span>{review.createdAt.toLocaleDateString("ja-JP")}</span>
+              <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{review.relationship}</span>
+              {review.period && <span>時期: {review.period}</span>}
             </div>
 
             {/* Body */}
