@@ -74,7 +74,7 @@ export default async function ReviewDetailPage({ params }: Props) {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             {/* Header */}
-            <div className="flex items-start justify-between gap-3 mb-4">
+            <div className="flex items-start justify-between gap-3 mb-2">
               <h1 className="text-xl font-bold text-gray-900 mt-1">{review.title}</h1>
               <div className="flex items-center gap-2 shrink-0 mt-1">
                 <RatingIconsDisplay rating={review.ratingOverall} size="md" />
@@ -84,8 +84,16 @@ export default async function ReviewDetailPage({ params }: Props) {
               </div>
             </div>
 
+            {/* Meta */}
+            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-8">
+              <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{review.relationship}</span>
+              <span>{review.isAnonymous ? "匿名" : review.user.displayName}</span>
+              {review.period && <span>時期: {review.period}</span>}
+              <span>{review.createdAt.toLocaleDateString("ja-JP")}</span>
+            </div>
+
             {/* Body */}
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mt-12 mb-6">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mb-6">
               {review.body}
             </p>
 
@@ -98,22 +106,14 @@ export default async function ReviewDetailPage({ params }: Props) {
               </div>
             )}
 
-            {/* Helpful */}
-            <div className="mb-4">
+            {/* Actions */}
+            <div className="flex flex-wrap items-center gap-3 border-t border-gray-100 pt-4">
               <HelpfulButton
                 reviewId={review.id}
                 initialCount={review.helpfulCount}
                 initialVoted={userVoted}
                 size="md"
               />
-            </div>
-
-            {/* Meta */}
-            <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-4">
-              <span className="px-2 py-0.5 bg-gray-100 rounded">{review.relationship}</span>
-              {review.period && <span>時期: {review.period}</span>}
-              <span>{review.isAnonymous ? "匿名" : review.user.displayName}</span>
-              <span>{review.createdAt.toLocaleDateString("ja-JP")}</span>
               {isOwner && (
                 <ReviewDeleteButton
                   reviewId={review.id}
