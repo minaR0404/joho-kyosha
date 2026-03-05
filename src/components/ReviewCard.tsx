@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { User, Calendar } from "lucide-react";
 import { RatingIconsDisplay } from "./RatingIcons";
 import HelpfulButton from "./HelpfulButton";
 
@@ -93,14 +94,20 @@ export default function ReviewCard({
       </div>
 
       <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3 pointer-events-none">
+        <span className="inline-flex items-center gap-0.5">
+          <User className="w-3.5 h-3.5" />
+          {!isAnonymous && userId ? (
+            <a href={`/user/${userId}`} className="pointer-events-auto hover:text-blue-600 hover:underline">{displayName}</a>
+          ) : (
+            <span>{isAnonymous ? "匿名" : displayName}</span>
+          )}
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Calendar className="w-3.5 h-3.5" />
+          {new Date(createdAt).toLocaleDateString("ja-JP")}
+        </span>
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
         {period && <span>時期: {period}</span>}
-        {!isAnonymous && userId ? (
-          <a href={`/user/${userId}`} className="pointer-events-auto hover:text-blue-600 hover:underline">{displayName}</a>
-        ) : (
-          <span>{isAnonymous ? "匿名" : displayName}</span>
-        )}
-        <span>{new Date(createdAt).toLocaleDateString("ja-JP")}</span>
         {reviewId != null && (
           <span className="pointer-events-auto">
             <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
