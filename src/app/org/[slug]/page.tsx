@@ -115,8 +115,8 @@ export default async function OrgDetailPage({ params }: Props) {
                 )}
                 {(aggregatedTags.length > 0 || org.tags.length > 0) && (
                   <div className="flex flex-wrap gap-1">
-                    {aggregatedTags.map((t) => (
-                      <TagBadge key={`review-${t.name}`} name={t.name} count={t.count} />
+                    {aggregatedTags.slice(0, 5).map((t) => (
+                      <TagBadge key={`review-${t.name}`} name={t.name} />
                     ))}
                     {org.tags
                       .filter(({ tag }) => !reviewTagCounts[String(tag.id)])
