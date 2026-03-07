@@ -1,15 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import CategoryNav from "@/components/CategoryNav";
 import OrgCard from "@/components/OrgCard";
 import ReviewCard from "@/components/ReviewCard";
 
 export default async function HomePage() {
-  const [categories, trendingOrgs, latestReviews, stats] = await Promise.all([
-    prisma.category.findMany({ orderBy: { id: "asc" } }),
+  const [categories, trendingOrgs, latestReviews, latestTestimonies, stats] = await Promise.all([
+    prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.organization.findMany({
-      where: { status: { not: "DELETED" } },
+      where: { status: { not: "DELETED" }, approvalStatus: "APPROVED" },
       orderBy: { reviewCount: "desc" },
       take: 6,
       include: { category: true },
@@ -21,6 +22,15 @@ export default async function HomePage() {
       include: {
         user: { select: { id: true, displayName: true, image: true } },
         org: { select: { name: true, slug: true } },
+      },
+    }),
+    prisma.testimony.findMany({
+      where: { deletedAt: null, status: "PUBLISHED" },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      include: {
+        user: { select: { id: true, displayName: true } },
+        category: { select: { name: true } },
       },
     }),
     Promise.all([
@@ -96,6 +106,40 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* Latest Testimonies */}
+        {latestTestimonies.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">最新の体験談</h2>
+              <Link href="/testimonies" className="text-sm text-blue-600 hover:underline">
+                すべて見る →
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {latestTestimonies.map((t) => (
+                <Link
+                  key={t.id}
+                  href={`/testimony/${t.id}`}
+                  className="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200 rounded">
+                      体験談
+                    </span>
+                    <span className="text-xs text-gray-500">{t.category.name}</span>
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-1">{t.title}</h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">{t.body}</p>
+                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                    <span>{t.isAnonymous ? "匿名" : t.user.displayName}</span>
+                    <span>{t.createdAt.toLocaleDateString("ja-JP")}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Latest Reviews */}
         <section id="latest-reviews" className="scroll-mt-20">

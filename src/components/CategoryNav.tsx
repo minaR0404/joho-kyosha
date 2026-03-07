@@ -1,21 +1,17 @@
 import Link from "next/link";
-import { CATEGORY_CONFIG, DEFAULT_ICON } from "@/lib/category-config";
+import { getCategoryIcon } from "@/lib/category-config";
 
 interface CategoryNavProps {
-  categories: { slug: string; name: string; icon: string | null }[];
+  categories: { slug: string; name: string; icon: string | null; sortOrder: number }[];
 }
 
 export default function CategoryNav({ categories }: CategoryNavProps) {
-  const sorted = [...categories].sort(
-    (a, b) =>
-      (CATEGORY_CONFIG[a.slug]?.order ?? 99) -
-      (CATEGORY_CONFIG[b.slug]?.order ?? 99)
-  );
+  const sorted = [...categories].sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
       {sorted.map((cat) => {
-        const Icon = CATEGORY_CONFIG[cat.slug]?.icon || DEFAULT_ICON;
+        const Icon = getCategoryIcon(cat.slug);
         return (
           <Link
             key={cat.slug}

@@ -10,6 +10,7 @@ import TagBadge from "@/components/TagBadge";
 import { User, Calendar } from "lucide-react";
 import HelpfulButton from "@/components/HelpfulButton";
 import ReviewDeleteButton from "@/components/ReviewDeleteButton";
+import ReportButton from "@/components/ReportButton";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string; id: string }> };
@@ -133,6 +134,9 @@ export default async function ReviewDetailPage({ params }: Props) {
                   redirectTo={`/org/${review.org.slug}`}
                 />
               )}
+              <div className="ml-auto">
+                <ReportButton targetType="REVIEW" targetId={review.id} />
+              </div>
             </div>
           </div>
         </div>

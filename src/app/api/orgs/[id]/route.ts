@@ -27,7 +27,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
-  if (!session?.user?.email || !isAdmin(session.user.email)) {
+  if (!session?.user || !isAdmin(session.user.role)) {
     return NextResponse.json({ error: "権限がありません" }, { status: 403 });
   }
 

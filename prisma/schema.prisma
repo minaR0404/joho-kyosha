@@ -8,54 +8,66 @@ datasource db {
 }
 
 model User {
-  id             Int          @id @default(autoincrement())
-  email          String?      @unique
+  id             Int             @id @default(autoincrement())
+  email          String?         @unique
   name           String?
   displayName    String
   image          String?
   hashedPassword String?
   provider       String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  role           String          @default("USER")
+  isBanned       Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   reviews        Review[]
   votes          ReviewVote[]
+  testimonies    Testimony[]
+  testimonyVotes TestimonyVote[]
+  submittedOrgs  Organization[]  @relation("submittedOrgs")
+  reports        Report[]
 }
 
 model Category {
-  id    Int            @id @default(autoincrement())
-  slug  String         @unique
-  name  String
-  icon  String?
-  orgs  Organization[]
+  id          Int             @id @default(autoincrement())
+  slug        String          @unique
+  name        String
+  icon        String?
+  sortOrder   Int             @default(0)
+  orgs        Organization[]
+  testimonies Testimony[]
 }
 
 model Organization {
-  id             Int          @id @default(autoincrement())
-  slug           String       @unique
-  name           String
-  nameKana       String?
-  aliases        String?
-  categoryId     Int
-  category       Category     @relation(fields: [categoryId], references: [id])
-  description    String?
-  website        String?
-  representative String?
-  founded        String?
-  address        String?
-  status         String       @default("ACTIVE")
-  avgRating      Float        @default(0)
-  reviewCount    Int          @default(0)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  reviews        Review[]
-  tags           TagsOnOrgs[]
+  id              Int          @id @default(autoincrement())
+  slug            String       @unique
+  name            String
+  nameKana        String?
+  aliases         String?
+  categoryId      Int
+  category        Category     @relation(fields: [categoryId], references: [id])
+  description     String?
+  website         String?
+  representative  String?
+  founded         String?
+  address         String?
+  status          String       @default("ACTIVE")
+  approvalStatus  String       @default("APPROVED")
+  submittedById   Int?
+  submittedBy     User?        @relation("submittedOrgs", fields: [submittedById], references: [id])
+  avgRating       Float        @default(0)
+  reviewCount     Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  reviews         Review[]
+  tags            TagsOnOrgs[]
 }
 
 model Tag {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  orgs       TagsOnOrgs[]
-  reviewTags ReviewTag[]
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  orgs           TagsOnOrgs[]
+  reviewTags     ReviewTag[]
+  testimonyTags  TestimonyTag[]
 }
 
 model TagsOnOrgs {
@@ -110,4 +122,62 @@ model ReviewVote {
   value    Int
 
   @@unique([reviewId, userId])
+}
+
+model Testimony {
+  id              Int             @id @default(autoincrement())
+  userId          Int
+  user            User            @relation(fields: [userId], references: [id])
+  categoryId      Int
+  category        Category        @relation(fields: [categoryId], references: [id])
+  title           String
+  body            String
+  scamType        String?
+  damageAmount    String?
+  period          String?
+  isAnonymous     Boolean         @default(true)
+  helpfulCount    Int             @default(0)
+  status          String          @default("PUBLISHED")
+  deletedAt       DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  votes           TestimonyVote[]
+  tags            TestimonyTag[]
+}
+
+model TestimonyTag {
+  testimonyId Int
+  tagId       Int
+  testimony   Testimony @relation(fields: [testimonyId], references: [id])
+  tag         Tag       @relation(fields: [tagId], references: [id])
+
+  @@id([testimonyId, tagId])
+}
+
+model TestimonyVote {
+  id          Int       @id @default(autoincrement())
+  testimonyId Int
+  testimony   Testimony @relation(fields: [testimonyId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  value       Int
+
+  @@unique([testimonyId, userId])
+}
+
+model Report {
+  id          Int       @id @default(autoincrement())
+  reporterId  Int
+  reporter    User      @relation(fields: [reporterId], references: [id])
+  targetType  String
+  targetId    Int
+  reason      String
+  detail      String?
+  status      String    @default("PENDING")
+  resolvedBy  Int?
+  resolvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([targetType, targetId])
+  @@index([status])
 }

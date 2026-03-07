@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import OrgCard from "@/components/OrgCard";
-import { CATEGORY_CONFIG, DEFAULT_ICON } from "@/lib/category-config";
+import { getCategoryIcon } from "@/lib/category-config";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }: Props) {
   if (!category) notFound();
 
   const orgs = await prisma.organization.findMany({
-    where: { categoryId: category.id, status: { not: "DELETED" } },
+    where: { categoryId: category.id, status: { not: "DELETED" }, approvalStatus: "APPROVED" },
     orderBy: { reviewCount: "desc" },
     include: { category: true },
   });
@@ -33,7 +33,7 @@ export default async function CategoryPage({ params }: Props) {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          {(() => { const Icon = CATEGORY_CONFIG[slug]?.icon || DEFAULT_ICON; return <Icon className="w-8 h-8 text-blue-600" strokeWidth={1.5} />; })()}
+          {(() => { const Icon = getCategoryIcon(slug); return <Icon className="w-8 h-8 text-blue-600" strokeWidth={1.5} />; })()}
           <h1 className="text-2xl font-bold text-gray-900">{category.name}</h1>
         </div>
         <p className="text-gray-600">

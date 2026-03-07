@@ -8,16 +8,8 @@ interface Category {
   id: number;
   slug: string;
   name: string;
+  sortOrder: number;
 }
-
-const CATEGORY_ORDER: Record<string, number> = {
-  "info-products": 0,
-  mlm: 1,
-  investment: 2,
-  "online-salon": 3,
-  religion: 4,
-  other: 5,
-};
 
 export default function NewOrgPage() {
   const router = useRouter();
@@ -36,7 +28,7 @@ export default function NewOrgPage() {
       .then((res) => res.json())
       .then((data) => {
         const cats: Category[] = data.categories || [];
-        cats.sort((a, b) => (CATEGORY_ORDER[a.slug] ?? 99) - (CATEGORY_ORDER[b.slug] ?? 99));
+        cats.sort((a, b) => a.sortOrder - b.sortOrder);
         setCategories(cats);
       })
       .catch(() => {});

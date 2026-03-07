@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { auth, isAdmin } from "@/lib/auth";
 import { toSlug } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   if (searchParams.get("categoriesOnly")) {
-    const categories = await prisma.category.findMany({ orderBy: { id: "asc" } });
+    const categories = await prisma.category.findMany({ orderBy: { sortOrder: "asc" } });
     return NextResponse.json({ categories });
   }
 
@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
   const orgs = await prisma.organization.findMany({
     where: {
       status: { not: "DELETED" },
+      approvalStatus: "APPROVED",
       ...(q ? { OR: [{ name: { contains: q } }, { description: { contains: q } }] } : {}),
     },
     orderBy: { reviewCount: "desc" },
@@ -56,6 +57,8 @@ export async function POST(req: NextRequest) {
       slug = `${slug}-${Date.now()}`;
     }
 
+    const adminUser = isAdmin(session.user.role);
+
     const org = await prisma.organization.create({
       data: {
         slug,
@@ -65,6 +68,8 @@ export async function POST(req: NextRequest) {
         website: website || null,
         representative: representative || null,
         founded: founded || null,
+        submittedById: Number(session.user.id),
+        approvalStatus: adminUser ? "APPROVED" : "PENDING",
       },
     });
 

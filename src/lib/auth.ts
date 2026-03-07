@@ -3,10 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
-export function isAdmin(email: string | null | undefined): boolean {
-  if (!email) return false;
-  const adminEmails = process.env.ADMIN_EMAIL?.split(",").map((e) => e.trim()) || [];
-  return adminEmails.includes(email);
+export function isAdmin(role: string | null | undefined): boolean {
+  return role === "ADMIN";
+}
+
+export function isModerator(role: string | null | undefined): boolean {
+  return role === "ADMIN" || role === "MODERATOR";
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -25,6 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         if (!user || !user.hashedPassword) return null;
+        if (user.isBanned) return null;
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
@@ -37,6 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: String(user.id),
           name: user.displayName,
           email: user.email,
+          role: user.role as string,
         };
       },
     }),
@@ -49,11 +53,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.sub) {
         session.user.id = token.sub;
       }
+      if (token.role) {
+        session.user.role = token.role as string;
+      }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
+        token.role = user.role;
       }
       return token;
     },

@@ -43,7 +43,7 @@ export default async function OrgDetailPage({ params }: Props) {
   });
 
   const session = await auth();
-  const admin = isAdmin(session?.user?.email);
+  const admin = isAdmin(session?.user?.role);
 
   if (!org || (org.status === "DELETED" && !admin)) notFound();
 
