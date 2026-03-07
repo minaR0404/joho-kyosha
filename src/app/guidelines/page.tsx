@@ -88,15 +88,15 @@ export default function GuidelinesPage() {
               <span>その組織に関わることで、金銭的・精神的な被害を受けるリスクの高さ</span>
             </div>
             <div className="flex gap-3 items-start">
-              <span className="font-bold text-gray-900 shrink-0 w-28">費用負担</span>
+              <span className="font-bold text-gray-900 shrink-0 w-28">金銭的リスク</span>
               <span>不当に高額な費用を請求されるか、隠れたコストがあるか</span>
             </div>
             <div className="flex gap-3 items-start">
-              <span className="font-bold text-gray-900 shrink-0 w-28">勧誘圧力</span>
+              <span className="font-bold text-gray-900 shrink-0 w-28">勧誘の強さ</span>
               <span>しつこい勧誘や心理的な圧力をかけてくるか</span>
             </div>
             <div className="flex gap-3 items-start">
-              <span className="font-bold text-gray-900 shrink-0 w-28">情報透明性</span>
+              <span className="font-bold text-gray-900 shrink-0 w-28">情報の不透明さ</span>
               <span>重要な情報（リスク、費用、契約条件等）を正直に開示しているか</span>
             </div>
             <div className="flex gap-3 items-start">
