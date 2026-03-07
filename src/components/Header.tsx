@@ -4,16 +4,26 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, Search, User, LogOut, Home, ShieldAlert, Network, TrendingUp, Monitor, Landmark, LayoutGrid } from "lucide-react";
+import { Menu, X, Search, User, LogOut, Home, MessageSquareText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCategoryIcon } from "@/lib/category-config";
 
 const MENU_CATEGORIES = [
-  { slug: "info-products", name: "情報商材", icon: ShieldAlert },
-  { slug: "mlm", name: "マルチ商法(MLM)", icon: Network },
-  { slug: "investment", name: "投資スクール", icon: TrendingUp },
-  { slug: "online-salon", name: "オンラインサロン", icon: Monitor },
-  { slug: "religion", name: "宗教", icon: Landmark },
-  { slug: "other", name: "その他", icon: LayoutGrid },
+  { slug: "info-products", name: "情報商材" },
+  { slug: "mlm", name: "マルチ商法(MLM)" },
+  { slug: "investment-school", name: "投資スクール・セミナー" },
+  { slug: "crypto-fx", name: "暗号資産・FX" },
+  { slug: "real-estate", name: "不動産投資" },
+  { slug: "online-salon", name: "オンラインサロン" },
+  { slug: "side-job", name: "副業・在宅ワーク" },
+  { slug: "school", name: "資格・スクール商法" },
+  { slug: "beauty-health", name: "美容・健康" },
+  { slug: "marriage", name: "結婚相談所" },
+  { slug: "door-to-door", name: "訪問販売" },
+  { slug: "precious-metals", name: "買取・貴金属" },
+  { slug: "factoring", name: "ファクタリング・金融" },
+  { slug: "religion", name: "宗教・スピリチュアル" },
+  { slug: "other", name: "その他" },
 ];
 
 export default function Header() {
@@ -99,6 +109,7 @@ export default function Header() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
                 {MENU_CATEGORIES.map((cat) => {
                   const active = pathname === `/category/${cat.slug}`;
+                  const Icon = getCategoryIcon(cat.slug);
                   return (
                     <Link
                       key={cat.slug}
@@ -111,13 +122,39 @@ export default function Header() {
                           : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                       )}
                     >
-                      <cat.icon className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+                      <Icon className="w-4 h-4 shrink-0" strokeWidth={1.5} />
                       {cat.name}
                     </Link>
                   );
                 })}
               </div>
             </div>
+            <div className="mb-3">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">コンテンツ</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
+                <Link
+                  href="/testimonies"
+                  onClick={() => setMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+                    pathname === "/testimonies"
+                      ? "bg-orange-50 text-orange-700"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  )}
+                >
+                  <MessageSquareText className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+                  体験談
+                </Link>
+                <Link
+                  href="/testimony/new"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                >
+                  体験談を投稿
+                </Link>
+              </div>
+            </div>
+
             <div className="border-t border-gray-100 pt-3 flex flex-col sm:flex-row gap-1">
               <Link
                 href="/"
