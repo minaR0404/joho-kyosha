@@ -27,6 +27,8 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/about" className="hover:text-white transition-colors">このサイトについて</Link></li>
               <li><Link href="/org/new" className="hover:text-white transition-colors">組織を登録する</Link></li>
+              <li><Link href="/testimonies" className="hover:text-white transition-colors">体験談一覧</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">削除依頼・お問い合わせ</Link></li>
               <li>
                 <a href="https://www.caa.go.jp/consumers/protect/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   消費者庁
@@ -36,6 +38,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-500">
+          <div className="flex justify-center gap-4 mb-3">
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">利用規約</Link>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">プライバシーポリシー</Link>
+            <Link href="/guidelines" className="hover:text-gray-300 transition-colors">投稿ガイドライン</Link>
+          </div>
           <p>&copy; 2026 情報強者 All rights reserved.</p>
         </div>
       </div>
