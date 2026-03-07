@@ -47,8 +47,8 @@ export default function AboutPage() {
               <span className="text-gray-600">情報の隠蔽・欺瞞の度合い</span>
             </div>
             <div className="flex gap-3">
-              <span className="font-medium text-gray-900 w-32">脱退の難しさ</span>
-              <span className="text-gray-600">やめにくさ・退会障壁の高さ</span>
+              <span className="font-medium text-gray-900 w-32">解約・脱退の難しさ</span>
+              <span className="text-gray-600">解約・退会のしにくさ</span>
             </div>
           </div>
           <p className="text-gray-700 leading-relaxed mt-3">

@@ -23,7 +23,7 @@ export default function RatingRadar(props: RatingRadarProps) {
     { axis: "金銭的リスク", value: props.ratingCost },
     { axis: "勧誘の強さ", value: props.ratingPressure },
     { axis: "不透明さ", value: props.ratingTransparency },
-    { axis: "脱退の難しさ", value: props.ratingExit },
+    { axis: "解約・脱退の難しさ", value: props.ratingExit },
   ];
 
   return (

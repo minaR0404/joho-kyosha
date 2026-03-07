@@ -100,8 +100,8 @@ export default function GuidelinesPage() {
               <span>重要な情報（リスク、費用、契約条件等）を正直に開示しているか</span>
             </div>
             <div className="flex gap-3 items-start">
-              <span className="font-bold text-gray-900 shrink-0 w-28">退会容易性</span>
-              <span>やめたいときにスムーズに退会・解約できるか</span>
+              <span className="font-bold text-gray-900 shrink-0 w-28">解約・脱退の難しさ</span>
+              <span>やめたいときにスムーズに解約・退会できるか</span>
             </div>
           </div>
         </section>

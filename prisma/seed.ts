@@ -4,23 +4,17 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  // Categories (15 categories with sortOrder)
+  // Categories (9 categories with sortOrder)
   const categories = await Promise.all([
     prisma.category.create({ data: { slug: "info-products", name: "情報商材", sortOrder: 1 } }),
     prisma.category.create({ data: { slug: "mlm", name: "マルチ商法(MLM)", sortOrder: 2 } }),
-    prisma.category.create({ data: { slug: "investment-school", name: "投資スクール・セミナー", sortOrder: 3 } }),
-    prisma.category.create({ data: { slug: "crypto-fx", name: "暗号資産・FX", sortOrder: 4 } }),
-    prisma.category.create({ data: { slug: "real-estate", name: "不動産投資", sortOrder: 5 } }),
-    prisma.category.create({ data: { slug: "online-salon", name: "オンラインサロン", sortOrder: 6 } }),
-    prisma.category.create({ data: { slug: "side-job", name: "副業・在宅ワーク", sortOrder: 7 } }),
-    prisma.category.create({ data: { slug: "school", name: "資格・スクール商法", sortOrder: 8 } }),
-    prisma.category.create({ data: { slug: "beauty-health", name: "美容・健康", sortOrder: 9 } }),
-    prisma.category.create({ data: { slug: "marriage", name: "結婚相談所", sortOrder: 10 } }),
-    prisma.category.create({ data: { slug: "door-to-door", name: "訪問販売", sortOrder: 11 } }),
-    prisma.category.create({ data: { slug: "precious-metals", name: "買取・貴金属", sortOrder: 12 } }),
-    prisma.category.create({ data: { slug: "factoring", name: "ファクタリング・金融", sortOrder: 13 } }),
-    prisma.category.create({ data: { slug: "religion", name: "宗教・スピリチュアル", sortOrder: 14 } }),
-    prisma.category.create({ data: { slug: "other", name: "その他", sortOrder: 15 } }),
+    prisma.category.create({ data: { slug: "investment", name: "投資・金融", sortOrder: 3 } }),
+    prisma.category.create({ data: { slug: "online-salon", name: "オンラインサロン", sortOrder: 4 } }),
+    prisma.category.create({ data: { slug: "side-job-school", name: "副業・スクール", sortOrder: 5 } }),
+    prisma.category.create({ data: { slug: "beauty-health", name: "美容・健康", sortOrder: 6 } }),
+    prisma.category.create({ data: { slug: "door-to-door", name: "訪問販売・買取", sortOrder: 7 } }),
+    prisma.category.create({ data: { slug: "religion", name: "宗教・スピリチュアル", sortOrder: 8 } }),
+    prisma.category.create({ data: { slug: "other", name: "その他", sortOrder: 9 } }),
   ]);
 
   // Tags (20 tags)
@@ -133,7 +127,7 @@ async function main() {
     data: {
       slug: "sample-salon-d",
       name: "サンプルオンラインサロンD",
-      categoryId: categories[5].id,
+      categoryId: categories[3].id,
       description: "ビジネス系オンラインサロン。月額1万円で「人脈が広がる」と宣伝しているが、実態はセミナー勧誘がメイン。",
       founded: "2021年",
       status: "ACTIVE",
@@ -258,7 +252,7 @@ async function main() {
   await prisma.testimony.create({
     data: {
       userId: user.id,
-      categoryId: categories[10].id, // 訪問販売
+      categoryId: categories[6].id, // 訪問販売・買取
       title: "突然の訪問で高額リフォーム契約",
       body: "「近所で工事をしていて、お宅の屋根が壊れているのが見えた」と突然訪問してきた業者に、その場で150万円のリフォーム契約を結ばされました。後日、別の業者に見てもらったところ屋根に問題はありませんでした。業者名は名刺に書いてありましたが、検索しても出てきません。",
       scamType: "点検商法・訪問販売",
@@ -277,7 +271,7 @@ async function main() {
   await prisma.testimony.create({
     data: {
       userId: user2.id,
-      categoryId: categories[3].id, // 暗号資産・FX
+      categoryId: categories[2].id, // 投資・金融
       title: "マッチングアプリで知り合った人に投資を勧められた",
       body: "マッチングアプリで知り合った相手に「絶対儲かる投資がある」と勧められ、海外の取引サイトに30万円を入金しました。最初は利益が出ているように見えましたが、出金しようとしたところ「手数料が必要」と追加入金を求められました。相手とは連絡が取れなくなり、サイトもアクセスできなくなりました。",
       scamType: "ロマンス詐欺・投資詐欺",
@@ -296,7 +290,7 @@ async function main() {
   await prisma.testimony.create({
     data: {
       userId: user.id,
-      categoryId: categories[8].id, // 美容・健康
+      categoryId: categories[5].id, // 美容・健康
       title: "無料体験のはずが高額ローンを組まされた",
       body: "「無料体験」の広告を見てエステサロンに行きました。施術後、「今日契約すれば特別価格」と言われ、断りきれず60万円のコースをローンで契約してしまいました。クーリングオフを申し出たところ、「施術済みなので適用外」と言われました。消費者センターに相談して解約できましたが、精神的に疲弊しました。",
       scamType: "エステの強引な勧誘",

@@ -67,5 +67,5 @@ export const RATING_AXES = [
   { key: "ratingCost", label: "金銭的リスク", description: "失う可能性のある金額" },
   { key: "ratingPressure", label: "勧誘の強さ", description: "勧誘のしつこさ" },
   { key: "ratingTransparency", label: "情報の不透明さ", description: "情報の隠蔽度" },
-  { key: "ratingExit", label: "脱退の難しさ", description: "やめにくさ" },
+  { key: "ratingExit", label: "解約・脱退の難しさ", description: "解約・退会のしにくさ" },
 ] as const;

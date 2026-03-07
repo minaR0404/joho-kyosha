@@ -172,7 +172,7 @@ export default async function ReviewDetailPage({ params }: Props) {
                   <span className="font-medium">{review.ratingTransparency.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">脱退の難しさ</span>
+                  <span className="text-gray-600">解約・脱退の難しさ</span>
                   <span className="font-medium">{review.ratingExit.toFixed(1)}</span>
                 </div>
               </div>

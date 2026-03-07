@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-800 text-gray-300 mt-16">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-white text-lg font-bold mb-3">情報強者</h3>
             <p className="text-sm leading-relaxed">
@@ -12,22 +12,16 @@ export default function Footer() {
               悪徳商法に入る前にまずはこのサイトを確認しよう。
             </p>
           </div>
-          <div className="md:col-span-2">
+          <div>
             <h4 className="text-white font-semibold mb-3">カテゴリ</h4>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
+            <ul className="space-y-1.5 text-sm">
               <li><Link href="/category/info-products" className="hover:text-white transition-colors">情報商材</Link></li>
               <li><Link href="/category/mlm" className="hover:text-white transition-colors">マルチ商法(MLM)</Link></li>
-              <li><Link href="/category/investment-school" className="hover:text-white transition-colors">投資スクール・セミナー</Link></li>
-              <li><Link href="/category/crypto-fx" className="hover:text-white transition-colors">暗号資産・FX</Link></li>
-              <li><Link href="/category/real-estate" className="hover:text-white transition-colors">不動産投資</Link></li>
+              <li><Link href="/category/investment" className="hover:text-white transition-colors">投資・金融</Link></li>
               <li><Link href="/category/online-salon" className="hover:text-white transition-colors">オンラインサロン</Link></li>
-              <li><Link href="/category/side-job" className="hover:text-white transition-colors">副業・在宅ワーク</Link></li>
-              <li><Link href="/category/school" className="hover:text-white transition-colors">資格・スクール商法</Link></li>
+              <li><Link href="/category/side-job-school" className="hover:text-white transition-colors">副業・スクール</Link></li>
               <li><Link href="/category/beauty-health" className="hover:text-white transition-colors">美容・健康</Link></li>
-              <li><Link href="/category/marriage" className="hover:text-white transition-colors">結婚相談所</Link></li>
-              <li><Link href="/category/door-to-door" className="hover:text-white transition-colors">訪問販売</Link></li>
-              <li><Link href="/category/precious-metals" className="hover:text-white transition-colors">買取・貴金属</Link></li>
-              <li><Link href="/category/factoring" className="hover:text-white transition-colors">ファクタリング・金融</Link></li>
+              <li><Link href="/category/door-to-door" className="hover:text-white transition-colors">訪問販売・買取</Link></li>
               <li><Link href="/category/religion" className="hover:text-white transition-colors">宗教・スピリチュアル</Link></li>
               <li><Link href="/category/other" className="hover:text-white transition-colors">その他</Link></li>
             </ul>
