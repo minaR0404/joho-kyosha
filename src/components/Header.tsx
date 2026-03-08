@@ -124,7 +124,7 @@ export default function Header() {
               </div>
             </div>
             <div className="mb-3">
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">コンテンツ</h3>
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">体験談</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
                 <Link
                   href="/testimonies"
@@ -137,7 +137,7 @@ export default function Header() {
                   )}
                 >
                   <MessageSquareText className="w-4 h-4 shrink-0" strokeWidth={1.5} />
-                  体験談
+                  体験談一覧
                 </Link>
                 <Link
                   href="/testimony/new"
