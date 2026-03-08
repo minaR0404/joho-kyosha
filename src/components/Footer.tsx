@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-800 text-gray-300 mt-16">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-white text-lg font-bold mb-3">情報強者</h3>
             <p className="text-sm leading-relaxed">
@@ -27,11 +27,16 @@ export default function Footer() {
             </ul>
           </div>
           <div>
+            <h4 className="text-white font-semibold mb-3">体験談</h4>
+            <ul className="space-y-1.5 text-sm">
+              <li><Link href="/testimonies" className="hover:text-white transition-colors">体験談一覧</Link></li>
+              <li><Link href="/testimony/new" className="hover:text-white transition-colors">体験談を投稿</Link></li>
+            </ul>
+          </div>
+          <div>
             <h4 className="text-white font-semibold mb-3">リンク</h4>
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/about" className="hover:text-white transition-colors">このサイトについて</Link></li>
-              <li><Link href="/testimonies" className="hover:text-white transition-colors">体験談一覧</Link></li>
-              <li><Link href="/testimony/new" className="hover:text-white transition-colors">体験談を投稿</Link></li>
               <li><Link href="/org/new" className="hover:text-white transition-colors">組織を登録する</Link></li>
               <li><Link href="/contact" className="hover:text-white transition-colors">削除依頼・お問い合わせ</Link></li>
               <li>

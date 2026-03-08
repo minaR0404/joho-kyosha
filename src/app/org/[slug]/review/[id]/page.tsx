@@ -17,8 +17,10 @@ type Props = { params: Promise<{ slug: string; id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, id } = await params;
+  const reviewId = Number(id);
+  if (isNaN(reviewId)) return {};
   const review = await prisma.review.findUnique({
-    where: { id: Number(id) },
+    where: { id: reviewId },
     include: { org: { select: { slug: true, name: true } } },
   });
   if (!review || review.org.slug !== decodeURIComponent(slug)) return {};
@@ -32,8 +34,11 @@ export default async function ReviewDetailPage({ params }: Props) {
   const { slug: rawSlug, id } = await params;
   const slug = decodeURIComponent(rawSlug);
 
+  const reviewId = Number(id);
+  if (isNaN(reviewId)) notFound();
+
   const review = await prisma.review.findUnique({
-    where: { id: Number(id) },
+    where: { id: reviewId },
     include: {
       org: {
         include: { category: true },
