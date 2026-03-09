@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { signIn } from "@/lib/auth";
 import crypto from "crypto";
 
 export async function GET(req: NextRequest) {
@@ -36,5 +37,10 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  redirect(`/auth/auto-login?token=${autoLoginToken}`);
+  // サーバーサイドで直接signIn → セッションcookieが設定される
+  await signIn("credentials", {
+    email: "__auto_login__",
+    password: autoLoginToken,
+    redirectTo: "/",
+  });
 }
