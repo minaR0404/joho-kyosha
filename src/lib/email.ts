@@ -10,6 +10,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     to: email,
     subject: "【情報強者】メールアドレスの確認",
     html: `
+      <div style="display:none;max-height:0;overflow:hidden;">情報強者へのご登録ありがとうございます。ボタンをクリックしてメールアドレスを確認してください。</div>
       <div style="max-width: 480px; margin: 0 auto; font-family: sans-serif;">
         <h2 style="color: #1e40af;">メールアドレスの確認</h2>
         <p>情報強者にご登録いただきありがとうございます。</p>

@@ -22,6 +22,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        // 一時トークンによる自動ログイン（メール認証後）
+        if (credentials.email === "__auto_login__") {
+          const tokenRecord = await prisma.verificationToken.findUnique({
+            where: { token: credentials.password as string },
+          });
+          if (!tokenRecord || tokenRecord.expiresAt < new Date()) return null;
+
+          const user = await prisma.user.findUnique({
+            where: { id: tokenRecord.userId },
+          });
+          if (!user || !user.emailVerifiedAt || user.isBanned) return null;
+
+          await prisma.verificationToken.delete({ where: { id: tokenRecord.id } });
+
+          return {
+            id: String(user.id),
+            name: user.displayName,
+            email: user.email,
+            role: user.role as string,
+            emailVerifiedAt: user.emailVerifiedAt.toISOString(),
+          };
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         });

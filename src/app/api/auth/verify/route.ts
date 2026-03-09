@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import crypto from "crypto";
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
@@ -25,5 +26,15 @@ export async function GET(req: NextRequest) {
     prisma.verificationToken.delete({ where: { id: record.id } }),
   ]);
 
-  redirect("/auth/login?verified=true");
+  // 自動ログイン用の一時トークン生成（5分有効）
+  const autoLoginToken = crypto.randomBytes(32).toString("hex");
+  await prisma.verificationToken.create({
+    data: {
+      token: autoLoginToken,
+      userId: record.userId,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+    },
+  });
+
+  redirect(`/auth/auto-login?token=${autoLoginToken}`);
 }
