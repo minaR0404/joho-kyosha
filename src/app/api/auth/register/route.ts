@@ -33,11 +33,22 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const verificationToken = await generateVerificationToken(user.id);
-    await sendVerificationEmail(email, verificationToken.token);
+    try {
+      const verificationToken = await generateVerificationToken(user.id);
+      await sendVerificationEmail(email, verificationToken.token);
+    } catch (emailError) {
+      // メール送信失敗時はユーザーを削除してロールバック
+      await prisma.user.delete({ where: { id: user.id } });
+      console.error("Verification email failed:", emailError);
+      return NextResponse.json(
+        { error: "確認メールの送信に失敗しました。しばらく後にお試しください。" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, requiresVerification: true });
-  } catch {
+  } catch (error) {
+    console.error("Registration failed:", error);
     return NextResponse.json(
       { error: "登録に失敗しました" },
       { status: 500 }
