@@ -17,10 +17,15 @@ export async function POST(req: NextRequest) {
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      return NextResponse.json(
-        { error: "このメールアドレスは既に登録されています" },
-        { status: 400 }
-      );
+      if (!existing.emailVerifiedAt) {
+        // 未認証ユーザーは削除して再登録を許可
+        await prisma.user.delete({ where: { id: existing.id } });
+      } else {
+        return NextResponse.json(
+          { error: "このメールアドレスは既に登録されています" },
+          { status: 400 }
+        );
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
