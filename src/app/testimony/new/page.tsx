@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import TestimonyForm from "@/components/TestimonyForm";
+import EmailVerificationBanner from "@/components/EmailVerificationBanner";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,6 +16,12 @@ export default async function NewTestimonyPage() {
   if (!session?.user) {
     redirect("/auth/login?callbackUrl=/testimony/new");
   }
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: Number(session.user.id) },
+    select: { emailVerifiedAt: true },
+  });
+  const isEmailVerified = !!currentUser?.emailVerifiedAt;
 
   const tags = await prisma.tag.findMany({ orderBy: { id: "asc" } });
 
@@ -33,6 +40,7 @@ export default async function NewTestimonyPage() {
         組織名がわからない場合や、個人による被害など、口コミとして書けない体験を共有できます。
       </p>
 
+      {!isEmailVerified && <EmailVerificationBanner />}
       <TestimonyForm tags={tags} />
     </div>
   );

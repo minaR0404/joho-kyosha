@@ -16,16 +16,18 @@ model User {
   image          String?
   hashedPassword String?
   provider       String?
-  role           String          @default("USER")
-  isBanned       Boolean         @default(false)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  reviews        Review[]
-  votes          ReviewVote[]
-  testimonies    Testimony[]
-  testimonyVotes TestimonyVote[]
-  submittedOrgs  Organization[]  @relation("submittedOrgs")
-  reports        Report[]
+  role               String              @default("USER")
+  isBanned           Boolean             @default(false)
+  emailVerifiedAt    DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  reviews            Review[]
+  votes              ReviewVote[]
+  testimonies        Testimony[]
+  testimonyVotes     TestimonyVote[]
+  submittedOrgs      Organization[]      @relation("submittedOrgs")
+  reports            Report[]
+  verificationTokens VerificationToken[]
 }
 
 model Category {
@@ -164,6 +166,17 @@ model TestimonyVote {
   value       Int
 
   @@unique([testimonyId, userId])
+}
+
+model VerificationToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Report {

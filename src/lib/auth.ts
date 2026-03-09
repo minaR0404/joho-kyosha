@@ -41,6 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: user.displayName,
           email: user.email,
           role: user.role as string,
+          emailVerifiedAt: user.emailVerifiedAt?.toISOString() ?? null,
         };
       },
     }),
@@ -56,12 +57,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.role) {
         session.user.role = token.role as string;
       }
+      session.user.emailVerifiedAt = (token.emailVerifiedAt as string) ?? null;
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
         token.role = user.role;
+        token.emailVerifiedAt = user.emailVerifiedAt;
       }
       return token;
     },

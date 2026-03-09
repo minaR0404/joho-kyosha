@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -31,10 +30,7 @@ export default function RegisterPage() {
         return;
       }
 
-      // Auto login after registration
-      await signIn("credentials", { email, password, redirect: false });
-      router.push("/");
-      router.refresh();
+      router.push("/auth/verify-email");
     } catch {
       setError("通信エラーが発生しました");
     } finally {

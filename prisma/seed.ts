@@ -51,6 +51,7 @@ async function main() {
       hashedPassword,
       provider: "credentials",
       role: "ADMIN",
+      emailVerifiedAt: new Date(),
     },
   });
 
@@ -60,6 +61,7 @@ async function main() {
       displayName: "匿名ユーザー",
       hashedPassword,
       provider: "credentials",
+      emailVerifiedAt: new Date(),
     },
   });
 
@@ -69,6 +71,7 @@ async function main() {
       displayName: "体験者A",
       hashedPassword,
       provider: "credentials",
+      emailVerifiedAt: new Date(),
     },
   });
 

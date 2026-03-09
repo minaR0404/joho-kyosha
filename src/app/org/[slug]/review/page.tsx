@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import ReviewForm from "@/components/ReviewForm";
+import EmailVerificationBanner from "@/components/EmailVerificationBanner";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -23,6 +24,12 @@ export default async function ReviewPage({ params }: Props) {
   if (!session?.user) {
     redirect(`/auth/login?callbackUrl=/org/${slug}/review`);
   }
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: Number(session.user.id) },
+    select: { emailVerifiedAt: true },
+  });
+  const isEmailVerified = !!currentUser?.emailVerifiedAt;
 
   const [org, tags] = await Promise.all([
     prisma.organization.findUnique({
@@ -51,6 +58,7 @@ export default async function ReviewPage({ params }: Props) {
         あなたの体験を共有して、他の人が騙されないよう助けましょう。
       </p>
 
+      {!isEmailVerified && <EmailVerificationBanner />}
       <ReviewForm orgId={org.id} orgSlug={org.slug} tags={tags} />
     </div>
   );

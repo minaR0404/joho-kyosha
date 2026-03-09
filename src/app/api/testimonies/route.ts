@@ -40,6 +40,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
     }
 
+    const currentUser = await prisma.user.findUnique({
+      where: { id: Number(session.user.id) },
+      select: { emailVerifiedAt: true },
+    });
+    if (!currentUser?.emailVerifiedAt) {
+      return NextResponse.json(
+        { error: "メールアドレスの確認が必要です" },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const {
       categoryId,
