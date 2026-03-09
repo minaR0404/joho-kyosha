@@ -13,14 +13,30 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [unverified, setUnverified] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setUnverified(false);
     setLoading(true);
 
     try {
+      // 先にメール確認状態をチェック
+      const checkRes = await fetch("/api/auth/check-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const checkData = await checkRes.json();
+
+      if (checkData.status === "unverified") {
+        setUnverified(true);
+        setLoading(false);
+        return;
+      }
+
       const res = await signIn("credentials", {
         email,
         password,
@@ -45,6 +61,15 @@ function LoginForm() {
       {verified && (
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm mb-4">
           メールアドレスが確認されました。ログインしてください。
+        </div>
+      )}
+      {unverified && (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-md text-sm mb-4">
+          <p className="font-medium">メールアドレスが未確認です</p>
+          <p className="mt-1">登録時に送信された確認メールのリンクをクリックしてください。</p>
+          <Link href="/auth/verify-email" className="text-yellow-900 underline hover:text-yellow-700 mt-1 inline-block">
+            確認メールについて
+          </Link>
         </div>
       )}
       {error && (

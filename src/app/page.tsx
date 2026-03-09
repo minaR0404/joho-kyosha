@@ -36,7 +36,7 @@ export default async function HomePage() {
     Promise.all([
       prisma.organization.count({ where: { status: { not: "DELETED" } } }),
       prisma.review.count({ where: { deletedAt: null } }),
-      prisma.user.count(),
+      prisma.user.count({ where: { emailVerifiedAt: { not: null } } }),
     ]),
   ]);
 
