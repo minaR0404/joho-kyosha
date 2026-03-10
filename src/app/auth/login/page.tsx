@@ -112,6 +112,12 @@ function LoginForm() {
         </button>
       </form>
 
+      <div className="text-right mt-2">
+        <Link href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">
+          パスワードを忘れた方
+        </Link>
+      </div>
+
       <p className="text-center text-sm text-gray-600 mt-6">
         アカウントをお持ちでない方は
         <Link href="/auth/register" className="text-blue-600 hover:underline ml-1">

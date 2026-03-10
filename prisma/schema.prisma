@@ -28,6 +28,7 @@ model User {
   submittedOrgs      Organization[]      @relation("submittedOrgs")
   reports            Report[]
   verificationTokens VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Category {
@@ -169,6 +170,17 @@ model TestimonyVote {
 }
 
 model VerificationToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
   id        Int      @id @default(autoincrement())
   token     String   @unique
   userId    Int
