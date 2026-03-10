@@ -1,13 +1,13 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { CheckCircle, AlertTriangle } from "lucide-react";
+import PasswordInput from "@/components/PasswordInput";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -106,14 +106,12 @@ function ResetPasswordForm() {
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
             新しいパスワード
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={8}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <p className="text-xs text-gray-500 mt-1">8文字以上</p>
         </div>
@@ -121,14 +119,12 @@ function ResetPasswordForm() {
           <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
             パスワード（確認）
           </label>
-          <input
+          <PasswordInput
             id="confirmPassword"
-            type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             minLength={8}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <button
