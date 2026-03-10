@@ -17,10 +17,23 @@ function LoginForm() {
   const [unverified, setUnverified] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const errors: Record<string, string> = {};
+    if (!email) errors.email = "メールアドレスを入力してください";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "正しいメールアドレスを入力してください";
+    if (!password) errors.password = "パスワードを入力してください";
+    return errors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setUnverified(false);
+    const errors = validate();
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     setLoading(true);
 
     try {
@@ -79,7 +92,7 @@ function LoginForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             メールアドレス
@@ -87,10 +100,10 @@ function LoginForm() {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: "" })); }}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${fieldErrors.email ? "border-red-400" : "border-gray-300"}`}
           />
+          {fieldErrors.email && <p className="text-xs text-red-600 mt-1">{fieldErrors.email}</p>}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -98,9 +111,9 @@ function LoginForm() {
           </label>
           <PasswordInput
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            onChange={(e) => { setPassword(e.target.value); setFieldErrors((p) => ({ ...p, password: "" })); }}
           />
+          {fieldErrors.password && <p className="text-xs text-red-600 mt-1">{fieldErrors.password}</p>}
         </div>
         <button
           type="submit"
