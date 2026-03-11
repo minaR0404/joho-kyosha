@@ -63,18 +63,18 @@ export default async function HomePage() {
             騙される前に、まずチェック。
           </p>
           <SearchBar size="lg" />
-          <div className="flex justify-center gap-20 mt-10">
-            <a href="#categories" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
-              <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{orgCount}</span>
-              <span className="text-xs text-blue-200 mt-2 tracking-wide">登録組織</span>
+          <div className="flex justify-center gap-4 md:gap-20 mt-10">
+            <a href="#categories" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
+              <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{orgCount}</span>
+              <span className="text-xs text-blue-200 mt-1 sm:mt-2 tracking-wide">登録組織</span>
             </a>
-            <a href="#latest-reviews" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
-              <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{reviewCount}</span>
-              <span className="text-xs text-blue-200 mt-2 tracking-wide">口コミ</span>
+            <a href="#latest-reviews" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
+              <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{reviewCount}</span>
+              <span className="text-xs text-blue-200 mt-1 sm:mt-2 tracking-wide">口コミ</span>
             </a>
-            <a href={session?.user ? "/mypage" : "/auth/login"} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[110px] h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
-              <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{userCount}</span>
-              <span className="text-xs text-blue-200 mt-2 tracking-wide">ユーザー</span>
+            <a href={session?.user ? "/mypage" : "/auth/login"} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
+              <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{userCount}</span>
+              <span className="text-xs text-blue-200 mt-1 sm:mt-2 tracking-wide">ユーザー</span>
             </a>
           </div>
         </div>
