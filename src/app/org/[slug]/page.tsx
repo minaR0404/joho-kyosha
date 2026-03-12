@@ -165,6 +165,22 @@ export default async function OrgDetailPage({ params }: Props) {
             )}
           </div>
 
+          {/* Rating Radar - Mobile only (compact) */}
+          {avgRatings && (
+            <div className="bg-white rounded-lg border border-gray-200 p-3 mb-6 lg:hidden">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="font-bold text-gray-900 text-sm">評価レーダー</h3>
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-gray-500">総合スコア</span>
+                  <span className={`text-base font-bold ${getRatingTextColor(org.avgRating)}`}>{org.avgRating.toFixed(1)}</span>
+                </div>
+              </div>
+              <div className="max-w-[250px] mx-auto">
+                <RatingRadar {...avgRatings} compact />
+              </div>
+            </div>
+          )}
+
           {/* Reviews */}
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-900">
@@ -214,8 +230,8 @@ export default async function OrgDetailPage({ params }: Props) {
           )}
         </div>
 
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
+        {/* Sidebar - PC only */}
+        <div className="hidden lg:block lg:col-span-1">
           {avgRatings && (
             <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4 sticky top-20">
               <h3 className="font-bold text-gray-900 mb-3">評価レーダー</h3>
