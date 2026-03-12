@@ -171,13 +171,11 @@ export default async function OrgDetailPage({ params }: Props) {
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-bold text-gray-900 text-sm">評価レーダー</h3>
                 <div className="flex items-center gap-1">
-                  <span className="text-xs text-gray-500">総合スコア</span>
-                  <span className={`text-base font-bold ${getRatingTextColor(org.avgRating)}`}>{org.avgRating.toFixed(1)}</span>
+                  <span className="text-xs text-gray-500 leading-none">総合スコア</span>
+                  <span className={`text-base font-bold leading-none ${getRatingTextColor(org.avgRating)}`}>{org.avgRating.toFixed(1)}</span>
                 </div>
               </div>
-              <div className="max-w-[250px] mx-auto">
-                <RatingRadar {...avgRatings} compact />
-              </div>
+              <RatingRadar {...avgRatings} compact />
             </div>
           )}
 
