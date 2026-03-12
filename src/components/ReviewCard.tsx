@@ -84,16 +84,7 @@ export default function ReviewCard({
         </div>
       </div>
 
-      <div className="relative mb-3 pointer-events-none">
-        <p ref={bodyRef} className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden">
-          {body}
-        </p>
-        {isClamped && (
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
-        )}
-      </div>
-
-      <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3 pointer-events-none">
+      <div className="relative z-10 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-gray-500 mb-3 pointer-events-none">
         <span className="inline-flex items-center gap-0.5">
           <User className="w-3.5 h-3.5" />
           {!isAnonymous && userId ? (
@@ -107,13 +98,25 @@ export default function ReviewCard({
           {new Date(createdAt).toLocaleDateString("ja-JP")}
         </span>
         <span className="px-2 py-0.5 bg-gray-100 rounded">{relationship}</span>
-        {period && <span>関わった時期: {period}</span>}
-        {reviewId != null && (
+        {period && <span className="hidden sm:inline">関わった時期: {period}</span>}
+      </div>
+
+      <div className="relative mb-3 pointer-events-none">
+        <p ref={bodyRef} className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden">
+          {body}
+        </p>
+        {isClamped && (
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
+        )}
+      </div>
+
+      {reviewId != null && (
+        <div className="relative z-10 border-t border-gray-100 pt-3 pointer-events-none">
           <span className="pointer-events-auto">
             <HelpfulButton reviewId={reviewId} initialCount={helpfulCount} initialVoted={userVoted} />
           </span>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
