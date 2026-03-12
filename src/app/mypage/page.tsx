@@ -54,31 +54,31 @@ export default async function MyPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center shrink-0">
-            <MessageSquare className="w-5 h-5 text-blue-600" />
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-5 flex flex-col sm:flex-row items-center gap-1 sm:gap-3 text-center sm:text-left">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 rounded-lg flex items-center justify-center shrink-0">
+            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
           </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">{user.reviews.length}</p>
+          <div className="flex flex-col justify-center">
+            <p className="h-7 sm:h-8 flex items-center justify-center sm:justify-start text-xl sm:text-2xl font-bold text-gray-900">{user.reviews.length}</p>
             <p className="text-xs text-gray-500">口コミ</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
-          <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
-            <ThumbsUp className="w-5 h-5 text-green-600" />
+        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-5 flex flex-col sm:flex-row items-center gap-1 sm:gap-3 text-center sm:text-left">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
+            <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
           </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">{totalHelpful}</p>
+          <div className="flex flex-col justify-center">
+            <p className="h-7 sm:h-8 flex items-center justify-center sm:justify-start text-xl sm:text-2xl font-bold text-gray-900">{totalHelpful}</p>
             <p className="text-xs text-gray-500">参考になった</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
-          <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center shrink-0">
-            <Calendar className="w-5 h-5 text-purple-600" />
+        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-5 flex flex-col sm:flex-row items-center gap-1 sm:gap-3 text-center sm:text-left">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-50 rounded-lg flex items-center justify-center shrink-0">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
           </div>
-          <div>
-            <p className="text-lg font-bold text-gray-900">
+          <div className="flex flex-col justify-center">
+            <p className="h-7 sm:h-8 flex items-center justify-center sm:justify-start text-sm sm:text-lg font-bold text-gray-900">
               {user.createdAt.toLocaleDateString("ja-JP", { year: "numeric", month: "short" })}
             </p>
             <p className="text-xs text-gray-500">登録日</p>
