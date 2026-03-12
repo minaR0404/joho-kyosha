@@ -55,7 +55,7 @@ export default function ReviewCard({
   }, [body]);
 
   return (
-    <div className="relative bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div className="relative bg-white rounded-lg border border-gray-200 p-5 pb-3 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
           {orgName && orgSlug && (
