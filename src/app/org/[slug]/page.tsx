@@ -98,43 +98,48 @@ export default async function OrgDetailPage({ params }: Props) {
         {/* Main Content */}
         <div className="lg:col-span-2">
           {/* Organization Header */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">{org.name}</h1>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
-                    {org.category.name}
-                  </span>
-                  {org.status === "CLOSED" && (
-                    <span className="text-xs px-2 py-0.5 bg-gray-200 text-gray-500 rounded">閉鎖</span>
-                  )}
-                </div>
-                {org.description && (
-                  <p className="text-gray-700 leading-relaxed mb-3">{org.description}</p>
-                )}
-                {(aggregatedTags.length > 0 || org.tags.length > 0) && (
-                  <div className="flex flex-wrap gap-1">
-                    {aggregatedTags.slice(0, 5).map((t) => (
-                      <TagBadge key={`review-${t.name}`} name={t.name} />
-                    ))}
-                    {org.tags
-                      .filter(({ tag }) => !reviewTagCounts[String(tag.id)])
-                      .map(({ tag }) => (
-                        <TagBadge key={`org-${tag.id}`} name={tag.name} />
-                      ))}
+          <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
+              <div className="flex items-start justify-between sm:block">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{org.name}</h1>
+                {org.reviewCount > 0 && (
+                  <div className="flex-shrink-0 sm:hidden">
+                    <RatingBadge rating={org.avgRating} />
                   </div>
                 )}
               </div>
               {org.reviewCount > 0 && (
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 hidden sm:block">
                   <RatingBadge rating={org.avgRating} />
                 </div>
               )}
             </div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
+                {org.category.name}
+              </span>
+              {org.status === "CLOSED" && (
+                <span className="text-xs px-2 py-0.5 bg-gray-200 text-gray-500 rounded">閉鎖</span>
+              )}
+            </div>
+            {org.description && (
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-3">{org.description}</p>
+            )}
+            {(aggregatedTags.length > 0 || org.tags.length > 0) && (
+              <div className="flex flex-wrap gap-1">
+                {aggregatedTags.slice(0, 5).map((t) => (
+                  <TagBadge key={`review-${t.name}`} name={t.name} />
+                ))}
+                {org.tags
+                  .filter(({ tag }) => !reviewTagCounts[String(tag.id)])
+                  .map(({ tag }) => (
+                    <TagBadge key={`org-${tag.id}`} name={tag.name} />
+                  ))}
+              </div>
+            )}
 
             {/* Org Details */}
-            <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-100 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-4 pt-4 border-t border-gray-100 text-sm">
               {org.representative && (
                 <div><span className="text-gray-500">代表者:</span> {org.representative}</div>
               )}
