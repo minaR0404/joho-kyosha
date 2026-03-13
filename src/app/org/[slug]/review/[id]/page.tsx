@@ -79,11 +79,11 @@ export default async function ReviewDetailPage({ params }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
             {/* Header */}
-            <div className="flex items-start justify-between gap-3 mb-2.5">
-              <h1 className="text-xl font-bold text-gray-900 mt-1">{review.title}</h1>
-              <div className="flex items-center gap-2 shrink-0 mt-1">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3 mb-2.5">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900">{review.title}</h1>
+              <div className="flex items-center gap-2 shrink-0">
                 <RatingIconsDisplay rating={review.ratingOverall} size="md" />
                 <span className="text-lg font-bold text-gray-700">
                   {review.ratingOverall.toFixed(1)}
@@ -92,9 +92,9 @@ export default async function ReviewDetailPage({ params }: Props) {
             </div>
 
             {/* Meta */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8 pl-1.5">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-6 text-sm text-gray-500 mb-4 sm:mb-8">
               <span className="inline-flex items-center gap-1">
-                <User className="w-4.5 h-4.5" />
+                <User className="w-4 h-4" />
                 {review.isAnonymous ? (
                   <span className="font-medium text-gray-700">匿名</span>
                 ) : (
@@ -108,11 +108,11 @@ export default async function ReviewDetailPage({ params }: Props) {
                 {review.createdAt.toLocaleDateString("ja-JP")}
               </span>
               <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">{review.relationship}</span>
-              {review.period && <span className="text-gray-400">関わった時期: {review.period}</span>}
+              {review.period && <span className="hidden sm:inline text-gray-400">関わった時期: {review.period}</span>}
             </div>
 
             {/* Body */}
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mb-6">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mb-4 sm:mb-6">
               {review.body}
             </p>
 
