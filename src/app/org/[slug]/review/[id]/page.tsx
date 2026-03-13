@@ -83,7 +83,27 @@ export default async function ReviewDetailPage({ params }: Props) {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3 mb-2.5">
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">{review.title}</h1>
-              <div className="flex items-center gap-2 shrink-0">
+              {/* Rating - PC: static, Mobile: accordion trigger */}
+              <details className="lg:hidden group shrink-0">
+                <summary className="flex items-center gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <RatingIconsDisplay rating={review.ratingOverall} size="md" />
+                  <span className="text-lg font-bold text-gray-700">
+                    {review.ratingOverall.toFixed(1)}
+                  </span>
+                  <span className="text-gray-400 text-xs transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div className="pt-2">
+                  <RatingRadar
+                    ratingDanger={review.ratingDanger}
+                    ratingCost={review.ratingCost}
+                    ratingPressure={review.ratingPressure}
+                    ratingTransparency={review.ratingTransparency}
+                    ratingExit={review.ratingExit}
+                    compact
+                  />
+                </div>
+              </details>
+              <div className="hidden lg:flex items-center gap-2 shrink-0">
                 <RatingIconsDisplay rating={review.ratingOverall} size="md" />
                 <span className="text-lg font-bold text-gray-700">
                   {review.ratingOverall.toFixed(1)}
@@ -146,8 +166,8 @@ export default async function ReviewDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
+        {/* Sidebar - PC only */}
+        <div className="hidden lg:block lg:col-span-1 space-y-4">
           {/* Rating Radar */}
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <h3 className="font-bold text-gray-900 mb-3">評価レーダー</h3>
