@@ -92,15 +92,24 @@ export default async function ReviewDetailPage({ params }: Props) {
                   </span>
                   <span className="text-gray-400 text-xs transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <div className="pt-2">
-                  <RatingRadar
-                    ratingDanger={review.ratingDanger}
-                    ratingCost={review.ratingCost}
-                    ratingPressure={review.ratingPressure}
-                    ratingTransparency={review.ratingTransparency}
-                    ratingExit={review.ratingExit}
-                    compact
-                  />
+                <div className="mt-2 bg-gray-50 rounded-lg p-3 flex items-center gap-2">
+                  <div className="flex-1 min-w-0">
+                    <RatingRadar
+                      ratingDanger={review.ratingDanger}
+                      ratingCost={review.ratingCost}
+                      ratingPressure={review.ratingPressure}
+                      ratingTransparency={review.ratingTransparency}
+                      ratingExit={review.ratingExit}
+                      compact
+                    />
+                  </div>
+                  <div className="shrink-0 text-[10px] space-y-0.5 text-gray-600">
+                    <div className="flex justify-between gap-1.5"><span>危険度</span><span className="font-medium">{review.ratingDanger.toFixed(1)}</span></div>
+                    <div className="flex justify-between gap-1.5"><span>金銭的リスク</span><span className="font-medium">{review.ratingCost.toFixed(1)}</span></div>
+                    <div className="flex justify-between gap-1.5"><span>勧誘の強さ</span><span className="font-medium">{review.ratingPressure.toFixed(1)}</span></div>
+                    <div className="flex justify-between gap-1.5"><span>不透明さ</span><span className="font-medium">{review.ratingTransparency.toFixed(1)}</span></div>
+                    <div className="flex justify-between gap-1.5"><span>脱退の難しさ</span><span className="font-medium">{review.ratingExit.toFixed(1)}</span></div>
+                  </div>
                 </div>
               </details>
               <div className="hidden lg:flex items-center gap-2 shrink-0">
