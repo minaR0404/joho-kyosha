@@ -4,8 +4,16 @@ export default function Footer() {
   return (
     <footer className="bg-gray-800 text-gray-300 mt-16">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
+        {/* Mobile: description top + 2-col grid / PC: 4-col grid */}
+        <div className="md:hidden mb-6">
+          <h3 className="text-white text-lg font-bold mb-2">情報強者</h3>
+          <p className="text-sm leading-relaxed">
+            みんなで情報を共有して騙されないように情報強者になろう。
+            悪徳商法に入る前にまずはこのサイトを確認しよう。
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          <div className="hidden md:block">
             <h3 className="text-white text-lg font-bold mb-3">情報強者</h3>
             <p className="text-sm leading-relaxed">
               みんなで情報を共有して騙されないように情報強者になろう。
@@ -13,8 +21,8 @@ export default function Footer() {
             </p>
           </div>
           <div>
-            <h4 className="text-white font-semibold mb-3">カテゴリ</h4>
-            <ul className="space-y-1.5 text-sm">
+            <h4 className="text-white font-semibold mb-2 md:mb-3">カテゴリ</h4>
+            <ul className="space-y-1 md:space-y-1.5 text-sm">
               <li><Link href="/category/info-products" className="hover:text-white transition-colors">情報商材</Link></li>
               <li><Link href="/category/mlm" className="hover:text-white transition-colors">マルチ商法(MLM)</Link></li>
               <li><Link href="/category/investment" className="hover:text-white transition-colors">投資・金融</Link></li>
@@ -26,14 +34,33 @@ export default function Footer() {
               <li><Link href="/category/other" className="hover:text-white transition-colors">その他</Link></li>
             </ul>
           </div>
-          <div>
+          {/* Mobile: 体験談+リンクをまとめる / PC: 体験談のみ */}
+          <div className="md:hidden">
+            <h4 className="text-white font-semibold mb-2">体験談</h4>
+            <ul className="space-y-1 text-sm">
+              <li><Link href="/testimonies" className="hover:text-white transition-colors">体験談一覧</Link></li>
+              <li><Link href="/testimony/new" className="hover:text-white transition-colors">体験談を投稿</Link></li>
+            </ul>
+            <h4 className="text-white font-semibold mt-4 mb-2">リンク</h4>
+            <ul className="space-y-1 text-sm">
+              <li><Link href="/about" className="hover:text-white transition-colors">このサイトについて</Link></li>
+              <li><Link href="/org/new" className="hover:text-white transition-colors">組織を登録する</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">削除依頼・お問い合わせ</Link></li>
+              <li>
+                <a href="https://www.caa.go.jp/consumers/protect/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  消費者庁
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="hidden md:block">
             <h4 className="text-white font-semibold mb-3">体験談</h4>
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/testimonies" className="hover:text-white transition-colors">体験談一覧</Link></li>
               <li><Link href="/testimony/new" className="hover:text-white transition-colors">体験談を投稿</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="hidden md:block">
             <h4 className="text-white font-semibold mb-3">リンク</h4>
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/about" className="hover:text-white transition-colors">このサイトについて</Link></li>
