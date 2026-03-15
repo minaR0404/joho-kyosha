@@ -80,6 +80,9 @@ export default function Footer() {
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">プライバシーポリシー</Link>
             <Link href="/guidelines" className="hover:text-gray-300 transition-colors">投稿ガイドライン</Link>
           </div>
+          <p className="text-xs text-gray-600 mb-3">
+            ※ 当サイトの情報は利用者の投稿に基づくものであり、正確性・完全性を保証するものではありません。
+          </p>
           <p>&copy; 2026 情報強者 All rights reserved.</p>
         </div>
       </div>

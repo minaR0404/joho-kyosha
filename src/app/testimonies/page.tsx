@@ -1,9 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
-import TagBadge from "@/components/TagBadge";
-import HelpfulButton from "@/components/HelpfulButton";
-import { User, Calendar, AlertTriangle, Banknote } from "lucide-react";
+import TestimonyCard from "@/components/TestimonyCard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,6 +18,7 @@ export default async function TestimoniesPage() {
       user: { select: { id: true, displayName: true } },
       category: { select: { slug: true, name: true } },
       tags: { include: { tag: true } },
+      org: { select: { name: true, slug: true } },
     },
   });
 
@@ -62,78 +61,25 @@ export default async function TestimoniesPage() {
       ) : (
         <div className="space-y-4">
           {testimonies.map((t) => (
-            <div key={t.id} className="relative bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
-              <div className="mb-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200 rounded">
-                    体験談
-                  </span>
-                  <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
-                    {t.category.name}
-                  </span>
-                </div>
-                <h2 className="font-bold text-gray-900">
-                  <Link href={`/testimony/${t.id}`} className="after:absolute after:inset-0">
-                    {t.title}
-                  </Link>
-                </h2>
-              </div>
-
-              {/* Info row */}
-              <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
-                {t.scamType && (
-                  <span className="inline-flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5 text-orange-500" />
-                    {t.scamType}
-                  </span>
-                )}
-                {t.damageAmount && (
-                  <span className="inline-flex items-center gap-1">
-                    <Banknote className="w-3.5 h-3.5 text-red-500" />
-                    {t.damageAmount}
-                  </span>
-                )}
-              </div>
-
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden mb-3">
-                {t.body}
-              </p>
-
-              {/* Tags */}
-              {t.tags.length > 0 && (
-                <div className="relative z-10 flex flex-wrap gap-1 mb-3">
-                  {t.tags.map((tt) => (
-                    <TagBadge key={tt.tag.id} name={tt.tag.name} />
-                  ))}
-                </div>
-              )}
-
-              {/* Footer */}
-              <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3 pointer-events-none">
-                <span className="inline-flex items-center gap-0.5">
-                  <User className="w-3.5 h-3.5" />
-                  {!t.isAnonymous ? (
-                    <a href={`/user/${t.user.id}`} className="pointer-events-auto hover:text-blue-600 hover:underline">
-                      {t.user.displayName}
-                    </a>
-                  ) : (
-                    <span>匿名</span>
-                  )}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" />
-                  {t.createdAt.toLocaleDateString("ja-JP")}
-                </span>
-                {t.period && <span>被害時期: {t.period}</span>}
-                <span className="pointer-events-auto">
-                  <HelpfulButton
-                    testimonyId={t.id}
-                    initialCount={t.helpfulCount}
-                    initialVoted={votedIds.has(t.id)}
-                  />
-                </span>
-              </div>
-            </div>
+            <TestimonyCard
+              key={t.id}
+              testimonyId={t.id}
+              title={t.title}
+              body={t.body}
+              categoryName={t.category.name}
+              scamType={t.scamType}
+              damageAmount={t.damageAmount}
+              period={t.period}
+              isAnonymous={t.isAnonymous}
+              displayName={t.user.displayName}
+              userId={t.user.id}
+              helpfulCount={t.helpfulCount}
+              createdAt={t.createdAt.toISOString()}
+              orgName={t.org?.name}
+              orgSlug={t.org?.slug}
+              userVoted={votedIds.has(t.id)}
+              tags={t.tags.map((tt) => ({ id: tt.tag.id, name: tt.tag.name }))}
+            />
           ))}
         </div>
       )}

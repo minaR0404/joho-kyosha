@@ -64,6 +64,7 @@ model Organization {
   updatedAt       DateTime     @updatedAt
   reviews         Review[]
   tags            TagsOnOrgs[]
+  testimonies     Testimony[]
 }
 
 model Tag {
@@ -134,6 +135,8 @@ model Testimony {
   user            User            @relation(fields: [userId], references: [id])
   categoryId      Int
   category        Category        @relation(fields: [categoryId], references: [id])
+  orgId           Int?
+  org             Organization?   @relation(fields: [orgId], references: [id])
   title           String
   body            String
   scamType        String?

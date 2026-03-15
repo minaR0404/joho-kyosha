@@ -165,6 +165,10 @@ export default async function OrgDetailPage({ params }: Props) {
             )}
           </div>
 
+          <p className="text-xs text-gray-400 mb-4 px-1">
+            ※ 掲載情報はユーザーの投稿に基づいています。当サイトは特定の組織を誹謗中傷する目的で運営しているものではありません。
+          </p>
+
           {/* Rating Radar - Mobile only (compact) */}
           {avgRatings && (
             <div className="bg-white rounded-lg border border-gray-200 p-3 mb-6 lg:hidden">

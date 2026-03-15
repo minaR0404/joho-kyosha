@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 
 interface Tag {
   id: number;
@@ -13,6 +14,12 @@ interface Category {
   slug: string;
   name: string;
   sortOrder: number;
+}
+
+interface OrgResult {
+  id: number;
+  name: string;
+  slug: string;
 }
 
 export default function TestimonyForm({ tags }: { tags: Tag[] }) {
@@ -29,6 +36,14 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
+  // Org search
+  const [orgSearch, setOrgSearch] = useState("");
+  const [orgResults, setOrgResults] = useState<OrgResult[]>([]);
+  const [selectedOrg, setSelectedOrg] = useState<OrgResult | null>(null);
+  const [showOrgDropdown, setShowOrgDropdown] = useState(false);
+  const orgDropdownRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
   useEffect(() => {
     fetch("/api/orgs?categoriesOnly=1")
       .then((res) => res.json())
@@ -38,6 +53,41 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
         setCategories(cats);
       })
       .catch(() => {});
+  }, []);
+
+  // Org search with debounce
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (orgSearch.length < 2) {
+      setOrgResults([]);
+      setShowOrgDropdown(false);
+      return;
+    }
+    debounceRef.current = setTimeout(() => {
+      fetch(`/api/orgs?q=${encodeURIComponent(orgSearch)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const results = (data.orgs || []).slice(0, 10).map((o: { id: number; name: string; slug: string }) => ({
+            id: o.id,
+            name: o.name,
+            slug: o.slug,
+          }));
+          setOrgResults(results);
+          setShowOrgDropdown(results.length > 0);
+        })
+        .catch(() => {});
+    }, 300);
+  }, [orgSearch]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (orgDropdownRef.current && !orgDropdownRef.current.contains(e.target as Node)) {
+        setShowOrgDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,6 +108,7 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
           period: period || undefined,
           isAnonymous,
           tagIds: selectedTagIds,
+          orgId: selectedOrg?.id || undefined,
         }),
       });
 
@@ -100,6 +151,58 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
+      </div>
+
+      {/* Organization (optional) */}
+      <div ref={orgDropdownRef} className="relative">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          関連する組織（任意）
+        </label>
+        {selectedOrg ? (
+          <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md">
+            <span className="text-sm text-blue-800">{selectedOrg.name}</span>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedOrg(null);
+                setOrgSearch("");
+              }}
+              className="ml-auto text-blue-400 hover:text-blue-600"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <input
+            type="text"
+            value={orgSearch}
+            onChange={(e) => setOrgSearch(e.target.value)}
+            onFocus={() => orgResults.length > 0 && setShowOrgDropdown(true)}
+            placeholder="組織名を検索（2文字以上）"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        )}
+        {showOrgDropdown && (
+          <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
+            {orgResults.map((org) => (
+              <button
+                key={org.id}
+                type="button"
+                onClick={() => {
+                  setSelectedOrg(org);
+                  setOrgSearch("");
+                  setShowOrgDropdown(false);
+                }}
+                className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors"
+              >
+                {org.name}
+              </button>
+            ))}
+          </div>
+        )}
+        <p className="text-xs text-gray-400 mt-1">
+          該当する組織がない場合はそのまま空欄で投稿できます
+        </p>
       </div>
 
       {/* Scam Type */}
@@ -241,6 +344,11 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
         />
         <span className="text-sm text-gray-700">匿名で投稿する</span>
       </label>
+
+      {/* Disclaimer */}
+      <div className="bg-gray-50 border border-gray-200 rounded-md px-4 py-3 text-xs text-gray-500 leading-relaxed">
+        ※ 投稿内容は公開されます。投稿は<a href="/terms" className="text-blue-600 hover:underline">利用規約</a>および<a href="/guidelines" className="text-blue-600 hover:underline">投稿ガイドライン</a>に従ってください。
+      </div>
 
       <button
         type="submit"

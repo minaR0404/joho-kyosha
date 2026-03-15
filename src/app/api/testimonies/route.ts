@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
         user: { select: { id: true, displayName: true } },
         category: { select: { slug: true, name: true } },
         tags: { include: { tag: true } },
+        org: { select: { name: true, slug: true } },
       },
     }),
     prisma.testimony.count({ where }),
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
       period,
       isAnonymous,
       tagIds,
+      orgId,
     } = body;
 
     if (!categoryId || !title || !testimonyBody) {
@@ -82,10 +84,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "時期は20文字以内で入力してください" }, { status: 400 });
     }
 
+    // Validate orgId if provided
+    let validOrgId: number | null = null;
+    if (orgId) {
+      const org = await prisma.organization.findUnique({ where: { id: Number(orgId) } });
+      if (!org) {
+        return NextResponse.json({ error: "指定された組織が見つかりません" }, { status: 400 });
+      }
+      validOrgId = org.id;
+    }
+
     const testimony = await prisma.testimony.create({
       data: {
         userId: Number(session.user.id),
         categoryId: Number(categoryId),
+        orgId: validOrgId,
         title,
         body: testimonyBody,
         scamType: scamType || null,

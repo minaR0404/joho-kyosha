@@ -140,6 +140,10 @@ export default async function TestimonyDetailPage({ params }: Props) {
             <ReportButton targetType="TESTIMONY" targetId={testimony.id} />
           </div>
         </div>
+
+        <p className="text-xs text-gray-400 mt-4">
+          ※ この体験談は投稿者個人の経験に基づくものです。
+        </p>
       </div>
     </div>
   );

@@ -215,6 +215,11 @@ export default function ReviewForm({ orgId, orgSlug, tags }: { orgId: number; or
         <span className="text-sm text-gray-700">匿名で投稿する</span>
       </label>
 
+      {/* Disclaimer */}
+      <div className="bg-gray-50 border border-gray-200 rounded-md px-4 py-3 text-xs text-gray-500 leading-relaxed">
+        ※ 投稿は<a href="/terms" className="text-blue-600 hover:underline">利用規約</a>および<a href="/guidelines" className="text-blue-600 hover:underline">投稿ガイドライン</a>に従ってください。
+      </div>
+
       <button
         type="submit"
         disabled={loading}
