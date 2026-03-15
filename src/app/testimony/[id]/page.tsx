@@ -5,6 +5,7 @@ import Link from "next/link";
 import TagBadge from "@/components/TagBadge";
 import { User, Calendar, AlertTriangle, Banknote } from "lucide-react";
 import HelpfulButton from "@/components/HelpfulButton";
+import DeleteButton from "@/components/DeleteButton";
 import ReportButton from "@/components/ReportButton";
 import type { Metadata } from "next";
 
@@ -38,6 +39,7 @@ export default async function TestimonyDetailPage({ params }: Props) {
 
   const session = await auth();
   const userId = session?.user?.id ? Number(session.user.id) : null;
+  const isOwner = userId === testimony.user.id;
   const userVoted = userId
     ? !!(await prisma.testimonyVote.findUnique({
         where: { testimonyId_userId: { testimonyId: testimony.id, userId } },
@@ -136,6 +138,12 @@ export default async function TestimonyDetailPage({ params }: Props) {
             initialVoted={userVoted}
             size="md"
           />
+          {isOwner && (
+            <DeleteButton
+              apiEndpoint={`/api/testimonies/${testimony.id}`}
+              redirectTo="/testimonies"
+            />
+          )}
           <div className="ml-auto">
             <ReportButton targetType="TESTIMONY" targetId={testimony.id} />
           </div>

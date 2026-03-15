@@ -9,7 +9,7 @@ import { getRatingTextColor } from "@/lib/utils";
 import TagBadge from "@/components/TagBadge";
 import { User, Calendar } from "lucide-react";
 import HelpfulButton from "@/components/HelpfulButton";
-import ReviewDeleteButton from "@/components/ReviewDeleteButton";
+import DeleteButton from "@/components/DeleteButton";
 import ReportButton from "@/components/ReportButton";
 import type { Metadata } from "next";
 
@@ -163,8 +163,8 @@ export default async function ReviewDetailPage({ params }: Props) {
                 size="md"
               />
               {isOwner && (
-                <ReviewDeleteButton
-                  reviewId={review.id}
+                <DeleteButton
+                  apiEndpoint={`/api/reviews/${review.id}`}
                   redirectTo={`/org/${review.org.slug}`}
                 />
               )}

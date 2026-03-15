@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 
-export default function ReviewDeleteButton({
-  reviewId,
+export default function DeleteButton({
+  apiEndpoint,
   redirectTo,
 }: {
-  reviewId: number;
+  apiEndpoint: string;
   redirectTo: string;
 }) {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function ReviewDeleteButton({
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/reviews/${reviewId}`, { method: "DELETE" });
+      const res = await fetch(apiEndpoint, { method: "DELETE" });
       if (res.ok) {
         router.push(redirectTo);
         router.refresh();
