@@ -22,24 +22,37 @@ interface OrgResult {
   slug: string;
 }
 
-export default function TestimonyForm({ tags }: { tags: Tag[] }) {
+export default function PostForm({
+  tags,
+  orgId: presetOrgId,
+  orgName: presetOrgName,
+  categoryId: presetCategoryId,
+}: {
+  tags: Tag[];
+  orgId?: number;
+  orgName?: string;
+  categoryId?: number;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryId, setCategoryId] = useState(presetCategoryId ? String(presetCategoryId) : "");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [scamType, setScamType] = useState("");
   const [damageAmount, setDamageAmount] = useState("");
   const [period, setPeriod] = useState("");
+  const [relationship, setRelationship] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
   // Org search
   const [orgSearch, setOrgSearch] = useState("");
   const [orgResults, setOrgResults] = useState<OrgResult[]>([]);
-  const [selectedOrg, setSelectedOrg] = useState<OrgResult | null>(null);
+  const [selectedOrg, setSelectedOrg] = useState<OrgResult | null>(
+    presetOrgId && presetOrgName ? { id: presetOrgId, name: presetOrgName, slug: "" } : null
+  );
   const [showOrgDropdown, setShowOrgDropdown] = useState(false);
   const orgDropdownRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -96,7 +109,7 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/testimonies", {
+      const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -106,6 +119,7 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
           scamType: scamType || undefined,
           damageAmount: damageAmount || undefined,
           period: period || undefined,
+          relationship: relationship || undefined,
           isAnonymous,
           tagIds: selectedTagIds,
           orgId: selectedOrg?.id || undefined,
@@ -118,7 +132,7 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
         return;
       }
 
-      router.push(`/testimony/${data.testimonyId}`);
+      router.push(`/post/${data.postId}`);
       router.refresh();
     } catch {
       setError("通信エラーが発生しました");
@@ -144,7 +158,8 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
           required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={!!presetCategoryId}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
         >
           <option value="">選択してください</option>
           {categories.map((c) => (
@@ -154,56 +169,90 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
       </div>
 
       {/* Organization (optional) */}
-      <div ref={orgDropdownRef} className="relative">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          関連する組織（任意）
-        </label>
-        {selectedOrg ? (
-          <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md">
-            <span className="text-sm text-blue-800">{selectedOrg.name}</span>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedOrg(null);
-                setOrgSearch("");
-              }}
-              className="ml-auto text-blue-400 hover:text-blue-600"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <input
-            type="text"
-            value={orgSearch}
-            onChange={(e) => setOrgSearch(e.target.value)}
-            onFocus={() => orgResults.length > 0 && setShowOrgDropdown(true)}
-            placeholder="組織名を検索（2文字以上）"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        )}
-        {showOrgDropdown && (
-          <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
-            {orgResults.map((org) => (
+      {!presetOrgId ? (
+        <div ref={orgDropdownRef} className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            関連する組織（任意）
+          </label>
+          {selectedOrg ? (
+            <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md">
+              <span className="text-sm text-blue-800">{selectedOrg.name}</span>
               <button
-                key={org.id}
                 type="button"
                 onClick={() => {
-                  setSelectedOrg(org);
+                  setSelectedOrg(null);
                   setOrgSearch("");
-                  setShowOrgDropdown(false);
                 }}
-                className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors"
+                className="ml-auto text-blue-400 hover:text-blue-600"
               >
-                {org.name}
+                <X className="w-4 h-4" />
               </button>
-            ))}
+            </div>
+          ) : (
+            <input
+              type="text"
+              value={orgSearch}
+              onChange={(e) => setOrgSearch(e.target.value)}
+              onFocus={() => orgResults.length > 0 && setShowOrgDropdown(true)}
+              placeholder="組織名を検索（2文字以上）"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          )}
+          {showOrgDropdown && (
+            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
+              {orgResults.map((org) => (
+                <button
+                  key={org.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedOrg(org);
+                    setOrgSearch("");
+                    setShowOrgDropdown(false);
+                  }}
+                  className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors"
+                >
+                  {org.name}
+                </button>
+              ))}
+            </div>
+          )}
+          <p className="text-xs text-gray-400 mt-1">
+            該当する組織がない場合はそのまま空欄で投稿できます
+          </p>
+        </div>
+      ) : (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            関連する組織
+          </label>
+          <div className="px-3 py-2 bg-blue-50 border border-blue-200 rounded-md text-sm text-blue-800">
+            {presetOrgName}
           </div>
-        )}
-        <p className="text-xs text-gray-400 mt-1">
-          該当する組織がない場合はそのまま空欄で投稿できます
-        </p>
-      </div>
+        </div>
+      )}
+
+      {/* Relationship (shown when org is selected) */}
+      {(selectedOrg || presetOrgId) && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            組織との関係
+          </label>
+          <select
+            value={relationship}
+            onChange={(e) => setRelationship(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">選択してください（任意）</option>
+            <option value="元会員">元会員</option>
+            <option value="現会員">現会員</option>
+            <option value="元従業員">元従業員</option>
+            <option value="家族・知人が関与">家族・知人が関与</option>
+            <option value="勧誘を受けた">勧誘を受けた</option>
+            <option value="被害者">被害者</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+      )}
 
       {/* Scam Type */}
       <div>
@@ -279,7 +328,7 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
       {/* Body */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          体験談 *
+          体験の詳細 *
         </label>
         <textarea
           value={body}
@@ -355,7 +404,7 @@ export default function TestimonyForm({ tags }: { tags: Tag[] }) {
         disabled={loading}
         className="w-full py-3 bg-blue-700 text-white rounded-md hover:bg-blue-800 transition-colors disabled:opacity-50 font-medium"
       >
-        {loading ? "投稿中..." : "体験談を投稿する"}
+        {loading ? "投稿中..." : "投稿する"}
       </button>
     </form>
   );

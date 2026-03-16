@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import OrgCard from "@/components/OrgCard";
-import TestimonyCard from "@/components/TestimonyCard";
+import PostCard from "@/components/PostCard";
 import { getCategoryIcon } from "@/lib/category-config";
 import type { Metadata } from "next";
 
@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = await prisma.category.findUnique({ where: { slug } });
   if (!category) return {};
   return {
-    title: `${category.name}の体験談・口コミ・評判一覧`,
-    description: `${category.name}に関する体験談・口コミ・評判をチェック。騙される前にまず確認しよう。`,
+    title: `${category.name}の投稿・口コミ・評判一覧`,
+    description: `${category.name}に関する投稿・口コミ・評判をチェック。騙される前にまず確認しよう。`,
   };
 }
 
@@ -30,15 +30,15 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const category = await prisma.category.findUnique({ where: { slug } });
   if (!category) notFound();
 
-  const activeTab = tab === "orgs" ? "orgs" : "testimonies";
+  const activeTab = tab === "orgs" ? "orgs" : "posts";
 
-  const [orgs, testimonies] = await Promise.all([
+  const [orgs, posts] = await Promise.all([
     prisma.organization.findMany({
       where: { categoryId: category.id, status: { not: "DELETED" }, approvalStatus: "APPROVED" },
-      orderBy: { reviewCount: "desc" },
+      orderBy: { postCount: "desc" },
       include: { category: true },
     }),
-    prisma.testimony.findMany({
+    prisma.post.findMany({
       where: { categoryId: category.id, deletedAt: null, status: "PUBLISHED" },
       orderBy: { createdAt: "desc" },
       include: {
@@ -54,12 +54,12 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const userId = session?.user?.id ? Number(session.user.id) : null;
 
   const votedIds = new Set<number>();
-  if (userId && testimonies.length > 0) {
-    const votes = await prisma.testimonyVote.findMany({
-      where: { userId, testimonyId: { in: testimonies.map((t) => t.id) }, value: 1 },
-      select: { testimonyId: true },
+  if (userId && posts.length > 0) {
+    const votes = await prisma.postVote.findMany({
+      where: { userId, postId: { in: posts.map((p) => p.id) }, value: 1 },
+      select: { postId: true },
     });
-    votes.forEach((v) => votedIds.add(v.testimonyId));
+    votes.forEach((v) => votedIds.add(v.postId));
   }
 
   const tabClass = (isActive: boolean) =>
@@ -77,49 +77,50 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <h1 className="text-2xl font-bold text-gray-900">{category.name}</h1>
         </div>
         <p className="text-gray-600">
-          {category.name}に関する体験談・口コミ・評判
+          {category.name}に関する投稿・口コミ・評判
         </p>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-gray-200 mb-6">
-        <Link href={`/category/${slug}?tab=testimonies`} className={tabClass(activeTab === "testimonies")}>
-          体験談（{testimonies.length}）
+        <Link href={`/category/${slug}?tab=posts`} className={tabClass(activeTab === "posts")}>
+          投稿（{posts.length}）
         </Link>
         <Link href={`/category/${slug}?tab=orgs`} className={tabClass(activeTab === "orgs")}>
           組織（{orgs.length}）
         </Link>
       </div>
 
-      {activeTab === "testimonies" ? (
-        testimonies.length === 0 ? (
+      {activeTab === "posts" ? (
+        posts.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
-            <p className="text-lg mb-2">まだ体験談がありません</p>
-            <Link href="/testimony/new" className="text-blue-600 hover:underline">
-              最初の体験談を投稿する
+            <p className="text-lg mb-2">まだ投稿がありません</p>
+            <Link href="/post/new" className="text-blue-600 hover:underline">
+              最初の投稿をする
             </Link>
           </div>
         ) : (
           <div className="space-y-4">
-            {testimonies.map((t) => (
-              <TestimonyCard
-                key={t.id}
-                testimonyId={t.id}
-                title={t.title}
-                body={t.body}
-                categoryName={t.category.name}
-                scamType={t.scamType}
-                damageAmount={t.damageAmount}
-                period={t.period}
-                isAnonymous={t.isAnonymous}
-                displayName={t.user.displayName}
-                userId={t.user.id}
-                helpfulCount={t.helpfulCount}
-                createdAt={t.createdAt.toISOString()}
-                orgName={t.org?.name}
-                orgSlug={t.org?.slug}
-                userVoted={votedIds.has(t.id)}
-                tags={t.tags.map((tt) => ({ id: tt.tag.id, name: tt.tag.name }))}
+            {posts.map((p) => (
+              <PostCard
+                key={p.id}
+                postId={p.id}
+                title={p.title}
+                body={p.body}
+                categoryName={p.category.name}
+                scamType={p.scamType}
+                damageAmount={p.damageAmount}
+                period={p.period}
+                relationship={p.relationship}
+                isAnonymous={p.isAnonymous}
+                displayName={p.user.displayName}
+                userId={p.user.id}
+                helpfulCount={p.helpfulCount}
+                createdAt={p.createdAt.toISOString()}
+                orgName={p.org?.name}
+                orgSlug={p.org?.slug}
+                userVoted={votedIds.has(p.id)}
+                tags={p.tags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))}
               />
             ))}
           </div>
@@ -143,8 +144,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                   categoryName={org.category.name}
                   categorySlug={org.category.slug}
                   description={org.description}
-                  avgRating={org.avgRating}
-                  reviewCount={org.reviewCount}
+                  postCount={org.postCount}
                   status={org.status}
                 />
               ))}

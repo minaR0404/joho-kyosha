@@ -4,14 +4,12 @@ import { useState } from "react";
 import { ThumbsUp } from "lucide-react";
 
 export default function HelpfulButton({
-  reviewId,
-  testimonyId,
+  postId,
   initialCount,
   initialVoted,
   size = "sm",
 }: {
-  reviewId?: number;
-  testimonyId?: number;
+  postId: number;
   initialCount: number;
   initialVoted: boolean;
   size?: "sm" | "md";
@@ -22,17 +20,13 @@ export default function HelpfulButton({
 
   const [showLoginHint, setShowLoginHint] = useState(false);
 
-  const voteUrl = testimonyId
-    ? `/api/testimonies/${testimonyId}/vote`
-    : `/api/reviews/${reviewId}/vote`;
-
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setLoading(true);
     setShowLoginHint(false);
     try {
-      const res = await fetch(voteUrl, {
+      const res = await fetch(`/api/posts/${postId}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ value: 1 }),

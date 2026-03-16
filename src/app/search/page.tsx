@@ -25,7 +25,7 @@ export default async function SearchPage({ searchParams }: Props) {
             { aliases: { contains: query } },
           ],
         },
-        orderBy: { reviewCount: "desc" },
+        orderBy: { postCount: "desc" },
         take: 50,
         include: { category: { select: { name: true, slug: true } } },
       })
@@ -63,8 +63,7 @@ export default async function SearchPage({ searchParams }: Props) {
                   categoryName={org.category.name}
                   categorySlug={org.category.slug}
                   description={org.description}
-                  avgRating={org.avgRating}
-                  reviewCount={org.reviewCount}
+                  postCount={org.postCount}
                   status={org.status}
                 />
               ))}

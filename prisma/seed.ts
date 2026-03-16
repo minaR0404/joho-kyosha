@@ -89,8 +89,7 @@ async function main() {
       status: "ACTIVE",
       approvalStatus: "APPROVED",
       submittedById: admin.id,
-      avgRating: 4.2,
-      reviewCount: 2,
+      postCount: 2,
     },
   });
 
@@ -106,8 +105,7 @@ async function main() {
       status: "ACTIVE",
       approvalStatus: "APPROVED",
       submittedById: admin.id,
-      avgRating: 3.8,
-      reviewCount: 2,
+      postCount: 2,
     },
   });
 
@@ -121,8 +119,7 @@ async function main() {
       status: "ACTIVE",
       approvalStatus: "APPROVED",
       submittedById: admin.id,
-      avgRating: 3.5,
-      reviewCount: 1,
+      postCount: 1,
     },
   });
 
@@ -136,8 +133,7 @@ async function main() {
       status: "ACTIVE",
       approvalStatus: "APPROVED",
       submittedById: admin.id,
-      avgRating: 2.8,
-      reviewCount: 1,
+      postCount: 1,
     },
   });
 
@@ -155,104 +151,97 @@ async function main() {
     ],
   });
 
-  // Sample reviews
-  await prisma.review.createMany({
-    data: [
-      {
-        orgId: org1.id,
-        userId: user.id,
-        ratingOverall: 4.4,
-        ratingDanger: 5,
-        ratingCost: 5,
-        ratingPressure: 4,
-        ratingTransparency: 4,
-        ratingExit: 4,
-        title: "高額バックエンドに注意",
-        body: "無料セミナーに参加したところ、最終的に50万円のコンサルを勧められました。「今日だけ特別価格」と言われましたが、後日同じ価格でした。内容は薄く、ネットで無料で得られる情報ばかりでした。",
-        relationship: "勧誘された",
-        period: "2023年6月",
-        isAnonymous: true,
-      },
-      {
-        orgId: org1.id,
-        userId: user2.id,
-        ratingOverall: 4.0,
-        ratingDanger: 4,
-        ratingCost: 5,
-        ratingPressure: 3,
-        ratingTransparency: 4,
-        ratingExit: 4,
-        title: "返金を求めたが対応されず",
-        body: "30万円の教材を購入しましたが、内容が説明と全く異なっていました。返金を求めましたが、「デジタル商品のため返金不可」の一点張り。消費者センターに相談中です。",
-        relationship: "元会員",
-        period: "2023年8月",
-        isAnonymous: false,
-      },
-      {
-        orgId: org2.id,
-        userId: user.id,
-        ratingOverall: 3.6,
-        ratingDanger: 3,
-        ratingCost: 4,
-        ratingPressure: 5,
-        ratingTransparency: 3,
-        ratingExit: 3,
-        title: "友人関係が壊れました",
-        body: "親しい友人から熱心に勧誘されました。断っても何度も連絡が来て、最終的に友人関係が壊れてしまいました。商品自体は普通の健康食品ですが、価格は市販品の3倍以上。",
-        relationship: "勧誘された",
-        period: "2022年",
-        isAnonymous: true,
-      },
-      {
-        orgId: org2.id,
-        userId: user2.id,
-        ratingOverall: 4.0,
-        ratingDanger: 4,
-        ratingCost: 3,
-        ratingPressure: 5,
-        ratingTransparency: 4,
-        ratingExit: 4,
-        title: "一度入ると抜けにくい",
-        body: "知人の紹介で入会しました。毎月のノルマがあり、達成できないと上位者から圧力がかかります。退会を申し出ると「もったいない」と引き止められ、なかなか辞められませんでした。",
-        relationship: "元会員",
-        period: "2021年〜2023年",
-        isAnonymous: false,
-      },
-      {
-        orgId: org3.id,
-        userId: user.id,
-        ratingOverall: 3.4,
-        ratingDanger: 3,
-        ratingCost: 4,
-        ratingPressure: 3,
-        ratingTransparency: 4,
-        ratingExit: 3,
-        title: "実績が確認できない",
-        body: "入会金50万円を支払いましたが、講師の実績を証明する資料は一切ありませんでした。「月収1000万円」と謳っていますが、根拠となるデータの提示を求めても回答がありません。",
-        relationship: "元会員",
-        period: "2023年",
-        isAnonymous: true,
-      },
-      {
-        orgId: org4.id,
-        userId: user2.id,
-        ratingOverall: 2.8,
-        ratingDanger: 2,
-        ratingCost: 3,
-        ratingPressure: 3,
-        ratingTransparency: 3,
-        ratingExit: 3,
-        title: "内容は薄いが危険度は低い",
-        body: "月額1万円のオンラインサロンに3ヶ月在籍しました。コンテンツはYouTubeレベル。人脈が広がるという触れ込みでしたが、実態はセミナーの案内ばかり。ただ退会は簡単にできました。",
-        relationship: "元会員",
-        period: "2024年",
-        isAnonymous: false,
-      },
-    ],
+  // Sample posts (organization-linked)
+  await prisma.post.create({
+    data: {
+      userId: user.id,
+      categoryId: categories[0].id,
+      orgId: org1.id,
+      title: "高額バックエンドに注意",
+      body: "無料セミナーに参加したところ、最終的に50万円のコンサルを勧められました。「今日だけ特別価格」と言われましたが、後日同じ価格でした。内容は薄く、ネットで無料で得られる情報ばかりでした。",
+      relationship: "勧誘された",
+      period: "2023年6月",
+      damageAmount: "50万円",
+      isAnonymous: true,
+      tags: { create: [{ tagId: tags[0].id }, { tagId: tags[5].id }] },
+    },
   });
 
-  // Sample testimonies
-  await prisma.testimony.create({
+  await prisma.post.create({
+    data: {
+      userId: user2.id,
+      categoryId: categories[0].id,
+      orgId: org1.id,
+      title: "返金を求めたが対応されず",
+      body: "30万円の教材を購入しましたが、内容が説明と全く異なっていました。返金を求めましたが、「デジタル商品のため返金不可」の一点張り。消費者センターに相談中です。",
+      relationship: "元会員",
+      period: "2023年8月",
+      damageAmount: "30万円",
+      isAnonymous: false,
+      tags: { create: [{ tagId: tags[2].id }, { tagId: tags[16].id }] },
+    },
+  });
+
+  await prisma.post.create({
+    data: {
+      userId: user.id,
+      categoryId: categories[1].id,
+      orgId: org2.id,
+      title: "友人関係が壊れました",
+      body: "親しい友人から熱心に勧誘されました。断っても何度も連絡が来て、最終的に友人関係が壊れてしまいました。商品自体は普通の健康食品ですが、価格は市販品の3倍以上。",
+      relationship: "勧誘された",
+      period: "2022年",
+      isAnonymous: true,
+      tags: { create: [{ tagId: tags[1].id }, { tagId: tags[13].id }] },
+    },
+  });
+
+  await prisma.post.create({
+    data: {
+      userId: user2.id,
+      categoryId: categories[1].id,
+      orgId: org2.id,
+      title: "一度入ると抜けにくい",
+      body: "知人の紹介で入会しました。毎月のノルマがあり、達成できないと上位者から圧力がかかります。退会を申し出ると「もったいない」と引き止められ、なかなか辞められませんでした。",
+      relationship: "元会員",
+      period: "2021年〜2023年",
+      isAnonymous: false,
+      tags: { create: [{ tagId: tags[7].id }, { tagId: tags[4].id }] },
+    },
+  });
+
+  await prisma.post.create({
+    data: {
+      userId: user.id,
+      categoryId: categories[2].id,
+      orgId: org3.id,
+      title: "実績が確認できない",
+      body: "入会金50万円を支払いましたが、講師の実績を証明する資料は一切ありませんでした。「月収1000万円」と謳っていますが、根拠となるデータの提示を求めても回答がありません。",
+      relationship: "元会員",
+      period: "2023年",
+      damageAmount: "50万円",
+      isAnonymous: true,
+      tags: { create: [{ tagId: tags[0].id }, { tagId: tags[6].id }] },
+    },
+  });
+
+  await prisma.post.create({
+    data: {
+      userId: user2.id,
+      categoryId: categories[3].id,
+      orgId: org4.id,
+      title: "内容は薄いが危険度は低い",
+      body: "月額1万円のオンラインサロンに3ヶ月在籍しました。コンテンツはYouTubeレベル。人脈が広がるという触れ込みでしたが、実態はセミナーの案内ばかり。ただ退会は簡単にできました。",
+      relationship: "元会員",
+      period: "2024年",
+      damageAmount: "3万円",
+      isAnonymous: false,
+      tags: { create: [{ tagId: tags[3].id }] },
+    },
+  });
+
+  // Sample posts (standalone - no organization)
+  await prisma.post.create({
     data: {
       userId: user.id,
       categoryId: categories[6].id, // 訪問販売・買取
@@ -271,7 +260,7 @@ async function main() {
     },
   });
 
-  await prisma.testimony.create({
+  await prisma.post.create({
     data: {
       userId: user2.id,
       categoryId: categories[2].id, // 投資・金融
@@ -290,7 +279,7 @@ async function main() {
     },
   });
 
-  await prisma.testimony.create({
+  await prisma.post.create({
     data: {
       userId: user.id,
       categoryId: categories[5].id, // 美容・健康

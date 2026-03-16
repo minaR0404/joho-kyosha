@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
       approvalStatus: "APPROVED",
       ...(q ? { OR: [{ name: { contains: q } }, { description: { contains: q } }] } : {}),
     },
-    orderBy: { reviewCount: "desc" },
+    orderBy: { postCount: "desc" },
     take: 50,
     include: { category: { select: { name: true, slug: true } } },
   });

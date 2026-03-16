@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MessageSquareMore } from "lucide-react";
-import RatingBadge from "./RatingBadge";
 
 interface OrgCardProps {
   slug: string;
@@ -8,8 +7,7 @@ interface OrgCardProps {
   categoryName: string;
   categorySlug: string;
   description: string | null;
-  avgRating: number;
-  reviewCount: number;
+  postCount: number;
   status: string;
 }
 
@@ -18,8 +16,7 @@ export default function OrgCard({
   name,
   categoryName,
   description,
-  avgRating,
-  reviewCount,
+  postCount,
   status,
 }: OrgCardProps) {
   return (
@@ -45,16 +42,14 @@ export default function OrgCard({
           )}
           <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-500">
             <MessageSquareMore className="w-5 h-5 translate-y-[1px]" />
-            <span>口コミ {reviewCount}件</span>
+            <span>投稿 {postCount}件</span>
           </div>
         </div>
-        <div className="flex-shrink-0">
-          {reviewCount > 0 ? (
-            <RatingBadge rating={avgRating} />
-          ) : (
-            <span className="text-xs text-gray-400">評価なし</span>
-          )}
-        </div>
+        {postCount > 0 && (
+          <span className="text-sm font-bold px-2.5 py-1 rounded bg-blue-50 text-blue-700">
+            {postCount}件
+          </span>
+        )}
       </div>
     </Link>
   );

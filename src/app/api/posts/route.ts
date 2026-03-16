@@ -15,8 +15,8 @@ export async function GET(req: NextRequest) {
     ...(categorySlug ? { category: { slug: categorySlug } } : {}),
   };
 
-  const [testimonies, total] = await Promise.all([
-    prisma.testimony.findMany({
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({
       where,
       orderBy: { createdAt: "desc" },
       take,
@@ -28,10 +28,10 @@ export async function GET(req: NextRequest) {
         org: { select: { name: true, slug: true } },
       },
     }),
-    prisma.testimony.count({ where }),
+    prisma.post.count({ where }),
   ]);
 
-  return NextResponse.json({ testimonies, total, page, totalPages: Math.ceil(total / take) });
+  return NextResponse.json({ posts, total, page, totalPages: Math.ceil(total / take) });
 }
 
 export async function POST(req: NextRequest) {
@@ -56,16 +56,17 @@ export async function POST(req: NextRequest) {
     const {
       categoryId,
       title,
-      body: testimonyBody,
+      body: postBody,
       scamType,
       damageAmount,
       period,
+      relationship,
       isAnonymous,
       tagIds,
       orgId,
     } = body;
 
-    if (!categoryId || !title || !testimonyBody) {
+    if (!categoryId || !title || !postBody) {
       return NextResponse.json(
         { error: "カテゴリ、タイトル、本文は必須です" },
         { status: 400 }
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "タイトルは100文字以内で入力してください" }, { status: 400 });
     }
 
-    if (testimonyBody.length > 2000) {
+    if (postBody.length > 2000) {
       return NextResponse.json({ error: "本文は2000文字以内で入力してください" }, { status: 400 });
     }
 
@@ -94,16 +95,17 @@ export async function POST(req: NextRequest) {
       validOrgId = org.id;
     }
 
-    const testimony = await prisma.testimony.create({
+    const post = await prisma.post.create({
       data: {
         userId: Number(session.user.id),
         categoryId: Number(categoryId),
         orgId: validOrgId,
         title,
-        body: testimonyBody,
+        body: postBody,
         scamType: scamType || null,
         damageAmount: damageAmount || null,
         period: period || null,
+        relationship: relationship || null,
         isAnonymous: isAnonymous ?? true,
         tags: Array.isArray(tagIds) && tagIds.length > 0
           ? { create: tagIds.map((tagId: number) => ({ tagId })) }
@@ -111,8 +113,19 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, testimonyId: testimony.id });
+    // Update organization postCount if orgId is set
+    if (validOrgId) {
+      const count = await prisma.post.count({
+        where: { orgId: validOrgId, deletedAt: null, status: "PUBLISHED" },
+      });
+      await prisma.organization.update({
+        where: { id: validOrgId },
+        data: { postCount: count },
+      });
+    }
+
+    return NextResponse.json({ success: true, postId: post.id });
   } catch {
-    return NextResponse.json({ error: "体験談の投稿に失敗しました" }, { status: 500 });
+    return NextResponse.json({ error: "投稿に失敗しました" }, { status: 500 });
   }
 }

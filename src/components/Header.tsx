@@ -124,27 +124,27 @@ export default function Header() {
               </div>
             </div>
             <div className="mb-3">
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">体験談</h3>
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">投稿</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
                 <Link
-                  href="/testimonies"
+                  href="/posts"
                   onClick={() => setMenuOpen(false)}
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
-                    pathname === "/testimonies"
-                      ? "bg-orange-50 text-orange-700"
+                    pathname === "/posts"
+                      ? "bg-blue-50 text-blue-700"
                       : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                   )}
                 >
                   <MessageSquareText className="w-4 h-4 shrink-0" strokeWidth={1.5} />
-                  体験談一覧
+                  投稿一覧
                 </Link>
                 <Link
-                  href="/testimony/new"
+                  href="/post/new"
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                 >
-                  体験談を投稿
+                  投稿する
                 </Link>
               </div>
             </div>

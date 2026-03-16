@@ -15,7 +15,7 @@ export default function ReportButton({
   targetType,
   targetId,
 }: {
-  targetType: "REVIEW" | "TESTIMONY" | "ORGANIZATION";
+  targetType: "POST" | "ORGANIZATION";
   targetId: number;
 }) {
   const [open, setOpen] = useState(false);

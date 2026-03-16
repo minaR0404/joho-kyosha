@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { MessageSquare, ThumbsUp, Calendar } from "lucide-react";
 import AccountSettings from "@/components/AccountSettings";
-import ReviewList from "@/components/ReviewList";
+import PostList from "@/components/PostList";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,11 +21,12 @@ export default async function MyPage() {
   const user = await prisma.user.findUnique({
     where: { id: Number(session.user.id) },
     include: {
-      reviews: {
+      posts: {
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
         include: {
-          org: { select: { slug: true, name: true, category: { select: { slug: true, name: true } } } },
+          category: { select: { name: true } },
+          org: { select: { slug: true, name: true } },
         },
       },
     },
@@ -33,14 +34,14 @@ export default async function MyPage() {
 
   if (!user) redirect("/auth/login");
 
-  const totalHelpful = user.reviews.reduce((sum, r) => sum + r.helpfulCount, 0);
+  const totalHelpful = user.posts.reduce((sum, p) => sum + p.helpfulCount, 0);
 
-  // Fetch user's votes on own reviews
-  const userVotes = await prisma.reviewVote.findMany({
-    where: { userId: user.id, reviewId: { in: user.reviews.map((r) => r.id) }, value: 1 },
-    select: { reviewId: true },
+  // Fetch user's votes on own posts
+  const userVotes = await prisma.postVote.findMany({
+    where: { userId: user.id, postId: { in: user.posts.map((p) => p.id) }, value: 1 },
+    select: { postId: true },
   });
-  const votedReviewIds = new Set(userVotes.map((v) => v.reviewId));
+  const votedPostIds = new Set(userVotes.map((v) => v.postId));
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -60,8 +61,8 @@ export default async function MyPage() {
             <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
           </div>
           <div className="flex flex-col justify-center">
-            <p className="h-7 sm:h-8 flex items-center justify-center sm:justify-start text-xl sm:text-2xl font-bold text-gray-900">{user.reviews.length}</p>
-            <p className="text-xs text-gray-500">口コミ</p>
+            <p className="h-7 sm:h-8 flex items-center justify-center sm:justify-start text-xl sm:text-2xl font-bold text-gray-900">{user.posts.length}</p>
+            <p className="text-xs text-gray-500">投稿</p>
           </div>
         </div>
         <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-5 flex flex-col sm:flex-row items-center gap-1 sm:gap-3 text-center sm:text-left">
@@ -92,23 +93,30 @@ export default async function MyPage() {
         <AccountSettings currentName={user.displayName} email={user.email || ""} />
       </section>
 
-      {/* Reviews */}
+      {/* Posts */}
       <section>
         <h2 className="text-lg font-bold text-gray-900 mb-4">
-          投稿した口コミ（{user.reviews.length}件）
+          あなたの投稿（{user.posts.length}件）
         </h2>
 
-        {user.reviews.length === 0 ? (
+        {user.posts.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <p className="text-gray-500 mb-3">まだ口コミを投稿していません</p>
-            <Link href="/" className="text-blue-600 hover:underline text-sm">
-              組織を探して口コミを書く
+            <p className="text-gray-500 mb-3">まだ投稿していません</p>
+            <Link href="/post/new" className="text-blue-600 hover:underline text-sm">
+              投稿する
             </Link>
           </div>
         ) : (
-          <ReviewList reviews={JSON.parse(JSON.stringify(user.reviews.map((r) => ({
-            ...r,
-            userVoted: votedReviewIds.has(r.id),
+          <PostList posts={JSON.parse(JSON.stringify(user.posts.map((p) => ({
+            id: p.id,
+            title: p.title,
+            body: p.body,
+            helpfulCount: p.helpfulCount,
+            createdAt: p.createdAt,
+            categoryName: p.category.name,
+            orgName: p.org?.name,
+            orgSlug: p.org?.slug,
+            userVoted: votedPostIds.has(p.id),
           }))))} />
         )}
       </section>

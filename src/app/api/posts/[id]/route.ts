@@ -13,41 +13,37 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    const reviewId = Number(id);
+    const postId = Number(id);
     const userId = Number(session.user.id);
 
-    const review = await prisma.review.findUnique({
-      where: { id: reviewId },
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
       select: { userId: true, orgId: true, deletedAt: true },
     });
 
-    if (!review || review.deletedAt) {
-      return NextResponse.json({ error: "口コミが見つかりません" }, { status: 404 });
+    if (!post || post.deletedAt) {
+      return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
     }
 
-    if (review.userId !== userId) {
+    if (post.userId !== userId) {
       return NextResponse.json({ error: "権限がありません" }, { status: 403 });
     }
 
-    await prisma.review.update({
-      where: { id: reviewId },
+    await prisma.post.update({
+      where: { id: postId },
       data: { deletedAt: new Date() },
     });
 
-    // Recalculate organization's average rating and review count
-    const agg = await prisma.review.aggregate({
-      where: { orgId: review.orgId, deletedAt: null },
-      _avg: { ratingOverall: true },
-      _count: true,
-    });
-
-    await prisma.organization.update({
-      where: { id: review.orgId },
-      data: {
-        avgRating: Math.round((agg._avg.ratingOverall || 0) * 10) / 10,
-        reviewCount: agg._count,
-      },
-    });
+    // Recalculate organization's post count
+    if (post.orgId) {
+      const count = await prisma.post.count({
+        where: { orgId: post.orgId, deletedAt: null, status: "PUBLISHED" },
+      });
+      await prisma.organization.update({
+        where: { id: post.orgId },
+        data: { postCount: count },
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch {

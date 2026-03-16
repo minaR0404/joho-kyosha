@@ -21,10 +21,8 @@ model User {
   emailVerifiedAt    DateTime?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  reviews            Review[]
-  votes              ReviewVote[]
-  testimonies        Testimony[]
-  testimonyVotes     TestimonyVote[]
+  posts              Post[]
+  postVotes          PostVote[]
   submittedOrgs      Organization[]      @relation("submittedOrgs")
   reports            Report[]
   verificationTokens VerificationToken[]
@@ -38,7 +36,7 @@ model Category {
   icon        String?
   sortOrder   Int             @default(0)
   orgs        Organization[]
-  testimonies Testimony[]
+  posts       Post[]
 }
 
 model Organization {
@@ -58,21 +56,18 @@ model Organization {
   approvalStatus  String       @default("APPROVED")
   submittedById   Int?
   submittedBy     User?        @relation("submittedOrgs", fields: [submittedById], references: [id])
-  avgRating       Float        @default(0)
-  reviewCount     Int          @default(0)
+  postCount       Int          @default(0)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
-  reviews         Review[]
   tags            TagsOnOrgs[]
-  testimonies     Testimony[]
+  posts           Post[]
 }
 
 model Tag {
   id             Int             @id @default(autoincrement())
   name           String          @unique
   orgs           TagsOnOrgs[]
-  reviewTags     ReviewTag[]
-  testimonyTags  TestimonyTag[]
+  postTags       PostTag[]
 }
 
 model TagsOnOrgs {
@@ -84,92 +79,48 @@ model TagsOnOrgs {
   @@id([orgId, tagId])
 }
 
-model Review {
-  id                 Int          @id @default(autoincrement())
-  orgId              Int
-  org                Organization @relation(fields: [orgId], references: [id])
-  userId             Int
-  user               User         @relation(fields: [userId], references: [id])
-  ratingOverall      Float
-  ratingDanger       Int
-  ratingCost         Int
-  ratingPressure     Int
-  ratingTransparency Int
-  ratingExit         Int
-  title              String
-  body               String
-  relationship       String
-  period             String?
-  isAnonymous        Boolean      @default(true)
-  helpfulCount       Int          @default(0)
-  deletedAt          DateTime?
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-  votes              ReviewVote[]
-  tags               ReviewTag[]
+model Post {
+  id           Int            @id @default(autoincrement())
+  userId       Int
+  user         User           @relation(fields: [userId], references: [id])
+  categoryId   Int
+  category     Category       @relation(fields: [categoryId], references: [id])
+  orgId        Int?
+  org          Organization?  @relation(fields: [orgId], references: [id])
+  title        String
+  body         String
+  scamType     String?
+  damageAmount String?
+  period       String?
+  relationship String?
+  isAnonymous  Boolean        @default(true)
+  helpfulCount Int            @default(0)
+  status       String         @default("PUBLISHED")
+  deletedAt    DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  votes        PostVote[]
+  tags         PostTag[]
 }
 
-model ReviewTag {
-  reviewId Int
-  tagId    Int
-  review   Review @relation(fields: [reviewId], references: [id])
-  tag      Tag    @relation(fields: [tagId], references: [id])
+model PostTag {
+  postId Int
+  tagId  Int
+  post   Post @relation(fields: [postId], references: [id])
+  tag    Tag  @relation(fields: [tagId], references: [id])
 
-  @@id([reviewId, tagId])
+  @@id([postId, tagId])
 }
 
-model ReviewVote {
-  id       Int    @id @default(autoincrement())
-  reviewId Int
-  review   Review @relation(fields: [reviewId], references: [id])
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
-  value    Int
+model PostVote {
+  id     Int  @id @default(autoincrement())
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  value  Int
 
-  @@unique([reviewId, userId])
-}
-
-model Testimony {
-  id              Int             @id @default(autoincrement())
-  userId          Int
-  user            User            @relation(fields: [userId], references: [id])
-  categoryId      Int
-  category        Category        @relation(fields: [categoryId], references: [id])
-  orgId           Int?
-  org             Organization?   @relation(fields: [orgId], references: [id])
-  title           String
-  body            String
-  scamType        String?
-  damageAmount    String?
-  period          String?
-  isAnonymous     Boolean         @default(true)
-  helpfulCount    Int             @default(0)
-  status          String          @default("PUBLISHED")
-  deletedAt       DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  votes           TestimonyVote[]
-  tags            TestimonyTag[]
-}
-
-model TestimonyTag {
-  testimonyId Int
-  tagId       Int
-  testimony   Testimony @relation(fields: [testimonyId], references: [id])
-  tag         Tag       @relation(fields: [tagId], references: [id])
-
-  @@id([testimonyId, tagId])
-}
-
-model TestimonyVote {
-  id          Int       @id @default(autoincrement())
-  testimonyId Int
-  testimony   Testimony @relation(fields: [testimonyId], references: [id])
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-  value       Int
-
-  @@unique([testimonyId, userId])
+  @@unique([postId, userId])
 }
 
 model VerificationToken {

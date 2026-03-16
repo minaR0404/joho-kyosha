@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MessageSquare, ThumbsUp, Calendar } from "lucide-react";
-import ReviewCard from "@/components/ReviewCard";
+import { MessageSquare, ThumbsUp } from "lucide-react";
+import PostCard from "@/components/PostCard";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ id: string }> };
@@ -24,11 +24,12 @@ export default async function UserProfilePage({ params }: Props) {
   const user = await prisma.user.findUnique({
     where: { id: Number(id) },
     include: {
-      reviews: {
-        where: { deletedAt: null, isAnonymous: false },
+      posts: {
+        where: { deletedAt: null, isAnonymous: false, status: "PUBLISHED" },
         orderBy: { createdAt: "desc" },
         include: {
-          org: { select: { slug: true, name: true, category: { select: { slug: true, name: true } } } },
+          category: { select: { name: true } },
+          org: { select: { slug: true, name: true } },
           tags: { include: { tag: true } },
         },
       },
@@ -37,18 +38,18 @@ export default async function UserProfilePage({ params }: Props) {
 
   if (!user) notFound();
 
-  const totalHelpful = user.reviews.reduce((sum, r) => sum + r.helpfulCount, 0);
+  const totalHelpful = user.posts.reduce((sum, p) => sum + p.helpfulCount, 0);
 
   // Fetch viewer's votes for HelpfulButton
   const session = await auth();
   const viewerId = session?.user?.id ? Number(session.user.id) : null;
-  const votedReviewIds = new Set<number>();
+  const votedPostIds = new Set<number>();
   if (viewerId) {
-    const votes = await prisma.reviewVote.findMany({
-      where: { userId: viewerId, reviewId: { in: user.reviews.map((r) => r.id) }, value: 1 },
-      select: { reviewId: true },
+    const votes = await prisma.postVote.findMany({
+      where: { userId: viewerId, postId: { in: user.posts.map((p) => p.id) }, value: 1 },
+      select: { postId: true },
     });
-    votes.forEach((v) => votedReviewIds.add(v.reviewId));
+    votes.forEach((v) => votedPostIds.add(v.postId));
   }
 
   return (
@@ -78,8 +79,8 @@ export default async function UserProfilePage({ params }: Props) {
             <MessageSquare className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{user.reviews.length}</p>
-            <p className="text-xs text-gray-500">口コミ</p>
+            <p className="text-2xl font-bold text-gray-900">{user.posts.length}</p>
+            <p className="text-xs text-gray-500">投稿</p>
           </div>
         </div>
         <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center gap-3">
@@ -93,39 +94,38 @@ export default async function UserProfilePage({ params }: Props) {
         </div>
       </div>
 
-      {/* Reviews */}
+      {/* Posts */}
       <section>
         <h2 className="text-lg font-bold text-gray-900 mb-4">
-          投稿した口コミ（{user.reviews.length}件）
+          投稿（{user.posts.length}件）
         </h2>
 
-        {user.reviews.length === 0 ? (
+        {user.posts.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">まだ公開口コミはありません</p>
+            <p className="text-gray-500">まだ公開投稿はありません</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {user.reviews.map((r) => (
-              <ReviewCard
-                key={r.id}
-                reviewId={r.id}
-                title={r.title}
-                body={r.body}
-                ratingOverall={r.ratingOverall}
-                ratingDanger={r.ratingDanger}
-                ratingCost={r.ratingCost}
-                ratingPressure={r.ratingPressure}
-                ratingTransparency={r.ratingTransparency}
-                ratingExit={r.ratingExit}
-                relationship={r.relationship}
-                period={r.period}
+            {user.posts.map((p) => (
+              <PostCard
+                key={p.id}
+                postId={p.id}
+                title={p.title}
+                body={p.body}
+                categoryName={p.category.name}
+                scamType={p.scamType}
+                damageAmount={p.damageAmount}
+                period={p.period}
+                relationship={p.relationship}
                 isAnonymous={false}
                 displayName={user.displayName}
-                helpfulCount={r.helpfulCount}
-                createdAt={r.createdAt.toISOString()}
-                orgName={r.org.name}
-                orgSlug={r.org.slug}
-                userVoted={votedReviewIds.has(r.id)}
+                userId={user.id}
+                helpfulCount={p.helpfulCount}
+                createdAt={p.createdAt.toISOString()}
+                orgName={p.org?.name}
+                orgSlug={p.org?.slug}
+                userVoted={votedPostIds.has(p.id)}
+                tags={p.tags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))}
               />
             ))}
           </div>

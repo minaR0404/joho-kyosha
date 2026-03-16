@@ -13,7 +13,7 @@ export async function POST(
     }
 
     const { id } = await params;
-    const testimonyId = Number(id);
+    const postId = Number(id);
     const userId = Number(session.user.id);
     const { value } = await req.json();
 
@@ -21,34 +21,34 @@ export async function POST(
       return NextResponse.json({ error: "無効な投票です" }, { status: 400 });
     }
 
-    const testimony = await prisma.testimony.findUnique({
-      where: { id: testimonyId },
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
       select: { deletedAt: true, status: true },
     });
-    if (!testimony || testimony.deletedAt || testimony.status !== "PUBLISHED") {
-      return NextResponse.json({ error: "体験談が見つかりません" }, { status: 404 });
+    if (!post || post.deletedAt || post.status !== "PUBLISHED") {
+      return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
     }
 
-    const existing = await prisma.testimonyVote.findUnique({
-      where: { testimonyId_userId: { testimonyId, userId } },
+    const existing = await prisma.postVote.findUnique({
+      where: { postId_userId: { postId, userId } },
     });
 
     if (existing) {
       if (existing.value === value) {
-        await prisma.testimonyVote.delete({ where: { id: existing.id } });
+        await prisma.postVote.delete({ where: { id: existing.id } });
       } else {
-        await prisma.testimonyVote.update({ where: { id: existing.id }, data: { value } });
+        await prisma.postVote.update({ where: { id: existing.id }, data: { value } });
       }
     } else {
-      await prisma.testimonyVote.create({ data: { testimonyId, userId, value } });
+      await prisma.postVote.create({ data: { postId, userId, value } });
     }
 
-    const helpfulCount = await prisma.testimonyVote.count({
-      where: { testimonyId, value: 1 },
+    const helpfulCount = await prisma.postVote.count({
+      where: { postId, value: 1 },
     });
 
-    await prisma.testimony.update({
-      where: { id: testimonyId },
+    await prisma.post.update({
+      where: { id: postId },
       data: { helpfulCount },
     });
 

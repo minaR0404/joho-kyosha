@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
-const VALID_TARGET_TYPES = ["REVIEW", "TESTIMONY", "ORGANIZATION"];
+const VALID_TARGET_TYPES = ["POST", "ORGANIZATION"];
 const VALID_REASONS = ["SPAM", "FALSE_INFO", "DEFAMATION", "INAPPROPRIATE", "OTHER"];
 
 export async function POST(req: NextRequest) {

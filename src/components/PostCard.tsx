@@ -5,14 +5,15 @@ import { User, Calendar, AlertTriangle, Banknote } from "lucide-react";
 import HelpfulButton from "./HelpfulButton";
 import TagBadge from "./TagBadge";
 
-interface TestimonyCardProps {
-  testimonyId: number;
+interface PostCardProps {
+  postId: number;
   title: string;
   body: string;
   categoryName: string;
   scamType: string | null;
   damageAmount: string | null;
   period: string | null;
+  relationship: string | null;
   isAnonymous: boolean;
   displayName: string;
   userId: number;
@@ -24,14 +25,15 @@ interface TestimonyCardProps {
   tags?: { id: number; name: string }[];
 }
 
-export default function TestimonyCard({
-  testimonyId,
+export default function PostCard({
+  postId,
   title,
   body,
   categoryName,
   scamType,
   damageAmount,
   period,
+  relationship,
   isAnonymous,
   displayName,
   userId,
@@ -41,7 +43,7 @@ export default function TestimonyCard({
   orgSlug,
   userVoted = false,
   tags,
-}: TestimonyCardProps) {
+}: PostCardProps) {
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const [isClamped, setIsClamped] = useState(false);
 
@@ -56,12 +58,14 @@ export default function TestimonyCard({
     <div className="relative bg-white rounded-lg border border-gray-200 p-5 pb-3 hover:shadow-md transition-shadow">
       <div className="mb-3">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200 rounded">
-            体験談
-          </span>
           <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
             {categoryName}
           </span>
+          {relationship && (
+            <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded">
+              {relationship}
+            </span>
+          )}
         </div>
         {orgName && orgSlug && (
           <a
@@ -72,7 +76,7 @@ export default function TestimonyCard({
           </a>
         )}
         <h4 className="font-bold text-gray-900">
-          <a href={`/testimony/${testimonyId}`} className="after:absolute after:inset-0">
+          <a href={`/post/${postId}`} className="after:absolute after:inset-0">
             {title}
           </a>
         </h4>
@@ -133,7 +137,7 @@ export default function TestimonyCard({
         {period && <span className="hidden sm:inline">被害時期: {period}</span>}
         <span className="pointer-events-auto">
           <HelpfulButton
-            testimonyId={testimonyId}
+            postId={postId}
             initialCount={helpfulCount}
             initialVoted={userVoted}
           />

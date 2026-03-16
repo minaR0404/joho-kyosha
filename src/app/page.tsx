@@ -4,31 +4,21 @@ import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import CategoryNav from "@/components/CategoryNav";
 import OrgCard from "@/components/OrgCard";
-import ReviewCard from "@/components/ReviewCard";
-import TestimonyCard from "@/components/TestimonyCard";
+import PostCard from "@/components/PostCard";
 
 export default async function HomePage() {
-  const [categories, trendingOrgs, latestReviews, latestTestimonies, stats] = await Promise.all([
+  const [categories, trendingOrgs, latestPosts, stats] = await Promise.all([
     prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.organization.findMany({
       where: { status: { not: "DELETED" }, approvalStatus: "APPROVED" },
-      orderBy: { reviewCount: "desc" },
+      orderBy: { postCount: "desc" },
       take: 6,
       include: { category: true },
     }),
-    prisma.review.findMany({
-      where: { deletedAt: null },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      include: {
-        user: { select: { id: true, displayName: true, image: true } },
-        org: { select: { name: true, slug: true } },
-      },
-    }),
-    prisma.testimony.findMany({
+    prisma.post.findMany({
       where: { deletedAt: null, status: "PUBLISHED" },
       orderBy: { createdAt: "desc" },
-      take: 6,
+      take: 8,
       include: {
         user: { select: { id: true, displayName: true } },
         category: { select: { name: true } },
@@ -38,36 +28,25 @@ export default async function HomePage() {
     }),
     Promise.all([
       prisma.organization.count({ where: { status: { not: "DELETED" } } }),
-      prisma.review.count({ where: { deletedAt: null } }),
-      prisma.testimony.count({ where: { deletedAt: null, status: "PUBLISHED" } }),
+      prisma.post.count({ where: { deletedAt: null, status: "PUBLISHED" } }),
       prisma.user.count({ where: { emailVerifiedAt: { not: null } } }),
     ]),
   ]);
 
-  const [orgCount, reviewCount, testimonyCount, userCount] = stats;
+  const [orgCount, postCount, userCount] = stats;
 
   const session = await auth();
   const userId = session?.user?.id ? Number(session.user.id) : null;
 
-  // Review votes
-  const reviewIds = latestReviews.map((r) => r.id);
-  const userReviewVotes = userId
-    ? await prisma.reviewVote.findMany({
-        where: { userId, reviewId: { in: reviewIds }, value: 1 },
-        select: { reviewId: true },
+  // Post votes
+  const postIds = latestPosts.map((p) => p.id);
+  const userVotes = userId
+    ? await prisma.postVote.findMany({
+        where: { userId, postId: { in: postIds }, value: 1 },
+        select: { postId: true },
       })
     : [];
-  const votedReviewIds = new Set(userReviewVotes.map((v) => v.reviewId));
-
-  // Testimony votes
-  const testimonyIds = latestTestimonies.map((t) => t.id);
-  const userTestimonyVotes = userId
-    ? await prisma.testimonyVote.findMany({
-        where: { userId, testimonyId: { in: testimonyIds }, value: 1 },
-        select: { testimonyId: true },
-      })
-    : [];
-  const votedTestimonyIds = new Set(userTestimonyVotes.map((v) => v.testimonyId));
+  const votedPostIds = new Set(userVotes.map((v) => v.postId));
 
   return (
     <div>
@@ -80,13 +59,9 @@ export default async function HomePage() {
           </p>
           <SearchBar size="lg" />
           <div className="flex justify-center gap-4 md:gap-16 mt-10">
-            <a href="#latest-testimonies" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{testimonyCount}</span>
-              <span className="text-xs text-blue-200 mt-1 sm:mt-2 tracking-wide">体験談</span>
-            </a>
-            <a href="#latest-reviews" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{reviewCount}</span>
-              <span className="text-xs text-blue-200 mt-1 sm:mt-2 tracking-wide">口コミ</span>
+            <a href="#latest-posts" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
+              <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{postCount}</span>
+              <span className="text-xs text-blue-200 mt-1 sm:mt-2 tracking-wide">投稿</span>
             </a>
             <a href="#categories" className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl w-[90px] h-[80px] sm:w-[110px] sm:h-[110px] flex flex-col items-center justify-center shadow-lg shadow-white/15 hover:bg-white/20 transition-colors">
               <span className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">{orgCount}</span>
@@ -107,71 +82,41 @@ export default async function HomePage() {
           <CategoryNav categories={categories} />
         </section>
 
-        {/* Latest Testimonies */}
-        {latestTestimonies.length > 0 && (
-          <section id="latest-testimonies" className="mb-12 scroll-mt-20">
+        {/* Latest Posts */}
+        {latestPosts.length > 0 && (
+          <section id="latest-posts" className="mb-12 scroll-mt-20">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">最新の体験談</h2>
-              <Link href="/testimonies" className="text-sm text-blue-600 hover:underline">
+              <h2 className="text-xl font-bold text-gray-900">最新の投稿</h2>
+              <Link href="/posts" className="text-sm text-blue-600 hover:underline">
                 すべて見る →
               </Link>
             </div>
             <div className="space-y-4">
-              {latestTestimonies.map((t) => (
-                <TestimonyCard
-                  key={t.id}
-                  testimonyId={t.id}
-                  title={t.title}
-                  body={t.body}
-                  categoryName={t.category.name}
-                  scamType={t.scamType}
-                  damageAmount={t.damageAmount}
-                  period={t.period}
-                  isAnonymous={t.isAnonymous}
-                  displayName={t.user.displayName}
-                  userId={t.user.id}
-                  helpfulCount={t.helpfulCount}
-                  createdAt={t.createdAt.toISOString()}
-                  orgName={t.org?.name}
-                  orgSlug={t.org?.slug}
-                  userVoted={votedTestimonyIds.has(t.id)}
-                  tags={t.tags.map((tt) => ({ id: tt.tag.id, name: tt.tag.name }))}
+              {latestPosts.map((p) => (
+                <PostCard
+                  key={p.id}
+                  postId={p.id}
+                  title={p.title}
+                  body={p.body}
+                  categoryName={p.category.name}
+                  scamType={p.scamType}
+                  damageAmount={p.damageAmount}
+                  period={p.period}
+                  relationship={p.relationship}
+                  isAnonymous={p.isAnonymous}
+                  displayName={p.user.displayName}
+                  userId={p.user.id}
+                  helpfulCount={p.helpfulCount}
+                  createdAt={p.createdAt.toISOString()}
+                  orgName={p.org?.name}
+                  orgSlug={p.org?.slug}
+                  userVoted={votedPostIds.has(p.id)}
+                  tags={p.tags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))}
                 />
               ))}
             </div>
           </section>
         )}
-
-        {/* Latest Reviews */}
-        <section id="latest-reviews" className="mb-12 scroll-mt-20">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">最新の口コミ</h2>
-          <div className="space-y-4">
-            {latestReviews.map((review) => (
-              <ReviewCard
-                key={review.id}
-                reviewId={review.id}
-                title={review.title}
-                body={review.body}
-                ratingOverall={review.ratingOverall}
-                ratingDanger={review.ratingDanger}
-                ratingCost={review.ratingCost}
-                ratingPressure={review.ratingPressure}
-                ratingTransparency={review.ratingTransparency}
-                ratingExit={review.ratingExit}
-                relationship={review.relationship}
-                period={review.period}
-                isAnonymous={review.isAnonymous}
-                displayName={review.user.displayName}
-                userId={review.user.id}
-                helpfulCount={review.helpfulCount}
-                createdAt={review.createdAt.toISOString()}
-                orgName={review.org.name}
-                orgSlug={review.org.slug}
-                userVoted={votedReviewIds.has(review.id)}
-              />
-            ))}
-          </div>
-        </section>
 
         {/* Trending Organizations */}
         <section className="mb-12">
@@ -185,8 +130,7 @@ export default async function HomePage() {
                 categoryName={org.category.name}
                 categorySlug={org.category.slug}
                 description={org.description}
-                avgRating={org.avgRating}
-                reviewCount={org.reviewCount}
+                postCount={org.postCount}
                 status={org.status}
               />
             ))}
