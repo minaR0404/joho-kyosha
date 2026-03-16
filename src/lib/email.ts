@@ -70,7 +70,7 @@ export async function sendVerificationEmail(email: string, token: string) {
   `;
 
   await resend.emails.send({
-    from: "情報強者 <onboarding@resend.dev>",
+    from: "情報強者 <noreply@joho-kyosya.com>",
     to: email,
     subject: "【情報強者】メールアドレスの確認",
     html: emailLayout("情報強者へのご登録ありがとうございます。ボタンをクリックしてメールアドレスを確認してください。", content),
@@ -101,7 +101,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   `;
 
   await resend.emails.send({
-    from: "情報強者 <onboarding@resend.dev>",
+    from: "情報強者 <noreply@joho-kyosya.com>",
     to: email,
     subject: "【情報強者】パスワードの再設定",
     html: emailLayout("パスワードの再設定リクエストを受け付けました。", content),
