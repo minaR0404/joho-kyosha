@@ -17,13 +17,31 @@ const notoSansJP = Noto_Sans_JP({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.joho-kyosya.com";
+const siteName = "情報強者";
+const siteDescription =
+  "情報商材・マルチ商法・宗教などの口コミ・評判サイト。みんなで情報を共有して騙されないように情報強者になろう。";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "情報強者 - 騙される前に、まずチェック。",
     template: "%s | 情報強者",
   },
-  description:
-    "情報商材・マルチ商法・宗教などの口コミ・評判サイト。みんなで情報を共有して騙されないように情報強者になろう。",
+  description: siteDescription,
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    url: siteUrl,
+    siteName,
+    title: "情報強者 - 騙される前に、まずチェック。",
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary",
+    title: "情報強者 - 騙される前に、まずチェック。",
+    description: siteDescription,
+  },
 };
 
 export default function RootLayout({
