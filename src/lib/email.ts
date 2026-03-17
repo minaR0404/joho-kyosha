@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const APP_URL = () => process.env.NEXT_PUBLIC_APP_URL || "https://joho-kyosha.vercel.app";
+const APP_URL = () => process.env.NEXT_PUBLIC_APP_URL || "https://www.joho-kyosya.com";
 
 function emailLayout(preheader: string, content: string) {
   return `
