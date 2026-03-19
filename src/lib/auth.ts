@@ -82,6 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.role = token.role as string;
       }
       session.user.emailVerifiedAt = (token.emailVerifiedAt as string) ?? null;
+      session.user.isBanned = (token.isBanned as boolean) ?? false;
       return session;
     },
     async jwt({ token, user }) {
@@ -89,7 +90,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.sub = user.id;
         token.role = user.role;
         token.emailVerifiedAt = user.emailVerifiedAt;
+        token.isBanned = false;
+        token.lastChecked = Date.now();
       }
+
+      // 既存セッション: 5分ごとにBAN状態をDBで再確認
+      if (!user && token.sub) {
+        const now = Date.now();
+        const lastChecked = (token.lastChecked as number) || 0;
+        if (now - lastChecked > 5 * 60 * 1000) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: Number(token.sub) },
+            select: { isBanned: true, role: true },
+          });
+          if (dbUser?.isBanned) {
+            return { ...token, isBanned: true };
+          }
+          if (dbUser) {
+            token.role = dbUser.role;
+          }
+          token.lastChecked = now;
+        }
+      }
+
       return token;
     },
   },

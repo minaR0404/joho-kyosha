@@ -9,6 +9,7 @@ declare module "next-auth" {
       image?: string | null;
       role?: string;
       emailVerifiedAt?: string | null;
+      isBanned?: boolean;
     };
   }
 
@@ -22,5 +23,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     role?: string;
     emailVerifiedAt?: string | null;
+    isBanned?: boolean;
+    lastChecked?: number;
   }
 }
