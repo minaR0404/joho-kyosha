@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth, isAdmin } from "@/lib/auth";
 import { toSlug } from "@/lib/utils";
+import { postRateLimit, checkRateLimit } from "@/lib/ratelimit";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -31,6 +32,14 @@ export async function POST(req: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const { success, headers } = await checkRateLimit(postRateLimit, session.user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: "リクエストが多すぎます。しばらくお待ちください" },
+        { status: 429, headers }
+      );
     }
 
     const { name, categoryId, description, website, representative, founded } =

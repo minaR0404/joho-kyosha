@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { apiRateLimit, checkRateLimit } from "@/lib/ratelimit";
 
 const VALID_TARGET_TYPES = ["POST", "ORGANIZATION"];
 const VALID_REASONS = ["SPAM", "FALSE_INFO", "DEFAMATION", "INAPPROPRIATE", "OTHER"];
@@ -10,6 +11,14 @@ export async function POST(req: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const { success, headers } = await checkRateLimit(apiRateLimit, session.user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: "リクエストが多すぎます。しばらくお待ちください" },
+        { status: 429, headers }
+      );
     }
 
     const { targetType, targetId, reason, detail } = await req.json();

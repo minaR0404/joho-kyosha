@@ -3,9 +3,19 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { generateVerificationToken } from "@/lib/verification-token";
 import { sendVerificationEmail } from "@/lib/email";
+import { postRateLimit, checkRateLimit } from "@/lib/ratelimit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "anonymous";
+    const { success, headers } = await checkRateLimit(postRateLimit, `register:${ip}`);
+    if (!success) {
+      return NextResponse.json(
+        { error: "登録の試行回数が多すぎます。しばらくお待ちください" },
+        { status: 429, headers }
+      );
+    }
+
     const { email, password, displayName } = await req.json();
 
     if (!email || !password || !displayName) {

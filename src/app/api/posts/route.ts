@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { postRateLimit, checkRateLimit } from "@/lib/ratelimit";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -39,6 +40,14 @@ export async function POST(req: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const { success, headers } = await checkRateLimit(postRateLimit, session.user.id);
+    if (!success) {
+      return NextResponse.json(
+        { error: "投稿の頻度が高すぎます。しばらくお待ちください" },
+        { status: 429, headers }
+      );
     }
 
     const currentUser = await prisma.user.findUnique({
