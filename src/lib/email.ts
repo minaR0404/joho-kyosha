@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const APP_URL = () => process.env.NEXT_PUBLIC_APP_URL || "https://www.joho-kyosya.com";
+const APP_URL = () => process.env.NEXT_PUBLIC_APP_URL || "https://www.joho-kyosha.com";
 
 function emailLayout(preheader: string, content: string) {
   return `
@@ -70,7 +70,7 @@ export async function sendVerificationEmail(email: string, token: string) {
   `;
 
   await resend.emails.send({
-    from: "情報強者 <noreply@joho-kyosya.com>",
+    from: "情報強者 <noreply@joho-kyosha.com>",
     to: email,
     subject: "【情報強者】メールアドレスの確認",
     html: emailLayout("情報強者へのご登録ありがとうございます。ボタンをクリックしてメールアドレスを確認してください。", content),
@@ -101,7 +101,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   `;
 
   await resend.emails.send({
-    from: "情報強者 <noreply@joho-kyosya.com>",
+    from: "情報強者 <noreply@joho-kyosha.com>",
     to: email,
     subject: "【情報強者】パスワードの再設定",
     html: emailLayout("パスワードの再設定リクエストを受け付けました。", content),

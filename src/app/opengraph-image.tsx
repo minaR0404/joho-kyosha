@@ -69,7 +69,7 @@ export default function OgImage() {
             color: "#64748b",
           }}
         >
-          joho-kyosya.com
+          joho-kyosha.com
         </div>
       </div>
     ),

@@ -17,7 +17,7 @@ const notoSansJP = Noto_Sans_JP({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.joho-kyosya.com";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.joho-kyosha.com";
 const siteName = "情報強者";
 const siteDescription =
   "情報商材・マルチ商法・宗教などの口コミ・評判サイト。みんなで情報を共有して騙されないように情報強者になろう。";

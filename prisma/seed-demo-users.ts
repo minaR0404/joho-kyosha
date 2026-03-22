@@ -27,7 +27,7 @@ async function main() {
   for (let i = 0; i < demoUsers.length; i++) {
     const user = await prisma.user.create({
       data: {
-        email: `demo-user-${i + 1}@joho-kyosya.internal`,
+        email: `demo-user-${i + 1}@joho-kyosha.internal`,
         displayName: demoUsers[i],
         hashedPassword,
         provider: "credentials",
