@@ -165,8 +165,8 @@ export default function PostForm({
             関連する組織（任意）
           </label>
           {selectedOrg ? (
-            <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md">
-              <span className="text-sm text-blue-800">{selectedOrg.name}</span>
+            <div className="flex items-center gap-2 px-4 py-3 bg-blue-50 border border-blue-200 rounded-md">
+              <span className="text-base text-blue-800">{selectedOrg.name}</span>
               <button
                 type="button"
                 onClick={() => {
