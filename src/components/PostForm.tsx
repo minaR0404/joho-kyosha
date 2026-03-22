@@ -264,13 +264,22 @@ export default function PostForm({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           被害額（概算）
         </label>
-        <input
-          type="text"
+        <CustomSelect
           value={damageAmount}
-          onChange={(e) => setDamageAmount(e.target.value)}
-          maxLength={30}
-          placeholder="例: 30万円"
-          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={setDamageAmount}
+          placeholder="選択してください（任意）"
+          options={[
+            { value: "1万円未満", label: "1万円未満" },
+            { value: "1〜5万円", label: "1〜5万円" },
+            { value: "5〜10万円", label: "5〜10万円" },
+            { value: "10〜30万円", label: "10〜30万円" },
+            { value: "30〜50万円", label: "30〜50万円" },
+            { value: "50〜100万円", label: "50〜100万円" },
+            { value: "100〜300万円", label: "100〜300万円" },
+            { value: "300〜500万円", label: "300〜500万円" },
+            { value: "500〜1000万円", label: "500〜1000万円" },
+            { value: "1000万円以上", label: "1000万円以上" },
+          ]}
         />
       </div>
 
