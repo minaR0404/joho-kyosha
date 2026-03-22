@@ -43,7 +43,12 @@ export default function PostForm({
   const [body, setBody] = useState("");
   const [scamType, setScamType] = useState("");
   const [damageAmount, setDamageAmount] = useState("");
-  const [period, setPeriod] = useState("");
+  const [periodYear, setPeriodYear] = useState("");
+  const [periodSeason, setPeriodSeason] = useState("");
+  const [periodEndYear, setPeriodEndYear] = useState("");
+  const [periodEndSeason, setPeriodEndSeason] = useState("");
+  const [periodOldYear, setPeriodOldYear] = useState("");
+  const [showPeriodRange, setShowPeriodRange] = useState(false);
   const [relationship, setRelationship] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
@@ -104,6 +109,53 @@ export default function PostForm({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  const yearOptions = [
+    { value: "2026", label: "2026年" },
+    { value: "2025", label: "2025年" },
+    { value: "2024", label: "2024年" },
+    { value: "2023", label: "2023年" },
+    { value: "2022", label: "2022年" },
+    { value: "2021", label: "2021年" },
+    { value: "2020", label: "2020年" },
+    { value: "old", label: "2019年以前" },
+    { value: "unknown", label: "覚えていない" },
+  ];
+
+  const oldYearOptions = [
+    { value: "2019", label: "2019年" },
+    { value: "2018", label: "2018年" },
+    { value: "2017", label: "2017年" },
+    { value: "2016", label: "2016年" },
+    { value: "2015", label: "2015年" },
+    { value: "older", label: "2014年以前" },
+  ];
+
+  const seasonOptions = [
+    { value: "前半", label: "前半（1〜6月）" },
+    { value: "後半", label: "後半（7〜12月）" },
+    { value: "不明", label: "覚えていない" },
+  ];
+
+  const buildPeriodString = () => {
+    if (!periodYear) return "";
+    if (periodYear === "unknown") return "時期不明";
+
+    const year = periodYear === "old"
+      ? (periodOldYear === "older" ? "2014年以前" : periodOldYear ? `${periodOldYear}年` : "2019年以前")
+      : `${periodYear}年`;
+    const season = periodSeason && periodSeason !== "不明" ? ` ${periodSeason}` : "";
+    const start = `${year}${season}`;
+
+    if (!showPeriodRange || !periodEndYear) return start;
+
+    const endYear = periodEndYear === "old"
+      ? (periodOldYear ? `${periodOldYear}年` : "2019年以前")
+      : periodEndYear === "unknown" ? "" : `${periodEndYear}年`;
+    if (!endYear) return start;
+    const endSeason = periodEndSeason && periodEndSeason !== "不明" ? ` ${periodEndSeason}` : "";
+    return `${start}〜${endYear}${endSeason}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -119,7 +171,7 @@ export default function PostForm({
           body,
           scamType: scamType || undefined,
           damageAmount: damageAmount || undefined,
-          period: period || undefined,
+          period: buildPeriodString() || undefined,
           relationship: relationship || undefined,
           isAnonymous,
           tagIds: selectedTagIds,
@@ -288,18 +340,85 @@ export default function PostForm({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           被害に遭った時期
         </label>
-        <input
-          type="text"
-          value={period}
-          onChange={(e) => setPeriod(e.target.value)}
-          maxLength={20}
-          placeholder="例: 2024年9月"
-          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {period.length > 16 && (
-          <p className={`text-xs text-right mt-1 ${period.length >= 20 ? "text-red-500" : "text-gray-400"}`}>
-            {period.length}/20
-          </p>
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <CustomSelect
+              value={periodYear}
+              onChange={(v) => {
+                setPeriodYear(v);
+                if (v !== "old") setPeriodOldYear("");
+                if (v === "unknown") { setPeriodSeason(""); setShowPeriodRange(false); }
+              }}
+              placeholder="年を選択"
+              options={yearOptions}
+            />
+          </div>
+          {periodYear && periodYear !== "unknown" && (
+            <div className="flex-1">
+              <CustomSelect
+                value={periodSeason}
+                onChange={setPeriodSeason}
+                placeholder="時期を選択"
+                options={seasonOptions}
+              />
+            </div>
+          )}
+        </div>
+        {periodYear === "old" && (
+          <div className="mt-3">
+            <CustomSelect
+              value={periodOldYear}
+              onChange={setPeriodOldYear}
+              placeholder="具体的な年（任意）"
+              options={oldYearOptions}
+            />
+          </div>
+        )}
+        {periodYear && periodYear !== "unknown" && !showPeriodRange && (
+          <button
+            type="button"
+            onClick={() => setShowPeriodRange(true)}
+            className="mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            期間が長い場合はこちら
+          </button>
+        )}
+        {showPeriodRange && (
+          <div className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-md">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-gray-600">終了時期</span>
+              <button
+                type="button"
+                onClick={() => { setShowPeriodRange(false); setPeriodEndYear(""); setPeriodEndSeason(""); }}
+                className="text-xs text-gray-400 hover:text-gray-600"
+              >
+                閉じる
+              </button>
+            </div>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <CustomSelect
+                  value={periodEndYear}
+                  onChange={(v) => {
+                    setPeriodEndYear(v);
+                    if (v === "unknown") setPeriodEndSeason("");
+                  }}
+                  placeholder="年を選択"
+                  options={yearOptions.filter((o) => o.value !== "unknown")}
+                />
+              </div>
+              {periodEndYear && periodEndYear !== "unknown" && (
+                <div className="flex-1">
+                  <CustomSelect
+                    value={periodEndSeason}
+                    onChange={setPeriodEndSeason}
+                    placeholder="時期を選択"
+                    options={seasonOptions}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
 
