@@ -143,12 +143,6 @@ export default function PostForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-          {error}
-        </div>
-      )}
-
       {/* Category */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -398,6 +392,12 @@ export default function PostForm({
       <div className="bg-gray-50 border border-gray-200 rounded-md px-4 py-3 text-xs text-gray-500 leading-relaxed">
         ※ 投稿内容は公開されます。投稿は<a href="/terms" className="text-blue-600 hover:underline">利用規約</a>および<a href="/guidelines" className="text-blue-600 hover:underline">投稿ガイドライン</a>に従ってください。
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+          {error}
+        </div>
+      )}
 
       <button
         type="submit"
