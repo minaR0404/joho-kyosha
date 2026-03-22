@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
+import { X, Search } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 
 interface Tag {
@@ -52,7 +52,11 @@ export default function PostForm({
   const [showPeriodRange, setShowPeriodRange] = useState(false);
   const [relationship, setRelationship] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
-  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+  const [selectedTags, setSelectedTags] = useState<{ id?: number; name: string }[]>([]);
+  const [tagSearch, setTagSearch] = useState("");
+  const [showTagDropdown, setShowTagDropdown] = useState(false);
+  const tagInputRef = useRef<HTMLInputElement>(null);
+  const tagDropdownRef = useRef<HTMLDivElement>(null);
 
   // Org search
   const [orgSearch, setOrgSearch] = useState("");
@@ -123,11 +127,14 @@ export default function PostForm({
       .catch(() => {});
   };
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (orgDropdownRef.current && !orgDropdownRef.current.contains(e.target as Node)) {
         setShowOrgDropdown(false);
+      }
+      if (tagDropdownRef.current && !tagDropdownRef.current.contains(e.target as Node)) {
+        setShowTagDropdown(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -269,7 +276,8 @@ export default function PostForm({
           period: buildPeriodString() || undefined,
           relationship: relationship || undefined,
           isAnonymous,
-          tagIds: selectedTagIds,
+          tagIds: selectedTags.filter((t) => t.id).map((t) => t.id),
+          newTags: selectedTags.filter((t) => !t.id).map((t) => t.name),
           orgId: selectedOrg?.id || undefined,
         }),
       });
@@ -580,36 +588,120 @@ export default function PostForm({
       </div>
 
       {/* Tags */}
-      {tags.length > 0 && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            該当するタグ（複数選択可）
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => {
-              const selected = selectedTagIds.includes(tag.id);
-              return (
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          タグ（複数選択可・自由入力OK）
+        </label>
+        {/* Selected tags as chips */}
+        {selectedTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {selectedTags.map((tag, i) => (
+              <span
+                key={tag.id ?? `new-${tag.name}`}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm bg-red-50 text-red-700 border border-red-300"
+              >
+                {tag.name}
                 <button
-                  key={tag.id}
                   type="button"
-                  onClick={() =>
-                    setSelectedTagIds((prev) =>
-                      selected ? prev.filter((id) => id !== tag.id) : [...prev, tag.id]
-                    )
-                  }
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
-                    selected
-                      ? "bg-red-50 text-red-700 border-red-300"
-                      : "bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-400"
-                  }`}
+                  onClick={() => setSelectedTags((prev) => prev.filter((_, j) => j !== i))}
+                  className="text-red-400 hover:text-red-600"
                 >
-                  {tag.name}
+                  <X className="w-3.5 h-3.5" />
                 </button>
-              );
-            })}
+              </span>
+            ))}
           </div>
-        </div>
-      )}
+        )}
+        {/* Search input */}
+        {selectedTags.length < 10 && (
+          <div ref={tagDropdownRef} className="relative">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                ref={tagInputRef}
+                type="text"
+                value={tagSearch}
+                onChange={(e) => {
+                  setTagSearch(e.target.value);
+                  setShowTagDropdown(true);
+                }}
+                onFocus={() => setShowTagDropdown(true)}
+                onBlur={() => setTimeout(() => setShowTagDropdown(false), 50)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    setShowTagDropdown(false);
+                    tagInputRef.current?.blur();
+                    return;
+                  }
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const trimmed = tagSearch.trim();
+                    if (!trimmed) { setShowTagDropdown(false); return; }
+                    if (trimmed.length > 20) return;
+                    if (selectedTags.some((t) => t.name === trimmed)) return;
+                    const existing = tags.find((t) => t.name === trimmed);
+                    setSelectedTags((prev) => [...prev, existing ? { id: existing.id, name: existing.name } : { name: trimmed }]);
+                    setTagSearch("");
+                    setShowTagDropdown(false);
+                  }
+                }}
+                placeholder="タグを検索 or 入力してEnter"
+                maxLength={20}
+                className="w-full pl-9 pr-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            {showTagDropdown && (() => {
+              const filtered = tags
+                .filter((t) => !selectedTags.some((s) => s.id === t.id || s.name === t.name))
+                .filter((t) => !tagSearch || t.name.includes(tagSearch))
+                .slice(0, 6);
+              const trimmed = tagSearch.trim();
+              const showNewOption = trimmed
+                && trimmed.length <= 20
+                && !tags.some((t) => t.name === trimmed)
+                && !selectedTags.some((t) => t.name === trimmed);
+              if (filtered.length === 0 && !showNewOption) return null;
+              return (
+                <div className="absolute z-30 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  {filtered.map((tag) => (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setSelectedTags((prev) => [...prev, { id: tag.id, name: tag.name }]);
+                        setTagSearch("");
+                        setShowTagDropdown(false);
+                      }}
+                      className="block w-full text-left px-4 py-3 text-base text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      {tag.name}
+                    </button>
+                  ))}
+                  {showNewOption && (
+                    <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setSelectedTags((prev) => [...prev, { name: trimmed }]);
+                        setTagSearch("");
+                        setShowTagDropdown(false);
+                      }}
+                      className="block w-full text-left px-4 py-3 text-base text-blue-600 hover:bg-blue-50 transition-colors"
+                    >
+                      「{trimmed}」を新しいタグとして追加
+                    </button>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+        )}
+        <p className="text-xs text-gray-400 mt-1">
+          最大10個まで。候補から選択するか、自由に入力してEnterで追加できます
+        </p>
+      </div>
 
       {/* Anonymous */}
       <label className="flex items-center gap-2 cursor-pointer">

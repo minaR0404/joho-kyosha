@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
       relationship,
       isAnonymous,
       tagIds,
+      newTags,
       orgId,
     } = body;
 
@@ -104,6 +105,27 @@ export async function POST(req: NextRequest) {
       validOrgId = org.id;
     }
 
+    // Resolve tag IDs: existing tagIds + upsert newTags
+    const allTagIds: number[] = [];
+    if (Array.isArray(tagIds)) {
+      allTagIds.push(...tagIds.map(Number).filter((n) => !isNaN(n)));
+    }
+    if (Array.isArray(newTags)) {
+      const validNewTags = newTags
+        .map((t: string) => t.trim())
+        .filter((t: string) => t.length > 0 && t.length <= 20)
+        .slice(0, 10);
+      for (const name of validNewTags) {
+        const tag = await prisma.tag.upsert({
+          where: { name },
+          update: {},
+          create: { name },
+        });
+        allTagIds.push(tag.id);
+      }
+    }
+    const uniqueTagIds = [...new Set(allTagIds)].slice(0, 10);
+
     const post = await prisma.post.create({
       data: {
         userId: Number(session.user.id),
@@ -116,8 +138,8 @@ export async function POST(req: NextRequest) {
         period: period || null,
         relationship: relationship || null,
         isAnonymous: isAnonymous ?? true,
-        tags: Array.isArray(tagIds) && tagIds.length > 0
-          ? { create: tagIds.map((tagId: number) => ({ tagId })) }
+        tags: uniqueTagIds.length > 0
+          ? { create: uniqueTagIds.map((tagId) => ({ tagId })) }
           : undefined,
       },
     });
