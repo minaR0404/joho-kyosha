@@ -42,6 +42,7 @@ export default function PostForm({
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [scamType, setScamType] = useState("");
+  const [scamTypeCustom, setScamTypeCustom] = useState("");
   const [damageAmount, setDamageAmount] = useState("");
   const [periodYear, setPeriodYear] = useState("");
   const [periodSeason, setPeriodSeason] = useState("");
@@ -109,6 +110,76 @@ export default function PostForm({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  const selectedCategorySlug = categories.find((c) => String(c.id) === categoryId)?.slug || "";
+
+  const scamTypeMap: Record<string, { value: string; label: string }[]> = {
+    "info-products": [
+      { value: "高額な情報商材の購入", label: "高額な情報商材の購入" },
+      { value: "再現性のないノウハウ販売", label: "再現性のないノウハウ販売" },
+      { value: "バックエンド商品への誘導", label: "バックエンド商品への誘導" },
+      { value: "返金保証の不履行", label: "返金保証の不履行" },
+      { value: "特商法表記の不備・虚偽", label: "特商法表記の不備・虚偽" },
+    ],
+    mlm: [
+      { value: "マルチ商法・ネットワークビジネス", label: "マルチ商法・ネットワークビジネス" },
+      { value: "勧誘による人間関係の悪化", label: "勧誘による人間関係の悪化" },
+      { value: "在庫の買い込み強要", label: "在庫の買い込み強要" },
+      { value: "セミナー参加費の負担", label: "セミナー参加費の負担" },
+      { value: "退会・解約の妨害", label: "退会・解約の妨害" },
+    ],
+    investment: [
+      { value: "投資詐欺（暗号資産・FX等）", label: "投資詐欺（暗号資産・FX等）" },
+      { value: "ポンジスキーム", label: "ポンジスキーム" },
+      { value: "未公開株・未上場トークン", label: "未公開株・未上場トークン" },
+      { value: "自動売買ツールの購入", label: "自動売買ツールの購入" },
+      { value: "出金拒否・口座凍結", label: "出金拒否・口座凍結" },
+    ],
+    "online-salon": [
+      { value: "内容が広告と異なる", label: "内容が広告と異なる" },
+      { value: "サロン内での別案件勧誘", label: "サロン内での別案件勧誘" },
+      { value: "退会手続きの困難", label: "退会手続きの困難" },
+      { value: "成果の誇大広告", label: "成果の誇大広告" },
+      { value: "やりがい搾取（無報酬の作業）", label: "やりがい搾取（無報酬の作業）" },
+    ],
+    "side-job-school": [
+      { value: "高額なスクール・セミナー", label: "高額なスクール・セミナー" },
+      { value: "副業・在宅ワーク詐欺", label: "副業・在宅ワーク詐欺" },
+      { value: "転職保証の不履行", label: "転職保証の不履行" },
+      { value: "紹介報酬型（マルチ構造）", label: "紹介報酬型（マルチ構造）" },
+      { value: "初期費用の詐取", label: "初期費用の詐取" },
+    ],
+    "beauty-health": [
+      { value: "定期購入の解約困難", label: "定期購入の解約困難" },
+      { value: "効果の誇大広告", label: "効果の誇大広告" },
+      { value: "無料体験からの高額契約", label: "無料体験からの高額契約" },
+      { value: "施術の健康被害", label: "施術の健康被害" },
+      { value: "カウンセリング商法", label: "カウンセリング商法" },
+    ],
+    "door-to-door": [
+      { value: "訪問販売・押し売り", label: "訪問販売・押し売り" },
+      { value: "貴金属の押し買い", label: "貴金属の押し買い" },
+      { value: "点検商法（屋根・床下等）", label: "点検商法（屋根・床下等）" },
+      { value: "契約の強要・威圧", label: "契約の強要・威圧" },
+      { value: "クーリングオフの妨害", label: "クーリングオフの妨害" },
+    ],
+    religion: [
+      { value: "霊感商法・スピリチュアル", label: "霊感商法・スピリチュアル" },
+      { value: "寄付・献金の強要", label: "寄付・献金の強要" },
+      { value: "脱会の妨害・孤立化", label: "脱会の妨害・孤立化" },
+      { value: "家族の引き離し", label: "家族の引き離し" },
+      { value: "開運グッズの高額販売", label: "開運グッズの高額販売" },
+    ],
+  };
+
+  const commonScamTypes = [
+    { value: "個人情報の悪用・脅迫", label: "個人情報の悪用・脅迫" },
+    { value: "other", label: "その他（自由入力）" },
+  ];
+
+  const scamTypeOptions = selectedCategorySlug && selectedCategorySlug !== "other"
+    ? [...(scamTypeMap[selectedCategorySlug] || []), ...commonScamTypes]
+    : commonScamTypes;
+
   const yearOptions = [
     { value: "2026", label: "2026年" },
     { value: "2025", label: "2025年" },
@@ -169,7 +240,7 @@ export default function PostForm({
           categoryId: Number(categoryId),
           title,
           body,
-          scamType: scamType || undefined,
+          scamType: (scamType === "other" ? scamTypeCustom : scamType) || undefined,
           damageAmount: damageAmount || undefined,
           period: buildPeriodString() || undefined,
           relationship: relationship || undefined,
@@ -203,7 +274,11 @@ export default function PostForm({
         </label>
         <CustomSelect
           value={categoryId}
-          onChange={setCategoryId}
+          onChange={(v) => {
+            setCategoryId(v);
+            setScamType("");
+            setScamTypeCustom("");
+          }}
           options={categories.map((c) => ({ value: String(c.id), label: c.name }))}
           placeholder="選択してください"
           disabled={!!presetCategoryId}
@@ -301,14 +376,25 @@ export default function PostForm({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           被害の種類
         </label>
-        <input
-          type="text"
+        <CustomSelect
           value={scamType}
-          onChange={(e) => setScamType(e.target.value)}
-          maxLength={50}
-          placeholder="例: SNSで知り合った個人による投資詐欺"
-          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(v) => {
+            setScamType(v);
+            if (v !== "other") setScamTypeCustom("");
+          }}
+          placeholder="選択してください（任意）"
+          options={scamTypeOptions}
         />
+        {scamType === "other" && (
+          <input
+            type="text"
+            value={scamTypeCustom}
+            onChange={(e) => setScamTypeCustom(e.target.value)}
+            maxLength={50}
+            placeholder="被害の種類を入力してください"
+            className="w-full mt-2 px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        )}
       </div>
 
       {/* Damage Amount */}
