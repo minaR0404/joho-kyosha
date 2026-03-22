@@ -25,7 +25,7 @@ const siteDescription =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   verification: {
-    google: "qrr2S2oeeLnr4GLUEXDcy8nTEz6nZjXdbh_Dwx6kDq4",
+    google: "lzDJH2_OiY8OygoJq5gADqiCuMTlKGNKu7h0Qu2LWHE",
   },
   title: {
     default: "情報強者 - 騙される前に、まずチェック。",
