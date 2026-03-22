@@ -13,14 +13,16 @@ export async function GET(req: NextRequest) {
   }
 
   const q = searchParams.get("q") || "";
+  const catId = searchParams.get("categoryId");
   const orgs = await prisma.organization.findMany({
     where: {
       status: { not: "DELETED" },
       approvalStatus: "APPROVED",
+      ...(catId ? { categoryId: Number(catId) } : {}),
       ...(q ? { OR: [{ name: { contains: q } }, { description: { contains: q } }] } : {}),
     },
     orderBy: { postCount: "desc" },
-    take: 50,
+    take: catId && !q ? 5 : 50,
     include: { category: { select: { name: true, slug: true } } },
   });
 

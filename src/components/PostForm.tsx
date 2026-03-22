@@ -84,7 +84,9 @@ export default function PostForm({
       return;
     }
     debounceRef.current = setTimeout(() => {
-      fetch(`/api/orgs?q=${encodeURIComponent(orgSearch)}`)
+      const params = new URLSearchParams({ q: orgSearch });
+      if (categoryId) params.set("categoryId", categoryId);
+      fetch(`/api/orgs?${params}`)
         .then((res) => res.json())
         .then((data) => {
           const results = (data.orgs || []).slice(0, 10).map((o: { id: number; name: string; slug: string }) => ({
@@ -97,7 +99,29 @@ export default function PostForm({
         })
         .catch(() => {});
     }, 300);
-  }, [orgSearch]);
+  }, [orgSearch, categoryId]);
+
+  // Load suggested orgs on focus
+  const loadSuggestedOrgs = () => {
+    if (orgSearch.length >= 2 || !categoryId) {
+      if (orgResults.length > 0) setShowOrgDropdown(true);
+      return;
+    }
+    fetch(`/api/orgs?categoryId=${categoryId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const results = (data.orgs || []).map((o: { id: number; name: string; slug: string }) => ({
+          id: o.id,
+          name: o.name,
+          slug: o.slug,
+        }));
+        if (results.length > 0) {
+          setOrgResults(results);
+          setShowOrgDropdown(true);
+        }
+      })
+      .catch(() => {});
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -310,7 +334,7 @@ export default function PostForm({
               type="text"
               value={orgSearch}
               onChange={(e) => setOrgSearch(e.target.value)}
-              onFocus={() => orgResults.length > 0 && setShowOrgDropdown(true)}
+              onFocus={loadSuggestedOrgs}
               placeholder="組織名を検索（2文字以上）"
               className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
