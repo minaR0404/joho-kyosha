@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
+import CustomSelect from "./CustomSelect";
 
 interface Tag {
   id: number;
@@ -148,18 +149,13 @@ export default function PostForm({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           カテゴリ *
         </label>
-        <select
+        <CustomSelect
           value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          required
+          onChange={setCategoryId}
+          options={categories.map((c) => ({ value: String(c.id), label: c.name }))}
+          placeholder="選択してください"
           disabled={!!presetCategoryId}
-          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-        >
-          <option value="">選択してください</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
+        />
       </div>
 
       {/* Organization (optional) */}
@@ -231,20 +227,20 @@ export default function PostForm({
           <label className="block text-sm font-medium text-gray-700 mb-2">
             組織との関係
           </label>
-          <select
+          <CustomSelect
             value={relationship}
-            onChange={(e) => setRelationship(e.target.value)}
-            className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">選択してください（任意）</option>
-            <option value="元会員">元会員</option>
-            <option value="現会員">現会員</option>
-            <option value="元従業員">元従業員</option>
-            <option value="家族・知人が関与">家族・知人が関与</option>
-            <option value="勧誘を受けた">勧誘を受けた</option>
-            <option value="被害者">被害者</option>
-            <option value="その他">その他</option>
-          </select>
+            onChange={setRelationship}
+            placeholder="選択してください（任意）"
+            options={[
+              { value: "元会員", label: "元会員" },
+              { value: "現会員", label: "現会員" },
+              { value: "元従業員", label: "元従業員" },
+              { value: "家族・知人が関与", label: "家族・知人が関与" },
+              { value: "勧誘を受けた", label: "勧誘を受けた" },
+              { value: "被害者", label: "被害者" },
+              { value: "その他", label: "その他" },
+            ]}
+          />
         </div>
       )}
 
