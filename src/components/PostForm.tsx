@@ -78,7 +78,7 @@ export default function PostForm({
   // Org search with debounce
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (orgSearch.length < 2) {
+    if (orgSearch.length < 1) {
       setOrgResults([]);
       setShowOrgDropdown(false);
       return;
@@ -103,7 +103,7 @@ export default function PostForm({
 
   // Load suggested orgs on focus
   const loadSuggestedOrgs = () => {
-    if (orgSearch.length >= 2 || !categoryId) {
+    if (orgSearch.length >= 1 || !categoryId) {
       if (orgResults.length > 0) setShowOrgDropdown(true);
       return;
     }
@@ -335,7 +335,7 @@ export default function PostForm({
               value={orgSearch}
               onChange={(e) => setOrgSearch(e.target.value)}
               onFocus={loadSuggestedOrgs}
-              placeholder="組織名を検索（2文字以上）"
+              placeholder="組織名を検索"
               className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           )}
