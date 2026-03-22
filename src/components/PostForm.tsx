@@ -153,7 +153,7 @@ export default function PostForm({
           onChange={(e) => setCategoryId(e.target.value)}
           required
           disabled={!!presetCategoryId}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
         >
           <option value="">選択してください</option>
           {categories.map((c) => (
@@ -189,7 +189,7 @@ export default function PostForm({
               onChange={(e) => setOrgSearch(e.target.value)}
               onFocus={() => orgResults.length > 0 && setShowOrgDropdown(true)}
               placeholder="組織名を検索（2文字以上）"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           )}
           {showOrgDropdown && (
@@ -234,7 +234,7 @@ export default function PostForm({
           <select
             value={relationship}
             onChange={(e) => setRelationship(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">選択してください（任意）</option>
             <option value="元会員">元会員</option>
@@ -259,7 +259,7 @@ export default function PostForm({
           onChange={(e) => setScamType(e.target.value)}
           maxLength={50}
           placeholder="例: SNSで知り合った個人による投資詐欺"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -274,7 +274,7 @@ export default function PostForm({
           onChange={(e) => setDamageAmount(e.target.value)}
           maxLength={30}
           placeholder="例: 30万円"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -289,7 +289,7 @@ export default function PostForm({
           onChange={(e) => setPeriod(e.target.value)}
           maxLength={20}
           placeholder="例: 2024年9月"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {period.length > 16 && (
           <p className={`text-xs text-right mt-1 ${period.length >= 20 ? "text-red-500" : "text-gray-400"}`}>
@@ -310,7 +310,7 @@ export default function PostForm({
           required
           maxLength={100}
           placeholder="一言で体験を要約してください"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {title.length > 80 && (
           <p className={`text-xs text-right mt-1 ${title.length >= 100 ? "text-red-500" : "text-gray-400"}`}>
@@ -336,7 +336,7 @@ export default function PostForm({
           maxLength={4000}
           rows={6}
           placeholder="何が起きたか、どのような手口だったかを具体的に書いてください。組織名がわからなくても構いません。"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden"
+          className="w-full px-3 py-3 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden"
         />
         {body.length > 3600 && (
           <p className={`text-xs text-right mt-1 ${body.length >= 4000 ? "text-red-500" : "text-gray-400"}`}>
