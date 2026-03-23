@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth, isAdmin } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { toSlug } from "@/lib/utils";
 import { postRateLimit, checkRateLimit } from "@/lib/ratelimit";
 
@@ -68,8 +68,6 @@ export async function POST(req: NextRequest) {
       slug = `${slug}-${Date.now()}`;
     }
 
-    const adminUser = isAdmin(session.user.role);
-
     const org = await prisma.organization.create({
       data: {
         slug,
@@ -80,7 +78,7 @@ export async function POST(req: NextRequest) {
         representative: representative || null,
         founded: founded || null,
         submittedById: Number(session.user.id),
-        approvalStatus: adminUser ? "APPROVED" : "PENDING",
+        approvalStatus: "APPROVED",
       },
     });
 
