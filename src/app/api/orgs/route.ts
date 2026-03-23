@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name, categoryId, description, website, representative, founded } =
+    const { name, categoryId, description, website, representative, founded, nameKana, aliases } =
       await req.json();
 
     if (!name || !categoryId) {
@@ -77,6 +77,8 @@ export async function POST(req: NextRequest) {
         website: website || null,
         representative: representative || null,
         founded: founded || null,
+        nameKana: nameKana || null,
+        aliases: aliases || null,
         submittedById: Number(session.user.id),
         approvalStatus: "APPROVED",
       },

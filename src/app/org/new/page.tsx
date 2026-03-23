@@ -20,6 +20,9 @@ export default function NewOrgPage() {
   const [website, setWebsite] = useState("");
   const [representative, setRepresentative] = useState("");
   const [founded, setFounded] = useState("");
+  const [nameKana, setNameKana] = useState("");
+  const [aliases, setAliases] = useState("");
+  const [showExtra, setShowExtra] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -50,6 +53,8 @@ export default function NewOrgPage() {
           website: website || undefined,
           representative: representative || undefined,
           founded: founded || undefined,
+          nameKana: nameKana || undefined,
+          aliases: aliases || undefined,
         }),
       });
 
@@ -152,6 +157,40 @@ export default function NewOrgPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+        {!showExtra ? (
+          <button
+            type="button"
+            onClick={() => setShowExtra(true)}
+            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            検索用の情報を追加する（任意）
+          </button>
+        ) : (
+          <div className="space-y-4 p-4 bg-gray-50 border border-gray-200 rounded-md">
+            <p className="text-xs text-gray-500">検索でヒットしやすくなります（任意）</p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">読み（カナ）</label>
+              <input
+                type="text"
+                value={nameKana}
+                onChange={(e) => setNameKana(e.target.value)}
+                placeholder="例: アムウェイ"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">別名・略称</label>
+              <input
+                type="text"
+                value={aliases}
+                onChange={(e) => setAliases(e.target.value)}
+                placeholder="例: Amway, アム"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-400 mt-1">カンマ区切りで複数入力できます</p>
+            </div>
+          </div>
+        )}
         <button
           type="submit"
           disabled={loading}
