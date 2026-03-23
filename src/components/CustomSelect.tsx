@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 
 interface Option {
   value: string;
@@ -14,12 +14,14 @@ export default function CustomSelect({
   options,
   placeholder = "選択してください",
   disabled = false,
+  clearable = false,
 }: {
   value: string;
   onChange: (value: string) => void;
   options: Option[];
   placeholder?: string;
   disabled?: boolean;
+  clearable?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -53,9 +55,23 @@ export default function CustomSelect({
         <span className={selectedLabel ? "text-gray-900" : "text-gray-400"}>
           {selectedLabel || placeholder}
         </span>
-        <ChevronDown
-          className={`w-5 h-5 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
-        />
+        {clearable && value ? (
+          <span
+            role="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange("");
+              setOpen(false);
+            }}
+            className="p-0.5 rounded-full hover:bg-gray-200 transition-colors"
+          >
+            <X className="w-4 h-4 text-gray-400" />
+          </span>
+        ) : (
+          <ChevronDown
+            className={`w-5 h-5 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        )}
       </button>
 
       {open && (

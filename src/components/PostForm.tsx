@@ -390,6 +390,7 @@ export default function PostForm({
             value={relationship}
             onChange={setRelationship}
             placeholder="選択してください（任意）"
+            clearable
             options={[
               { value: "元会員", label: "元会員" },
               { value: "現会員", label: "現会員" },
@@ -416,6 +417,7 @@ export default function PostForm({
           }}
           placeholder="選択してください（任意）"
           options={scamTypeOptions}
+          clearable
         />
         {scamType === "other" && (
           <input
@@ -438,6 +440,7 @@ export default function PostForm({
           value={damageAmount}
           onChange={setDamageAmount}
           placeholder="選択してください（任意）"
+          clearable
           options={[
             { value: "1万円未満", label: "1万円未満" },
             { value: "1〜5万円", label: "1〜5万円" },
@@ -465,10 +468,11 @@ export default function PostForm({
               onChange={(v) => {
                 setPeriodYear(v);
                 if (v !== "old") setPeriodOldYear("");
-                if (v === "unknown") { setPeriodSeason(""); setShowPeriodRange(false); }
+                if (v === "unknown" || !v) { setPeriodSeason(""); setShowPeriodRange(false); setPeriodEndYear(""); setPeriodEndSeason(""); }
               }}
               placeholder="年を選択"
               options={yearOptions}
+              clearable
             />
           </div>
           {periodYear && periodYear !== "unknown" && (
@@ -478,6 +482,7 @@ export default function PostForm({
                 onChange={setPeriodSeason}
                 placeholder="時期を選択"
                 options={seasonOptions}
+                clearable
               />
             </div>
           )}
@@ -489,6 +494,7 @@ export default function PostForm({
               onChange={setPeriodOldYear}
               placeholder="具体的な年（任意）"
               options={oldYearOptions}
+              clearable
             />
           </div>
         )}
@@ -519,10 +525,11 @@ export default function PostForm({
                   value={periodEndYear}
                   onChange={(v) => {
                     setPeriodEndYear(v);
-                    if (v === "unknown") setPeriodEndSeason("");
+                    if (v === "unknown" || !v) setPeriodEndSeason("");
                   }}
                   placeholder="年を選択"
                   options={yearOptions.filter((o) => o.value !== "unknown")}
+                  clearable
                 />
               </div>
               {periodEndYear && periodEndYear !== "unknown" && (
@@ -532,6 +539,7 @@ export default function PostForm({
                     onChange={setPeriodEndSeason}
                     placeholder="時期を選択"
                     options={seasonOptions}
+                    clearable
                   />
                 </div>
               )}
