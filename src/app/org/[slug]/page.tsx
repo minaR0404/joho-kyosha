@@ -139,8 +139,8 @@ export default async function OrgDetailPage({ params }: Props) {
               {org.website && (
                 <div>
                   <span className="text-gray-500">公式サイト:</span>{" "}
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                    リンク
+                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">
+                    {org.website}
                   </a>
                 </div>
               )}
