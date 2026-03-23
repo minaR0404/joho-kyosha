@@ -29,7 +29,7 @@ export default async function PostDetailPage({ params }: Props) {
   const post = await prisma.post.findUnique({
     where: { id: Number(id) },
     include: {
-      user: { select: { id: true, displayName: true } },
+      user: { select: { id: true, displayName: true, role: true } },
       category: { select: { slug: true, name: true } },
       org: { select: { slug: true, name: true, postCount: true, category: { select: { name: true } } } },
       tags: { include: { tag: true } },
@@ -170,7 +170,9 @@ export default async function PostDetailPage({ params }: Props) {
             </div>
 
             <p className="text-xs text-gray-400 mt-4">
-              ※ この投稿は投稿者個人の経験に基づくものです。
+              {post.user.role === "EDITOR"
+                ? "※ 各種相談事例・報告を基に編集部が再構成した事例です。"
+                : "※ この投稿は投稿者個人の経験に基づくものです。"}
             </p>
           </div>
         </div>
