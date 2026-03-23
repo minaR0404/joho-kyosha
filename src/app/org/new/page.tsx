@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import CustomSelect from "@/components/CustomSelect";
 
 interface Category {
   id: number;
@@ -104,17 +105,12 @@ export default function NewOrgPage() {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">カテゴリ *</label>
-          <select
+          <CustomSelect
             value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">選択してください</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+            onChange={(v) => setCategoryId(v)}
+            options={categories.map((c) => ({ value: String(c.id), label: c.name }))}
+            placeholder="選択してください"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">概要</label>
