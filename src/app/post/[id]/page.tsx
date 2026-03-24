@@ -31,7 +31,7 @@ export default async function PostDetailPage({ params }: Props) {
     include: {
       user: { select: { id: true, displayName: true, role: true } },
       category: { select: { slug: true, name: true } },
-      org: { select: { slug: true, name: true, postCount: true, category: { select: { name: true } } } },
+      org: { select: { slug: true, name: true, description: true, postCount: true, category: { select: { name: true } } } },
       tags: { include: { tag: true } },
     },
   });
@@ -82,6 +82,14 @@ export default async function PostDetailPage({ params }: Props) {
                   <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded">
                     {post.relationship}
                   </span>
+                )}
+                {post.org && (
+                  <Link
+                    href={`/org/${post.org.slug}`}
+                    className="text-xs px-2 py-0.5 bg-orange-50 text-orange-600 border border-orange-200 rounded hover:bg-orange-100 transition-colors"
+                  >
+                    {post.org.name}
+                  </Link>
                 )}
               </div>
               <h1 className="text-xl font-bold text-gray-900">{post.title}</h1>
@@ -183,8 +191,11 @@ export default async function PostDetailPage({ params }: Props) {
             <div className="bg-white rounded-lg border border-gray-200 p-4 sticky top-20">
               <h3 className="font-bold text-gray-900 mb-2">{post.org.name}</h3>
               <p className="text-xs text-gray-500 mb-3">{post.org.category.name}</p>
+              {post.org.description && (
+                <p className="text-sm text-gray-600 mb-3 line-clamp-4">{post.org.description}</p>
+              )}
               {post.org.postCount > 0 && (
-                <p className="text-sm text-gray-600 mb-3">投稿 {post.org.postCount}件</p>
+                <p className="text-sm text-gray-500 mb-3">投稿 {post.org.postCount}件</p>
               )}
               <Link
                 href={`/org/${post.org.slug}`}
