@@ -18,7 +18,7 @@ export default async function HomePage() {
     prisma.post.findMany({
       where: { deletedAt: null, status: "PUBLISHED" },
       orderBy: { createdAt: "desc" },
-      take: 8,
+      take: 4,
       include: {
         user: { select: { id: true, displayName: true } },
         category: { select: { name: true } },
