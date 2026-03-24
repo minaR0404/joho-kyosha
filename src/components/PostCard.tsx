@@ -102,7 +102,7 @@ export default function PostCard({
 
       <div className="relative mb-3 pointer-events-none">
         <p ref={bodyRef} className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden">
-          {body}
+          {body.replace(/\n{2,}/g, "\n")}
         </p>
         {isClamped && (
           <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
