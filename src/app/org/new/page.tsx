@@ -118,9 +118,11 @@ export default function NewOrgPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
+            maxLength={300}
             placeholder="この組織・商材の概要を簡単に記載してください"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <p className="text-xs text-gray-400 mt-1 text-right">{description.length}/300</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>

@@ -54,6 +54,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (description && description.length > 300) {
+      return NextResponse.json(
+        { error: "概要は300文字以内で入力してください" },
+        { status: 400 }
+      );
+    }
+
     const existingByName = await prisma.organization.findFirst({ where: { name } });
     if (existingByName) {
       return NextResponse.json(
