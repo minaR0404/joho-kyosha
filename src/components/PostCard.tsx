@@ -66,15 +66,15 @@ export default function PostCard({
               {relationship}
             </span>
           )}
+          {orgName && orgSlug && (
+            <a
+              href={`/org/${orgSlug}`}
+              className="relative z-10 text-xs px-2 py-0.5 bg-orange-50 text-orange-600 border border-orange-200 rounded hover:bg-orange-100 transition-colors"
+            >
+              {orgName}
+            </a>
+          )}
         </div>
-        {orgName && orgSlug && (
-          <a
-            href={`/org/${orgSlug}`}
-            className="relative z-10 block text-sm text-blue-600 mb-0.5 hover:underline"
-          >
-            {orgName}
-          </a>
-        )}
         <h4 className="font-bold text-gray-900">
           <a href={`/post/${postId}`} className="after:absolute after:inset-0">
             {title}
