@@ -153,15 +153,14 @@ export default function NewOrgPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        {!showExtra ? (
-          <button
-            type="button"
-            onClick={() => setShowExtra(true)}
-            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            検索用の情報を追加する（任意）
-          </button>
-        ) : (
+        <button
+          type="button"
+          onClick={() => setShowExtra(!showExtra)}
+          className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+        >
+          {showExtra ? "検索用の情報を閉じる" : "検索用の情報を追加する（任意）"}
+        </button>
+        {showExtra && (
           <div className="space-y-4 p-4 bg-gray-50 border border-gray-200 rounded-md">
             <p className="text-xs text-gray-500">検索でヒットしやすくなります（任意）</p>
             <div>
