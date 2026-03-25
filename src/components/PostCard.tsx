@@ -1,17 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { User, Calendar, AlertTriangle, Banknote } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import HelpfulButton from "./HelpfulButton";
-import TagBadge from "./TagBadge";
 
 interface PostCardProps {
   postId: number;
   title: string;
   body: string;
   categoryName: string;
-  scamType: string | null;
-  damageAmount: string | null;
   period: string | null;
   relationship: string | null;
   isAnonymous: boolean;
@@ -22,7 +19,6 @@ interface PostCardProps {
   orgName?: string | null;
   orgSlug?: string | null;
   userVoted?: boolean;
-  tags?: { id: number; name: string }[];
 }
 
 export default function PostCard({
@@ -30,8 +26,6 @@ export default function PostCard({
   title,
   body,
   categoryName,
-  scamType,
-  damageAmount,
   period,
   relationship,
   isAnonymous,
@@ -42,7 +36,6 @@ export default function PostCard({
   orgName,
   orgSlug,
   userVoted = false,
-  tags,
 }: PostCardProps) {
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const [isClamped, setIsClamped] = useState(false);
@@ -82,24 +75,6 @@ export default function PostCard({
         </h4>
       </div>
 
-      {/* Info row */}
-      {(scamType || damageAmount) && (
-        <div className="relative z-10 flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
-          {scamType && (
-            <span className="inline-flex items-center gap-1">
-              <AlertTriangle className="w-3.5 h-3.5 text-orange-500" />
-              {scamType}
-            </span>
-          )}
-          {damageAmount && (
-            <span className="inline-flex items-center gap-1">
-              <Banknote className="w-3.5 h-3.5 text-red-500" />
-              {damageAmount}
-            </span>
-          )}
-        </div>
-      )}
-
       <div className="relative mb-3 pointer-events-none">
         <p ref={bodyRef} className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap max-h-[5em] overflow-hidden">
           {body.replace(/\n{2,}/g, "\n")}
@@ -108,15 +83,6 @@ export default function PostCard({
           <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
         )}
       </div>
-
-      {/* Tags */}
-      {tags && tags.length > 0 && (
-        <div className="relative z-10 flex flex-wrap gap-1 mb-3">
-          {tags.map((tag) => (
-            <TagBadge key={tag.id} name={tag.name} />
-          ))}
-        </div>
-      )}
 
       {/* Footer */}
       <div className="relative z-10 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-gray-500 border-t border-gray-100 pt-3 pointer-events-none">
