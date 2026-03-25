@@ -579,8 +579,10 @@ export default function PostForm({
           onChange={(e) => {
             setBody(e.target.value.slice(0, 4000));
             const el = e.target;
+            const scrollY = window.scrollY;
             el.style.height = "auto";
             el.style.height = `${el.scrollHeight}px`;
+            window.scrollTo(0, scrollY);
           }}
           required
           maxLength={4000}
