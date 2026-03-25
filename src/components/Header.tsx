@@ -94,9 +94,17 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Backdrop */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 top-16 z-40"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
       {/* Dropdown menu */}
       {menuOpen && (
-        <div className="border-t border-gray-200 bg-white shadow-lg">
+        <div className="relative z-50 border-t border-gray-200 bg-white shadow-lg">
           <div className="max-w-6xl mx-auto px-4 py-4">
             <div className="mb-3">
               <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">カテゴリ</h3>
