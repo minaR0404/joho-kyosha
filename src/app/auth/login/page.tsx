@@ -137,10 +137,12 @@ function LoginForm() {
         </Link>
       </p>
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-md text-xs text-gray-500">
-        <p className="font-medium mb-1">デモアカウント:</p>
-        <p>メール: demo@example.com / パスワード: password123</p>
-      </div>
+      {process.env.NODE_ENV === "development" && (
+        <div className="mt-6 p-4 bg-gray-50 rounded-md text-xs text-gray-500">
+          <p className="font-medium mb-1">デモアカウント:</p>
+          <p>メール: demo@example.com / パスワード: password123</p>
+        </div>
+      )}
     </>
   );
 }
