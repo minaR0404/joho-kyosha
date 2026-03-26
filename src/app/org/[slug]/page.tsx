@@ -188,8 +188,6 @@ export default async function OrgDetailPage({ params }: Props) {
                   title={post.title}
                   body={post.body}
                   categoryName={post.category.name}
-                  scamType={post.scamType}
-                  damageAmount={post.damageAmount}
                   period={post.period}
                   relationship={post.relationship}
                   isAnonymous={post.isAnonymous}
@@ -198,7 +196,6 @@ export default async function OrgDetailPage({ params }: Props) {
                   helpfulCount={post.helpfulCount}
                   createdAt={post.createdAt.toISOString()}
                   userVoted={votedPostIds.has(post.id)}
-                  tags={post.tags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))}
                 />
               ))}
             </div>

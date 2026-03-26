@@ -122,8 +122,6 @@ export default async function SearchPage({ searchParams }: Props) {
                         title={p.title}
                         body={p.body}
                         categoryName={p.category.name}
-                        scamType={p.scamType}
-                        damageAmount={p.damageAmount}
                         period={p.period}
                         relationship={p.relationship}
                         isAnonymous={p.isAnonymous}
@@ -134,7 +132,6 @@ export default async function SearchPage({ searchParams }: Props) {
                         orgName={p.org?.name}
                         orgSlug={p.org?.slug}
                         userVoted={votedIds.has(p.id)}
-                        tags={p.tags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))}
                       />
                     ))}
                   </div>

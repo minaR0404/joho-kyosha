@@ -113,8 +113,6 @@ export default async function UserProfilePage({ params }: Props) {
                 title={p.title}
                 body={p.body}
                 categoryName={p.category.name}
-                scamType={p.scamType}
-                damageAmount={p.damageAmount}
                 period={p.period}
                 relationship={p.relationship}
                 isAnonymous={false}
@@ -125,7 +123,6 @@ export default async function UserProfilePage({ params }: Props) {
                 orgName={p.org?.name}
                 orgSlug={p.org?.slug}
                 userVoted={votedPostIds.has(p.id)}
-                tags={p.tags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))}
               />
             ))}
           </div>
